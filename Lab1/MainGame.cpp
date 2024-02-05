@@ -1,4 +1,5 @@
 #include "MainGame.h"
+
 #include <iostream>
 #include <string>
 
@@ -20,6 +21,16 @@ void MainGame::run()
 void MainGame::initSystems()
 {
 	_gameDisplay.initDisplay();
+
+	// create an array of vertices
+	_vertices [ 0 ] = Vertex ( -0.5f, -0.5f, 0.0f );
+	_vertices [ 1 ] = Vertex ( 0.5f, -0.5f, 0.0f );
+	_vertices [ 2 ] = Vertex ( 0.0f, 0.5f, 0.0f );
+
+	// create a mesh object
+	_mesh.SetMesh( _vertices, 3 );
+
+	_shaderProgram.LoadDefaultShaders ( );
 }
 
 void MainGame::gameLoop()
@@ -51,18 +62,13 @@ void MainGame::processInput()
 
 void MainGame::drawGame()
 {
-	glClearDepth(1.0); 
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear colour and depth buffer - set colour to colour defined in glClearColor
-
+	_gameDisplay.clearDisplay ( );
 	
-	// old code for testing only 
-	glEnableClientState(GL_COLOR_ARRAY); 
-	glBegin(GL_TRIANGLES);
-	glColor3f(1.0f, 0.0f, 0.0f);	
-	glVertex2f(0, 0);
-	glVertex2f(0, 500);
-	glVertex2f(500, 500);
-	glEnd();
+	// bind the shader
+	_shaderProgram.Bind ( );
+	
+	// draw the mesh
+	_mesh.Draw ( );
 
 	_gameDisplay.swapBuffer();
 }

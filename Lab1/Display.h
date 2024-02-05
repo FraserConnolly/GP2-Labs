@@ -12,6 +12,7 @@ public:
 	Display();
 	~Display();
 	void initDisplay();
+	void clearDisplay ( );
 	void swapBuffer();
 
 private:
@@ -19,6 +20,7 @@ private:
 	void returnError(std::string errorString);
 
 	SDL_Window* _window; //holds pointer to out window
+	SDL_GLContext _glContext;
 	int _screenWidth;
 	int _screenHeight;
 };

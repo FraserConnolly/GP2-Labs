@@ -10,6 +10,9 @@ Display::Display()
 
 Display::~Display()
 {
+	SDL_DestroyWindow ( _window );
+	SDL_GL_DeleteContext ( _glContext );
+	SDL_Quit ( );
 }
 
 void Display::returnError(std::string errorString)
@@ -43,9 +46,9 @@ void Display::initDisplay()
 		return;
 	}
 
-	SDL_GLContext glContext = SDL_GL_CreateContext(_window);
+	_glContext = SDL_GL_CreateContext(_window);
 
-	if (glContext == nullptr)
+	if (_glContext == nullptr)
 	{
 		returnError("Failed to OpenGL context.");
 		return;
@@ -61,4 +64,10 @@ void Display::initDisplay()
 
 	glClearColor(0.0f, 1.0f, 1.0f, 1.0f);
 
+}
+
+void Display::clearDisplay ( )
+{ 
+	glClearDepth ( 1.0 );
+	glClear ( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT ); // clear colour and depth buffer - set colour to colour defined in glClearColor
 }
