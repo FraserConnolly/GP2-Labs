@@ -31,8 +31,18 @@ void MainGame::initSystems()
 	_vertices [ 1 ].SetColour ( 0.0f, 1.0f, 0.0f );
 	_vertices [ 2 ].SetColour ( 0.0f, 0.0f, 1.0f );
 
+	_vertices [ 0 ].SetTexture ( 0.0f, 0.0f );
+	_vertices [ 1 ].SetTexture ( 1.0f, 0.0f );
+	_vertices [ 2 ].SetTexture ( 0.5f, 1.0f );
+
+	_indices [ 0 ] = 0;
+	_indices [ 1 ] = 1;
+	_indices [ 2 ] = 2;
+
 	// create a mesh object
-	_mesh.SetMesh( _vertices, 3 );
+	_mesh.SetMesh( _vertices, 3, _indices, 3 );
+
+	_mesh.LoadTexture ( "bricks.jpg" );
 
 	_shaderProgram.LoadDefaultShaders ( );
 }

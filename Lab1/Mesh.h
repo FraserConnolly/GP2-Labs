@@ -51,9 +51,16 @@ public:
 		_pos.z = z;
 	}
 
+	void SetTexture ( float u, float v )
+	{
+		_tex.x = u;
+		_tex.y = v;
+	}
+
 private:
 	glm::vec3 _pos;
 	glm::vec3 _col;
+	glm::vec2 _tex;
 };
 
 
@@ -61,11 +68,15 @@ class Mesh
 {
 public:
 	Mesh ( );
-	Mesh ( Vertex * vertices, unsigned int numVertices );
+	Mesh ( const Vertex * vertices, const unsigned int numVertices );
+	Mesh ( const Vertex * vertices, const unsigned int numVertices, const  unsigned int * indices, const int numIndicies);
+
 	~Mesh ( );
 
-	void SetMesh ( Vertex * vertices, unsigned int numVertices );
+	void SetMesh ( const Vertex * vertices, const unsigned int numVertices, const  unsigned int * indices, const int numIndicies );
 	void Draw ( );
+
+	void LoadTexture ( const char * filename );
 
 private:
 	enum
@@ -76,6 +87,9 @@ private:
 
 	GLuint _vertexArrayObject;
 	GLuint _vertexArrayBuffers [ NUM_BUFFERS ]; // create our array of buffers
+	GLuint _elementBufferObject; //GL_ELEMENT_ARRAY_BUFFER
+
+	GLuint _texture;
 
 	unsigned int _drawCount; //how much of the vertexArrayObject do we want to draw
 };

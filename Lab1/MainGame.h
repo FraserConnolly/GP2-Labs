@@ -1,7 +1,8 @@
 #pragma once
 
 #include <SDL\SDL.h>
-#include <GL/glew.h>
+#include <GL\glew.h>
+
 #include "Display.h" 
 #include "Mesh.h"
 #include "Shader.h"
@@ -36,6 +37,7 @@ private:
 	float _time = 0.0f;
 	float _deltaTime = 0.0f;
 	Vertex _vertices[ 3 ];
+	unsigned int _indices [ 3 ];
 	Mesh _mesh;
 	Display _gameDisplay;
 	GameState _gameState;
