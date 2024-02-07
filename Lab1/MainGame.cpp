@@ -27,6 +27,10 @@ void MainGame::initSystems()
 	_vertices [ 1 ] = Vertex ( 0.5f, -0.5f, 0.0f );
 	_vertices [ 2 ] = Vertex ( 0.0f, 0.5f, 0.0f );
 
+	_vertices [ 0 ].SetColour ( 1.0f, 0.0f, 0.0f );
+	_vertices [ 1 ].SetColour ( 0.0f, 1.0f, 0.0f );
+	_vertices [ 2 ].SetColour ( 0.0f, 0.0f, 1.0f );
+
 	// create a mesh object
 	_mesh.SetMesh( _vertices, 3 );
 
@@ -37,6 +41,9 @@ void MainGame::gameLoop()
 {
 	while (_gameState != GameState::EXIT)
 	{
+		float newTime = _gameDisplay.getTime ( );
+		_deltaTime = _time - newTime;
+		_time = newTime;
 		processInput();
 		drawGame();
 	}
@@ -66,7 +73,10 @@ void MainGame::drawGame()
 	
 	// bind the shader
 	_shaderProgram.Bind ( );
-	
+
+	//GLfloat greenValue = ( sin ( _time ) / 2.0f ) + 0.5f;
+	//_shaderProgram.SetUniform ( "ourColor", 0.0f, greenValue, 0.0f, 1.0f );
+
 	// draw the mesh
 	_mesh.Draw ( );
 

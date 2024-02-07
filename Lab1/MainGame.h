@@ -15,6 +15,15 @@ public:
 	~MainGame();
 
 	void run();
+	float getTime ( )
+	{
+		return _time;
+	}
+
+	float getDeltaTime ( )
+	{
+		return _deltaTime;
+	}
 
 private:
 
@@ -23,6 +32,9 @@ private:
 	void gameLoop();
 	void drawGame();
 
+	// in seconds
+	float _time = 0.0f;
+	float _deltaTime = 0.0f;
 	Vertex _vertices[ 3 ];
 	Mesh _mesh;
 	Display _gameDisplay;

@@ -30,6 +30,14 @@ void Display::swapBuffer()
 	SDL_GL_SwapWindow(_window);
 }
 
+/// <summary>
+/// Time in seconds since the game started
+/// </summary>
+float Display::getTime ( )
+{
+	return SDL_GetTicks ( ) / 1000.0f;
+}
+
 void Display::initDisplay()
 {
 	SDL_Init(SDL_INIT_EVERYTHING);

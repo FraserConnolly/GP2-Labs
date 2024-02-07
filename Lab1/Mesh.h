@@ -16,13 +16,44 @@ public:
 		_pos.z = z;
 	}
 
+	Vertex ( float x, float y, float z, float r, float g, float b )
+	{
+		_pos.x = x;
+		_pos.y = y;
+		_pos.z = z;
+		_col.r = r;
+		_col.g = g;
+		_col.b = b;
+	}
+
 	Vertex ( const glm::vec3 & pos )
 	{
-		this->_pos = pos;
+		_pos = pos;
+	}
+
+	Vertex ( const glm::vec3 & pos, const glm::vec3 & col )
+	{
+		_pos = pos;
+		_col = col;
+	}
+
+	void SetColour ( float r, float g, float b )
+	{
+		_col.r = r;
+		_col.g = g;
+		_col.b = b;
+	}
+
+	void SetPosition ( float x, float y, float z )
+	{
+		_pos.x = x;
+		_pos.y = y;
+		_pos.z = z;
 	}
 
 private:
 	glm::vec3 _pos;
+	glm::vec3 _col;
 };
 
 

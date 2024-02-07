@@ -2,6 +2,9 @@
 #include <iostream>
 #include <fstream>
 
+#define VertexShaderPath "shader.vert"
+#define FragmentShaderPath "shader.frag"
+
 Shader::Shader ( )
 	: _program( 0 ), _shaders ( )
 { 
@@ -20,7 +23,7 @@ Shader::~Shader ( )
 	for ( size_t i = 0; i < NUM_SHADERS; i++ )
 	{
 		glDetachShader ( _program, _shaders [ i ] ); //detach shader from program
-		glDeleteShader ( _shaders [ i ] ); //delete the sahders
+		glDeleteShader ( _shaders [ i ] ); //delete the shaders
 	}
 	
 	glDeleteProgram ( _program );
@@ -31,11 +34,11 @@ void Shader::LoadDefaultShaders ( )
 	_program = glCreateProgram ( );
 
 	_shaders [ 0 ] = CreateShader (
-		LoadShader ( "shader.vert" ),
+		LoadShader ( VertexShaderPath ),
 		GL_VERTEX_SHADER );
 
 	_shaders [ 1 ] = CreateShader (
-		LoadShader ( "shader.frag" ),
+		LoadShader ( FragmentShaderPath ),
 		GL_FRAGMENT_SHADER );
 
 	for ( size_t i = 0; i < NUM_SHADERS; i++ )
@@ -46,11 +49,16 @@ void Shader::LoadDefaultShaders ( )
 	glBindAttribLocation ( _program, 0, "position" );
 
 	glLinkProgram ( _program ); //create executables that will run on the GPU shaders
-	CheckShaderError ( _program, GL_LINK_STATUS, true, "Error: Shader program linking failed" ); // cheack for error
+	CheckShaderError ( _program, GL_LINK_STATUS, true, "Error: Shader program linking failed" ); // check for error
 
 	// validate the shader
 	glValidateProgram ( _program ); //check the entire program is valid
 	CheckShaderError ( _program, GL_VALIDATE_STATUS, true, "Error: Shader program not valid" );
+
+	for ( size_t i = 0; i < NUM_SHADERS; i++ )
+	{
+		glDeleteShader ( _shaders [ i ] ); //delete the shader's source - not needed after compilation
+	}
 }
 
 void Shader::Bind ( )
@@ -117,3 +125,37 @@ GLuint Shader::CreateShader ( const std::string & text, GLenum type )
 
 	return shader;
 }
+
+#pragma region Uniform Sets
+
+void Shader::SetUniform ( const GLchar * name, const GLboolean v ) const
+{
+	GLint uniformLocation = glGetUniformLocation ( _program, name );
+	glUniform1i ( uniformLocation, v );
+}
+
+void Shader::SetUniform ( const GLchar * name, const GLint v ) const
+{
+	GLint uniformLocation = glGetUniformLocation ( _program, name );
+	glUniform1i ( uniformLocation, v );
+}
+
+void Shader::SetUniform ( const GLchar * name, const GLfloat v ) const
+{ 
+	GLint uniformLocation = glGetUniformLocation ( _program, name );
+	glUniform1f ( uniformLocation, v );
+}
+
+void Shader::SetUniform ( const GLchar * name, const GLfloat x, const GLfloat y, const GLfloat z ) const
+{ 
+	GLint uniformLocation = glGetUniformLocation ( _program, name );
+	glUniform3f ( uniformLocation, x, y, z );
+}
+
+void Shader::SetUniform ( const GLchar * name, const GLfloat x, const GLfloat y, const GLfloat z, const GLfloat w ) const
+{
+	GLint uniformLocation = glGetUniformLocation ( _program, name );
+	glUniform4f ( uniformLocation, x, y, z, w );
+}
+
+#pragma endregion

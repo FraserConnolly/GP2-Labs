@@ -16,6 +16,15 @@ public:
 	void CheckShaderError ( GLuint shader, GLuint flag, bool isProgram, const std::string &
 							errorMessage );
 	GLuint CreateShader ( const std::string & text, GLenum type );
+	
+	/// <summary>
+	/// Ensure that the shader program is being used before applying uniforms.
+	/// </summary>
+	void SetUniform ( const GLchar * name, const GLboolean v ) const;
+	void SetUniform ( const GLchar * name, const GLint v ) const;
+	void SetUniform ( const GLchar * name, const GLfloat v ) const;
+	void SetUniform ( const GLchar * name, const GLfloat x, const GLfloat y, const GLfloat z ) const;
+	void SetUniform ( const GLchar * name, const GLfloat x, const GLfloat y, const GLfloat z, const GLfloat w ) const;
 
 private:
 	

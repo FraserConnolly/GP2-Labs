@@ -14,6 +14,7 @@ public:
 	void initDisplay();
 	void clearDisplay ( );
 	void swapBuffer();
+	float getTime ( );
 
 private:
 
