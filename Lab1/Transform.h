@@ -48,20 +48,48 @@ public:
 
 #pragma region Setters
 
-	inline void SetPos ( glm::vec3 & pos )
+	inline void SetPosition ( const glm::vec3 & pos )
 	{
-		this->_position = pos;
+		_position = pos;
 	} 
 
-	inline void SetRot(glm::vec3& rot) 
+	inline void SetPosition ( const float x, const float y, const float z )
 	{
-		this->_rotation = rot; 
+		_position.x = x;
+		_position.y = y;
+		_position.z = z;
 	}
 
-	inline void SetScale(glm::vec3& scale) 
+	inline void SetRotation( const glm::vec3 & rot) 
+	{
+		_rotation = rot; 
+	}
+
+	inline void SetEulerRotation ( const float x, const float y, const float z )
 	{ 
-		this->_scale = scale; 
+		_rotation.x = glm::radians( x );
+		_rotation.y = glm::radians( y );
+		_rotation.z = glm::radians( z );
+	}
+
+	inline void SetScale(const glm::vec3 & scale) 
+	{ 
+		_scale = scale; 
 	} 
+
+	inline void SetScale ( const float x, const float y, const float z )
+	{
+		_scale.x = x;
+		_scale.y = y;
+		_scale.z = z;
+	}
+
+	inline void SetScale ( const float s )
+	{
+		_scale.x = s;
+		_scale.y = s;
+		_scale.z = s;
+	}
 
 #pragma endregion
 
