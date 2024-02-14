@@ -2,19 +2,15 @@
 #include <iostream>
 #include <fstream>
 
+#include <glm/gtc/type_ptr.hpp>
+
 #define VertexShaderPath "shader.vert"
 #define FragmentShaderPath "shader.frag"
 
 Shader::Shader ( )
-	: _program( 0 ), _shaders ( )
+	: _program ( 0 ), _shaders ( ), _uniforms ( )
 { 
 
-}
-
-Shader::Shader ( const std::string & filename )
-	: _program ( 0 ), _shaders ( )
-{
-	// not yet implemented
 }
 
 Shader::~Shader ( )
@@ -30,26 +26,31 @@ Shader::~Shader ( )
 }
 
 void Shader::LoadDefaultShaders ( )
+{
+	LoadShaders ( VertexShaderPath, FragmentShaderPath );
+}
+
+void Shader::LoadShaders ( const std::string & vertShader, const std::string & fragShader )
+{
+	LoadShaders ( vertShader.c_str ( ), fragShader.c_str ( ) );
+}
+
+void Shader::LoadShaders ( const char * vertexShader, const char * fargmentShader )
 { 
 	_program = glCreateProgram ( );
 
 	_shaders [ 0 ] = CreateShader (
-		LoadShader ( VertexShaderPath ),
+		LoadShader ( vertexShader ),
 		GL_VERTEX_SHADER );
 
 	_shaders [ 1 ] = CreateShader (
-		LoadShader ( FragmentShaderPath ),
+		LoadShader ( fargmentShader ),
 		GL_FRAGMENT_SHADER );
 
 	for ( size_t i = 0; i < NUM_SHADERS; i++ )
 	{
-		glAttachShader ( _program, _shaders [ i ] );
+		glAttachShader ( _program, _shaders [ i ] ); //attach the shader to the program
 	}
-
-	// FC - Is this needed, the location of the attributes are specified in the shader using location
-	//glBindAttribLocation ( _program, 0, "position" );
-	//glBindAttribLocation ( _program, 1, "colour" );
-	//glBindAttribLocation ( _program, 2, "texCoord" );
 
 	glLinkProgram ( _program ); //create executables that will run on the GPU shaders
 	CheckShaderError ( _program, GL_LINK_STATUS, true, "Error: Shader program linking failed" ); // check for error
@@ -142,39 +143,49 @@ GLuint Shader::CreateShader ( const std::string & text, GLenum type )
 
 #pragma region Uniform Sets
 
+inline GLint Shader::GetUnifromLocation ( const GLchar * name ) const
+{
+	return glGetUniformLocation ( _program, name );
+}
+
 void Shader::SetUniform ( const GLchar * name, const GLboolean v ) const
 {
-	GLint uniformLocation = glGetUniformLocation ( _program, name );
-	glUniform1i ( uniformLocation, v );
+	glUniform1i ( GetUnifromLocation ( name ), v );
 }
 
 void Shader::SetUniform ( const GLchar * name, const GLint v ) const
 {
-	GLint uniformLocation = glGetUniformLocation ( _program, name );
-	glUniform1i ( uniformLocation, v );
+	glUniform1i ( GetUnifromLocation ( name ), v );
 }
 
 void Shader::SetUniform ( const GLchar * name, const GLfloat v ) const
 { 
-	GLint uniformLocation = glGetUniformLocation ( _program, name );
-	glUniform1f ( uniformLocation, v );
+	glUniform1f ( GetUnifromLocation ( name ), v );
 }
 
 void Shader::SetUniform ( const GLchar * name, const GLfloat x, const GLfloat y, const GLfloat z ) const
 { 
-	GLint uniformLocation = glGetUniformLocation ( _program, name );
-	glUniform3f ( uniformLocation, x, y, z );
+	glUniform3f ( GetUnifromLocation ( name ), x, y, z );
 }
 
 void Shader::SetUniform ( const GLchar * name, const GLfloat x, const GLfloat y, const GLfloat z, const GLfloat w ) const
 {
-	GLint uniformLocation = glGetUniformLocation ( _program, name );
-	glUniform4f ( uniformLocation, x, y, z, w );
+	glUniform4f ( GetUnifromLocation ( name ), x, y, z, w );
 }
+
+void Shader::SetUniform ( const GLchar * name, const glm::mat4 & matrix )
+{
+	glUniformMatrix4fv ( GetUnifromLocation ( name ), 1, GLU_FALSE, glm::value_ptr ( matrix ) );
+}
+
+#pragma endregion
 
 void Shader::SetTransform ( const glm::mat4 & transform )
 {
-	glUniformMatrix4fv ( _uniforms [ TRANSFORM_U ], 1, GLU_FALSE, &transform [ 0 ][ 0 ] );
+	// The last parameter of glUnifromMatrix4fv the actual matrix data, 
+	// but GLM stores their matrices' data in a way that doesn't always match OpenGL's expectations 
+	// so we first convert the data with GLM's built-in function value_ptr.
+	glUniformMatrix4fv ( _uniforms [ TRANSFORM_U ], 1, GLU_FALSE, glm::value_ptr ( transform ) );
 }
 
 void Shader::Update ( const Transform & transform )
@@ -183,4 +194,3 @@ void Shader::Update ( const Transform & transform )
 	SetTransform ( model );
 }
 
-#pragma endregion

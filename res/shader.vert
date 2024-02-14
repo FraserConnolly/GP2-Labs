@@ -12,7 +12,7 @@ out vec2 textureCoord;
 
 void main()
 {
-    gl_Position = transform * vec4(aPosition, 1.0);
-    vertexColour = aVertexColour; // set ourColor to the input colour we got from the vertex data
+    gl_Position = transform * vec4(aPosition, 1.0); // the 1.0 is the w value which is necessary for the matrix multiplication.
+    vertexColour = aVertexColour;
     textureCoord = aTextureCoord;
 }  

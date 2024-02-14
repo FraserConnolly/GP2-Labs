@@ -8,10 +8,12 @@ class Shader
 public:
 
 	Shader ( );
-	Shader ( const std::string & filename );
 	~Shader ( );
 	
 	void LoadDefaultShaders ( );
+	void LoadShaders ( const std::string & vertShader, const std::string & fragShader );
+	void LoadShaders ( const char * vertexShader, const char * fargmentShader );
+	
 	void Bind ( ); //Set GPU to use our shaders
 	std::string LoadShader ( const std::string & fileName );
 	
@@ -27,6 +29,7 @@ public:
 	void SetUniform ( const GLchar * name, const GLfloat v ) const;
 	void SetUniform ( const GLchar * name, const GLfloat x, const GLfloat y, const GLfloat z ) const;
 	void SetUniform ( const GLchar * name, const GLfloat x, const GLfloat y, const GLfloat z, const GLfloat w ) const;
+	void SetUniform ( const GLchar * name, const glm::mat4 & matrix );
 	void SetTransform ( const glm::mat4 & transform );
 
 	void Update ( const Transform & transform );
@@ -51,4 +54,6 @@ private:
 	GLuint _program; // Track the shader program
 	GLuint _shaders [ NUM_SHADERS ]; //array of shaders
 	GLuint _uniforms [ NUM_UNIFORMS ];
+
+	GLint GetUnifromLocation ( const GLchar * name ) const;
 };
