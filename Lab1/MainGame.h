@@ -6,16 +6,20 @@
 #include "Display.h" 
 #include "Mesh.h"
 #include "Shader.h"
+#include "Texture.h"
+#include "Transform.h"
 
 enum class GameState{PLAY, EXIT};
 
 class MainGame
 {
 public:
+
 	MainGame();
 	~MainGame();
 
 	void run();
+
 	float getTime ( )
 	{
 		return _time;
@@ -39,6 +43,8 @@ private:
 	Vertex _vertices[ 3 ];
 	unsigned int _indices [ 3 ];
 	Mesh _mesh;
+	Texture _texture;
+	Transform _transform;
 	Display _gameDisplay;
 	GameState _gameState;
 	Shader _shaderProgram ;

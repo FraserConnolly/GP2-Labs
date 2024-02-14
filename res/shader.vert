@@ -1,23 +1,18 @@
-//#version 120
-
-//attribute vec3 position;
-
-//void main()
-//{
-//	gl_Position = vec4(position, 1.0);
-//}
-
 #version 330 core
-layout (location = 0) in vec3 aPos;   // the position variable has attribute position 0
-layout (location = 1) in vec3 aColor; // the color variable has attribute position 1
-layout (location = 2) in vec2 aTexCoord;
+
+// see Vertex::Attributes
+layout (location = 0) in vec3 aPosition;      // the position variable has attribute position 0
+layout (location = 1) in vec3 aVertexColour;  // the colour variable has attribute position 1
+layout (location = 2) in vec2 aTextureCoord;  // the texture coordinate variable has attribute position 2
   
-out vec3 ourColor; // output a color to the fragment shader
-out vec2 TexCoord;
+uniform mat4 transform;
+
+out vec3 vertexColour; // output a colour to the fragment shader
+out vec2 textureCoord;
 
 void main()
 {
-    gl_Position = vec4(aPos, 1.0);
-    ourColor = aColor; // set ourColor to the input color we got from the vertex data
-    TexCoord = aTexCoord;
+    gl_Position = transform * vec4(aPosition, 1.0);
+    vertexColour = aVertexColour; // set ourColor to the input colour we got from the vertex data
+    textureCoord = aTextureCoord;
 }  

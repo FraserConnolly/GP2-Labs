@@ -46,7 +46,10 @@ void Shader::LoadDefaultShaders ( )
 		glAttachShader ( _program, _shaders [ i ] );
 	}
 
-	glBindAttribLocation ( _program, 0, "position" );
+	// FC - Is this needed, the location of the attributes are specified in the shader using location
+	//glBindAttribLocation ( _program, 0, "position" );
+	//glBindAttribLocation ( _program, 1, "colour" );
+	//glBindAttribLocation ( _program, 2, "texCoord" );
 
 	glLinkProgram ( _program ); //create executables that will run on the GPU shaders
 	CheckShaderError ( _program, GL_LINK_STATUS, true, "Error: Shader program linking failed" ); // check for error
@@ -54,6 +57,8 @@ void Shader::LoadDefaultShaders ( )
 	// validate the shader
 	glValidateProgram ( _program ); //check the entire program is valid
 	CheckShaderError ( _program, GL_VALIDATE_STATUS, true, "Error: Shader program not valid" );
+
+	_uniforms [ TRANSFORM_U ] = glGetUniformLocation ( _program, "transform" );
 
 	for ( size_t i = 0; i < NUM_SHADERS; i++ )
 	{
@@ -87,21 +92,30 @@ std::string Shader::LoadShader ( const std::string & fileName )
 	return output;
 }
 
-void Shader::CheckShaderError ( GLuint shader, GLuint flag, bool isProgram, const std::string &
-								errorMessage )
+void Shader::CheckShaderError ( GLuint shader, GLuint flag, bool isProgram, const std::string & errorMessage )
 {
 	GLint success = 0;
 	GLchar error [ 1024 ] = { 0 };
 	if ( isProgram )
+	{
 		glGetProgramiv ( shader, flag, &success );
+	}
 	else
+	{
 		glGetShaderiv ( shader, flag, &success );
+	}
+
 	if ( success == GL_FALSE )
 	{
 		if ( isProgram )
+		{
 			glGetProgramInfoLog ( shader, sizeof ( error ), NULL, error );
+		}
 		else
+		{
 			glGetShaderInfoLog ( shader, sizeof ( error ), NULL, error );
+		}
+
 		std::cerr << errorMessage << ": '" << error << "'" << std::endl;
 	}
 }
@@ -156,6 +170,17 @@ void Shader::SetUniform ( const GLchar * name, const GLfloat x, const GLfloat y,
 {
 	GLint uniformLocation = glGetUniformLocation ( _program, name );
 	glUniform4f ( uniformLocation, x, y, z, w );
+}
+
+void Shader::SetTransform ( const glm::mat4 & transform )
+{
+	glUniformMatrix4fv ( _uniforms [ TRANSFORM_U ], 1, GLU_FALSE, &transform [ 0 ][ 0 ] );
+}
+
+void Shader::Update ( const Transform & transform )
+{ 
+	glm::mat4 model = transform.GetModel ( ); 
+	SetTransform ( model );
 }
 
 #pragma endregion

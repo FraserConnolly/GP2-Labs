@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <GL\glew.h>
+#include "Transform.h"
 
 class Shader
 {
@@ -11,10 +12,11 @@ public:
 	~Shader ( );
 	
 	void LoadDefaultShaders ( );
-	void Bind ( ); //Set gpu to use our shaders
+	void Bind ( ); //Set GPU to use our shaders
 	std::string LoadShader ( const std::string & fileName );
-	void CheckShaderError ( GLuint shader, GLuint flag, bool isProgram, const std::string &
-							errorMessage );
+	
+	void CheckShaderError ( GLuint shader, GLuint flag, bool isProgram, const std::string &errorMessage );
+	
 	GLuint CreateShader ( const std::string & text, GLenum type );
 	
 	/// <summary>
@@ -25,13 +27,22 @@ public:
 	void SetUniform ( const GLchar * name, const GLfloat v ) const;
 	void SetUniform ( const GLchar * name, const GLfloat x, const GLfloat y, const GLfloat z ) const;
 	void SetUniform ( const GLchar * name, const GLfloat x, const GLfloat y, const GLfloat z, const GLfloat w ) const;
+	void SetTransform ( const glm::mat4 & transform );
+
+	void Update ( const Transform & transform );
 
 private:
 	
 	static const unsigned int NUM_SHADERS = 2; // number of shaders
 	
+	enum
+	{
+		TRANSFORM_U,
+		NUM_UNIFORMS
+	};
+
 	Shader ( const Shader & other )
-		:_program( 0 ), _shaders { 0, 0 }
+		:_program( 0 ), _shaders { 0, 0 }, _uniforms{ 0 }
 	{ }
 	
 	void operator=( const Shader & other )
@@ -39,4 +50,5 @@ private:
 	
 	GLuint _program; // Track the shader program
 	GLuint _shaders [ NUM_SHADERS ]; //array of shaders
+	GLuint _uniforms [ NUM_UNIFORMS ];
 };

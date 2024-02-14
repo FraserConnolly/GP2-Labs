@@ -27,9 +27,10 @@ void MainGame::initSystems()
 	_vertices [ 1 ] = Vertex ( 0.5f, -0.5f, 0.0f );
 	_vertices [ 2 ] = Vertex ( 0.0f, 0.5f, 0.0f );
 
-	_vertices [ 0 ].SetColour ( 1.0f, 0.0f, 0.0f );
-	_vertices [ 1 ].SetColour ( 0.0f, 1.0f, 0.0f );
-	_vertices [ 2 ].SetColour ( 0.0f, 0.0f, 1.0f );
+	// Rainbow vertex colours
+	//_vertices [ 0 ].SetColour ( 1.0f, 0.0f, 0.0f );
+	//_vertices [ 1 ].SetColour ( 0.0f, 1.0f, 0.0f );
+	//_vertices [ 2 ].SetColour ( 0.0f, 0.0f, 1.0f );
 
 	_vertices [ 0 ].SetTexture ( 0.0f, 0.0f );
 	_vertices [ 1 ].SetTexture ( 1.0f, 0.0f );
@@ -40,9 +41,10 @@ void MainGame::initSystems()
 	_indices [ 2 ] = 2;
 
 	// create a mesh object
+	//_mesh.SetMesh ( _vertices, 3, nullptr, 0 );
 	_mesh.SetMesh( _vertices, 3, _indices, 3 );
 
-	_mesh.LoadTexture ( "bricks.jpg" );
+	_texture.LoadTexture ( "bricks.jpg" );
 
 	_shaderProgram.LoadDefaultShaders ( );
 }
@@ -80,12 +82,16 @@ void MainGame::processInput()
 void MainGame::drawGame()
 {
 	_gameDisplay.clearDisplay ( );
-	
-	// bind the shader
-	_shaderProgram.Bind ( );
 
-	//GLfloat greenValue = ( sin ( _time ) / 2.0f ) + 0.5f;
-	//_shaderProgram.SetUniform ( "ourColor", 0.0f, greenValue, 0.0f, 1.0f );
+	float sinTime = sinf ( getTime ( ) * 0.5f );
+	_transform.SetPos ( glm::vec3 ( sinTime, 0.0f, 0.0f ) );
+	_transform.SetRot ( glm::vec3 ( 0.0f, 0.0f, getTime ( ) * 5 ) );
+	_transform.SetScale ( glm::vec3 ( sinTime , sinTime , sinTime ) );
+
+	// bind and update the shader
+	_shaderProgram.Bind ( );
+	_shaderProgram.Update ( _transform );
+	_texture.Bind ( 0u );
 
 	// draw the mesh
 	_mesh.Draw ( );
