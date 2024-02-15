@@ -18,35 +18,111 @@ void MainGame::run()
 	gameLoop();
 }
 
-void MainGame::initSystems()
+void MainGame::initSystems ( )
 {
-	_gameDisplay.initDisplay();
+	_gameDisplay.initDisplay ( );
 
-	// create an array of vertices
-	_vertices [ 0 ] = Vertex ( -0.5f, -0.5f, 0.0f );
-	_vertices [ 1 ] = Vertex ( 0.5f, -0.5f, 0.0f );
-	_vertices [ 2 ] = Vertex ( 0.0f, 0.5f, 0.0f );
+	// enable depth testing
+	glEnable ( GL_DEPTH_TEST );
+
+#pragma region Vertices for a triangle
+
+
+	_triangleVertices [ 0 ] = Vertex ( -0.5f, -0.5f, 0.0f );
+	_triangleVertices [ 1 ] = Vertex ( 0.5f, -0.5f, 0.0f );
+	_triangleVertices [ 2 ] = Vertex ( 0.0f, 0.5f, 0.0f );
+
+	_triangleVertices [ 0 ].SetPosition ( 0.0f, 0.0f, 0.0f );
+	_triangleVertices [ 1 ].SetPosition ( 0.5f, 0.0f, 0.0f );
+	_triangleVertices [ 2 ].SetPosition( 0.25f, 0.5f, 0.0f );
 
 	// Rainbow vertex colours
 	//_vertices [ 0 ].SetColour ( 1.0f, 0.0f, 0.0f );
 	//_vertices [ 1 ].SetColour ( 0.0f, 1.0f, 0.0f );
 	//_vertices [ 2 ].SetColour ( 0.0f, 0.0f, 1.0f );
 
-	_vertices [ 0 ].SetTexture ( 0.0f, 0.0f );
-	_vertices [ 1 ].SetTexture ( 1.0f, 0.0f );
-	_vertices [ 2 ].SetTexture ( 0.5f, 1.0f );
+	_triangleVertices [ 0 ].SetTexture ( 0.0f, 0.0f );
+	_triangleVertices [ 1 ].SetTexture ( 1.0f, 0.0f );
+	_triangleVertices [ 2 ].SetTexture ( 0.5f, 1.0f );
 
-	_indices [ 0 ] = 0;
-	_indices [ 1 ] = 1;
-	_indices [ 2 ] = 2;
+	_triangleIndices [ 0 ] = 0;
+	_triangleIndices [ 1 ] = 1;
+	_triangleIndices [ 2 ] = 2;
+
+#pragma endregion
+
+#pragma region vertices for a cube
+
+	// raw vertices for a cube with texture coordinates
+	float vertices[ ] = {
+	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+	 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+
+	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+	 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+	 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+	-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+	-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+	-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+	-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+	 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+	 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+	 0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+	 0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+	-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+	};
+
+	for ( size_t i = 0, j = 0; j < 36; j++ )
+	{
+		float x, y, z, u, v;
+		x = vertices [ i++ ];
+		y = vertices [ i++ ];
+		z = vertices [ i++ ];
+		u = vertices [ i++ ];
+		v = vertices [ i++ ];
+		_cubeVertices [ j ].SetPosition ( x, y, z );
+		_cubeVertices [ j ].SetTexture ( u, v );
+	}
+
+#pragma endregion
 
 	// create a mesh object
 	//_mesh.SetMesh ( _vertices, 3, nullptr, 0 );
-	_mesh.SetMesh( _vertices, 3, _indices, 3 );
+	//_mesh.SetMesh( _triangleVertices, 3, _triangleIndices, 3 );
+	_mesh.SetMesh ( _cubeVertices, 36, nullptr, 0 );
 
 	_texture.LoadTexture ( "bricks.jpg" );
 
+	_mainCamera.GetTransform ( ).SetPosition ( glm::vec3 ( 0.5f, 0.5f, 5.0f ) );
+	
 	_shaderProgram.LoadDefaultShaders ( );
+	_shaderProgram.SetCamera ( &_mainCamera );
 }
 
 void MainGame::gameLoop()
@@ -84,9 +160,18 @@ void MainGame::drawGame()
 	_gameDisplay.clearDisplay ( );
 
 	float sinTime = sinf ( getTime ( ) * 0.5f );
-	_transform.SetPos ( glm::vec3 ( sinTime, 0.0f, 0.0f ) );
-	_transform.SetRot ( glm::vec3 ( 0.0f, 0.0f, getTime ( ) * 5 ) );
-	_transform.SetScale ( glm::vec3 ( sinTime , sinTime , sinTime ) );
+	//_transform.SetPos ( glm::vec3 ( sinTime, 0.0f, 0.0f ) );
+	_transform.SetRotation ( 0.0f, getTime(), getTime ( ) ) ;
+	//_transform.SetScale ( glm::vec3 ( sinTime , sinTime , sinTime ) );
+	_transform.SetScale ( 2.0f );
+
+	float t = glm::clamp ( ( sinf ( getTime ( ) * 0.5f ) + 1 ) /2, 0.0f, 1.0f );
+	//float fov = 20 * ( 1.f - t ) + 60 * t;
+	//_mainCamera.SetFoV ( fov );
+
+	float z = 2.0f * ( 1.f - t ) + 10.0f * t;
+	//_mainCamera.GetTransform ( ).SetPosition ( 0.0f, 0.0f, z );
+	//_mainCamera.GetTransform ( ).SetPosition ( 0.0f, 0.0f, z );
 
 	// bind and update the shader
 	_shaderProgram.Bind ( );

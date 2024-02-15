@@ -4,8 +4,8 @@
 Display::Display()
 {
 	_window = nullptr; //initialise to generate null access violation for debugging. 
-	_screenWidth = 1024;
-	_screenHeight = 768; 
+	_screenWidth = 1920/2;
+	_screenHeight = 1080/2; 
 }
 
 Display::~Display()
@@ -70,7 +70,7 @@ void Display::initDisplay()
 		return;
 	}
 
-	glClearColor(0.0f, 1.0f, 1.0f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 }
 

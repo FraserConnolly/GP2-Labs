@@ -8,6 +8,7 @@
 #include "Shader.h"
 #include "Texture.h"
 #include "Transform.h"
+#include "Camera.h"
 
 enum class GameState{PLAY, EXIT};
 
@@ -40,14 +41,19 @@ private:
 	// in seconds
 	float _time = 0.0f;
 	float _deltaTime = 0.0f;
-	Vertex _vertices[ 3 ];
-	unsigned int _indices [ 3 ];
+	
+	Vertex _triangleVertices[ 3 ];
+	unsigned int _triangleIndices [ 3 ];
+	
+	Vertex _cubeVertices [ 36 ];
+
 	Mesh _mesh;
 	Texture _texture;
 	Transform _transform;
 	Display _gameDisplay;
 	GameState _gameState;
-	Shader _shaderProgram ;
+	Shader _shaderProgram;
+	Camera _mainCamera;
 
 };
 

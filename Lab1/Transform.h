@@ -29,19 +29,19 @@ public:
 
 #pragma region Getters
 
-	inline glm::vec3 * GetPos ( )
+	inline const glm::vec3 & GetPosition ( ) const
 	{
-		return &_position;
+		return _position;
 	} 
 
-	inline glm::vec3* GetRot() 
+	inline const glm::vec3 & GetRotation() const
 	{ 
-		return &_rotation; 
+		return _rotation; 
 	} 
 
-	inline glm::vec3* GetScale() 
+	inline const glm::vec3 & GetScale() const
 	{ 
-		return &_scale; 
+		return _scale; 
 	}
 
 #pragma endregion
@@ -65,6 +65,13 @@ public:
 		_rotation = rot; 
 	}
 
+	inline void SetRotation ( const float x, const float y, const float z )
+	{
+		_rotation.x = x;
+		_rotation.y = y;
+		_rotation.z = z;
+	}
+	
 	inline void SetEulerRotation ( const float x, const float y, const float z )
 	{ 
 		_rotation.x = glm::radians( x );

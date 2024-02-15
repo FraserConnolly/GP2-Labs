@@ -55,11 +55,14 @@ void Shader::LoadShaders ( const char * vertexShader, const char * fargmentShade
 	glLinkProgram ( _program ); //create executables that will run on the GPU shaders
 	CheckShaderError ( _program, GL_LINK_STATUS, true, "Error: Shader program linking failed" ); // check for error
 
-	// validate the shader
+	// Validate the shader
 	glValidateProgram ( _program ); //check the entire program is valid
 	CheckShaderError ( _program, GL_VALIDATE_STATUS, true, "Error: Shader program not valid" );
 
-	_uniforms [ TRANSFORM_U ] = glGetUniformLocation ( _program, "transform" );
+	// Get the location of the uniform variables
+	_uniforms [ MODEL_U ]		= glGetUniformLocation ( _program, "model" );
+	_uniforms [ VIEW_U ]		= glGetUniformLocation ( _program, "view" );
+	_uniforms [ PROJECTION_U ]	= glGetUniformLocation ( _program, "projection" );
 
 	for ( size_t i = 0; i < NUM_SHADERS; i++ )
 	{
@@ -180,17 +183,26 @@ void Shader::SetUniform ( const GLchar * name, const glm::mat4 & matrix )
 
 #pragma endregion
 
-void Shader::SetTransform ( const glm::mat4 & transform )
+void Shader::SetTransform ( const glm::mat4 & modelMatrix )
 {
-	// The last parameter of glUnifromMatrix4fv the actual matrix data, 
-	// but GLM stores their matrices' data in a way that doesn't always match OpenGL's expectations 
-	// so we first convert the data with GLM's built-in function value_ptr.
-	glUniformMatrix4fv ( _uniforms [ TRANSFORM_U ], 1, GLU_FALSE, glm::value_ptr ( transform ) );
 }
 
 void Shader::Update ( const Transform & transform )
 { 
 	glm::mat4 model = transform.GetModel ( ); 
-	SetTransform ( model );
+	// The last parameter of glUnifromMatrix4fv the actual matrix data, 
+	// but GLM stores their matrices' data in a way that doesn't always match OpenGL's expectations 
+	// so we first convert the data with GLM's built-in function value_ptr.
+	glUniformMatrix4fv ( _uniforms [ MODEL_U ], 1, GLU_FALSE, glm::value_ptr ( model ) );
+
+	if ( _camera != nullptr )
+	{
+		glm::mat4 view = _camera->GetViewMatrix ( );
+		glUniformMatrix4fv ( _uniforms [ VIEW_U ], 1, GLU_FALSE, glm::value_ptr ( view ) );
+
+		glm::mat4 projection = _camera->GetProjectionMatrix ( );
+		glUniformMatrix4fv ( _uniforms [ PROJECTION_U ], 1, GLU_FALSE, glm::value_ptr ( projection ) );
+	}
+
 }
 

@@ -2,6 +2,7 @@
 #include <string>
 #include <GL\glew.h>
 #include "Transform.h"
+#include "Camera.h"
 
 class Shader
 {
@@ -14,7 +15,13 @@ public:
 	void LoadShaders ( const std::string & vertShader, const std::string & fragShader );
 	void LoadShaders ( const char * vertexShader, const char * fargmentShader );
 	
+	void SetCamera ( Camera * const camera )
+	{
+		_camera = camera;
+	}
+
 	void Bind ( ); //Set GPU to use our shaders
+
 	std::string LoadShader ( const std::string & fileName );
 	
 	void CheckShaderError ( GLuint shader, GLuint flag, bool isProgram, const std::string &errorMessage );
@@ -40,7 +47,9 @@ private:
 	
 	enum
 	{
-		TRANSFORM_U,
+		MODEL_U,
+		VIEW_U,
+		PROJECTION_U,
 		NUM_UNIFORMS
 	};
 
@@ -54,6 +63,8 @@ private:
 	GLuint _program; // Track the shader program
 	GLuint _shaders [ NUM_SHADERS ]; //array of shaders
 	GLuint _uniforms [ NUM_UNIFORMS ];
+
+	Camera * _camera = nullptr;
 
 	GLint GetUnifromLocation ( const GLchar * name ) const;
 };
