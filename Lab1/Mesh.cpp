@@ -6,13 +6,13 @@ Mesh::Mesh ( )
 	: _vertexArrayBuffers ( ), _vertexArrayObject ( 0u ), _elementBufferObject ( 0u ), _drawCount ( 0 )
 { }
 
-Mesh::Mesh ( const Vertex * vertices, const unsigned int numVertices )
+Mesh::Mesh ( const Vertex1P1D1U * vertices, const unsigned int numVertices )
 	: _vertexArrayBuffers( ), _vertexArrayObject ( 0u ), _elementBufferObject( 0u ), _drawCount ( 0 )
 { 
 	SetMesh ( vertices, numVertices, nullptr, 0 );
 }
 
-Mesh::Mesh ( const Vertex * vertices, const unsigned int numVertices, const  unsigned int * indices, const int indiciesCount )
+Mesh::Mesh ( const Vertex1P1D1U * vertices, const unsigned int numVertices, const  unsigned int * indices, const int indiciesCount )
 	: _vertexArrayBuffers ( ), _vertexArrayObject ( 0u ), _elementBufferObject ( 0u ), _drawCount ( 0 )
 {
 	SetMesh ( vertices, numVertices, indices, indiciesCount );
@@ -23,7 +23,7 @@ Mesh::~Mesh ( )
 	glDeleteVertexArrays ( 1, &_vertexArrayObject );
 }
 
-void Mesh::SetMesh ( const Vertex  * vertices, const unsigned int numVertices, const unsigned int * indices, const int indiciesCount)
+void Mesh::SetMesh ( const Vertex1P1D1U  * vertices, const unsigned int numVertices, const unsigned int * indices, const int indiciesCount)
 { 
 	if ( _vertexArrayObject != NULL )
 	{
@@ -50,14 +50,14 @@ void Mesh::SetMesh ( const Vertex  * vertices, const unsigned int numVertices, c
 	}
 
 	// position attribute
-	glVertexAttribPointer ( Vertex::POSITION, 3, GL_FLOAT, GL_FALSE, Vertex::VERTEX_FLOAT_COUNT * sizeof ( float ), ( void * ) ( Vertex::VERTEX_POSITION_OFFSET * sizeof ( float ) ) );
-	glEnableVertexAttribArray ( Vertex::POSITION );
+	glVertexAttribPointer ( Vertex1P1D1U::POSITION, 3, GL_FLOAT, GL_FALSE, Vertex1P1D1U::VERTEX_FLOAT_COUNT * sizeof ( float ), ( void * ) ( Vertex1P1D1U::VERTEX_POSITION_OFFSET * sizeof ( float ) ) );
+	glEnableVertexAttribArray ( Vertex1P1D1U::POSITION );
 	// colour attribute
-	glVertexAttribPointer ( Vertex::COLOUR,   3, GL_FLOAT, GL_FALSE, Vertex::VERTEX_FLOAT_COUNT * sizeof ( float ), ( void * ) ( Vertex::VERTEX_COLOUR_OFFSET   * sizeof ( float ) ) );
-	glEnableVertexAttribArray ( Vertex::COLOUR );
+	glVertexAttribPointer ( Vertex1P1D1U::COLOUR,   3, GL_FLOAT, GL_FALSE, Vertex1P1D1U::VERTEX_FLOAT_COUNT * sizeof ( float ), ( void * ) ( Vertex1P1D1U::VERTEX_COLOUR_OFFSET   * sizeof ( float ) ) );
+	glEnableVertexAttribArray ( Vertex1P1D1U::COLOUR );
 	// texture attribute
-	glVertexAttribPointer ( Vertex::TEXTURE,  2, GL_FLOAT, GL_FALSE, Vertex::VERTEX_FLOAT_COUNT * sizeof ( float ), ( void * ) ( Vertex::VERTEX_TEXTURE_OFFSET  * sizeof ( float ) ) );
-	glEnableVertexAttribArray ( Vertex::TEXTURE );
+	glVertexAttribPointer ( Vertex1P1D1U::TEXTURE,  2, GL_FLOAT, GL_FALSE, Vertex1P1D1U::VERTEX_FLOAT_COUNT * sizeof ( float ), ( void * ) ( Vertex1P1D1U::VERTEX_TEXTURE_OFFSET  * sizeof ( float ) ) );
+	glEnableVertexAttribArray ( Vertex1P1D1U::TEXTURE );
 
 	glBindVertexArray ( 0 ); // unbind our VAO
 }

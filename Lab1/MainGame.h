@@ -42,10 +42,10 @@ private:
 	float _time = 0.0f;
 	float _deltaTime = 0.0f;
 	
-	Vertex _triangleVertices[ 3 ];
+	Vertex1P1D1U _triangleVertices[ 3 ];
 	unsigned int _triangleIndices [ 3 ];
 	
-	Vertex _cubeVertices [ 36 ];
+	Vertex1P1D1U _cubeVertices [ 36 ];
 
 	Mesh _mesh;
 	Texture _texture;

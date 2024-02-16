@@ -28,9 +28,9 @@ void MainGame::initSystems ( )
 #pragma region Vertices for a triangle
 
 
-	_triangleVertices [ 0 ] = Vertex ( -0.5f, -0.5f, 0.0f );
-	_triangleVertices [ 1 ] = Vertex ( 0.5f, -0.5f, 0.0f );
-	_triangleVertices [ 2 ] = Vertex ( 0.0f, 0.5f, 0.0f );
+	_triangleVertices [ 0 ] = Vertex1P1D1U ( -0.5f, -0.5f, 0.0f );
+	_triangleVertices [ 1 ] = Vertex1P1D1U ( 0.5f, -0.5f, 0.0f );
+	_triangleVertices [ 2 ] = Vertex1P1D1U ( 0.0f, 0.5f, 0.0f );
 
 	_triangleVertices [ 0 ].SetPosition ( 0.0f, 0.0f, 0.0f );
 	_triangleVertices [ 1 ].SetPosition ( 0.5f, 0.0f, 0.0f );

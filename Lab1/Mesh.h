@@ -1,93 +1,19 @@
 #pragma once
+
 #include <glm\glm.hpp>
 #include <GL\glew.h>
-
-class Vertex
-{
-public:
-	static const int VERTEX_FLOAT_COUNT = 3 + 3 + 2 ;
-	static const int VERTEX_POSITION_OFFSET = 0 ;
-	static const int VERTEX_COLOUR_OFFSET = 3 ;
-	static const int VERTEX_TEXTURE_OFFSET = 6 ;
-
-	enum Attributes
-	{
-		POSITION,
-		COLOUR,
-		TEXTURE,
-
-		NUMBER_OF_ATTRIBUTES
-	};
-
-	Vertex ( )
-	{ }
-
-	Vertex ( const float x, const float y, const float z )
-	{
-		SetPosition ( x, y, z );
-	}
-
-	Vertex ( const float x, const float y, const float z, const float r, const float g, const float b )
-	{
-		SetPosition ( x, y, z );
-		SetColour ( r, g, b );
-	}
-
-	Vertex ( const float x, const float y, const float z, const float r, const float g, const float b, const float u, const float v )
-	{
-		SetPosition ( x, y, z );
-		SetColour ( r, g, b );
-		SetTexture ( u, v );
-	}
-
-	Vertex ( const glm::vec3 & pos )
-	{
-		_pos = pos;
-	}
-
-	Vertex ( const glm::vec3 & pos, const glm::vec3 & col )
-	{
-		_pos = pos;
-		_col = col;
-	}
-
-	void SetColour ( const float r, const float g, const float b )
-	{
-		_col.r = r;
-		_col.g = g;
-		_col.b = b;
-	}
-
-	void SetPosition ( const float x, const float y, const float z )
-	{
-		_pos.x = x;
-		_pos.y = y;
-		_pos.z = z;
-	}
-
-	void SetTexture ( const float u, const float v )
-	{
-		_tex.x = u;
-		_tex.y = v;
-	}
-
-private:
-	glm::vec3 _pos;
-	glm::vec3 _col = glm::vec3( 1.0f, 1.0f, 1.0f ); // default colour to white.
-	glm::vec2 _tex;
-};
-
+#include "Vertex.h"
 
 class Mesh
 {
 public:
 	Mesh ( );
-	Mesh ( const Vertex * vertices, const unsigned int numVertices );
-	Mesh ( const Vertex * vertices, const unsigned int numVertices, const  unsigned int * indices, const int numIndicies);
+	Mesh ( const Vertex1P1D1U * vertices, const unsigned int numVertices );
+	Mesh ( const Vertex1P1D1U * vertices, const unsigned int numVertices, const  unsigned int * indices, const int numIndicies);
 
 	~Mesh ( );
 
-	void SetMesh ( const Vertex * vertices, const unsigned int numVertices, const  unsigned int * indices, const int numIndicies );
+	void SetMesh ( const Vertex1P1D1U * vertices, const unsigned int numVertices, const  unsigned int * indices, const int numIndicies );
 	void Draw ( );
 
 private:
