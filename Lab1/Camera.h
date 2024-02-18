@@ -65,6 +65,30 @@ public:
 		_aspectRatio = width / height;
 	}
 
+	void SetCameraTarget ( const glm::vec3 & target )
+	{
+		_cameraTarget = target;
+		_cameraDirection = glm::normalize( _transform.GetPosition( ) - _cameraTarget );
+		glm::vec3 up = glm::vec3 ( 0.0f, 1.0f, 0.0f );
+		_cameraRight = glm::normalize ( glm::cross ( up, _cameraDirection ) );
+		_cameraUp = glm::cross ( _cameraDirection, _cameraRight );
+	}
+
+	glm::vec3 GetCameraRight ( )
+	{
+		return _cameraRight;
+	}
+
+	glm::vec3 GetCameraFront ( )
+	{
+		return glm::vec3 ( 0.0f, 0.0f, -1.0f );
+	}
+
+	glm::vec3 GetCameraUp ( )
+	{
+		return _cameraUp;
+	}
+
 #pragma endregion
 
 	Transform & GetTransform ( );
@@ -79,5 +103,9 @@ private:
 	glm::vec4 _orthoRectangle = glm::vec4 ( -10.0f, 10.0f, -10.0f, 10.0f );
 	CameraMode _mode;
 	Transform _transform;
+	glm::vec3 _cameraTarget;
+	glm::vec3 _cameraDirection;
+	glm::vec3 _cameraRight;
+	glm::vec3 _cameraUp;
 };
 

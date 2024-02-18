@@ -21,6 +21,11 @@ void MainGame::run()
 void MainGame::initSystems ( )
 {
 	_gameDisplay.initDisplay ( );
+	
+	_keyboardInput.registerKey ( SDLK_LEFT );
+	_keyboardInput.registerKey ( SDLK_RIGHT );
+	_keyboardInput.registerKey ( SDLK_UP );
+	_keyboardInput.registerKey ( SDLK_DOWN );
 
 	// enable depth testing
 	glEnable ( GL_DEPTH_TEST );
@@ -120,7 +125,8 @@ void MainGame::initSystems ( )
 	_texture.LoadTexture ( "bricks.jpg" );
 
 	_mainCamera.GetTransform ( ).SetPosition ( glm::vec3 ( 0.5f, 0.5f, 5.0f ) );
-	
+	_mainCamera.SetCameraTarget ( glm::vec3 ( 0.0f, 0.0f, 0.0f ) );
+
 	_shaderProgram.LoadDefaultShaders ( );
 	_shaderProgram.SetCamera ( &_mainCamera );
 }
@@ -130,8 +136,17 @@ void MainGame::gameLoop()
 	while (_gameState != GameState::EXIT)
 	{
 		float newTime = _gameDisplay.getTime ( );
-		_deltaTime = _time - newTime;
+		_deltaTime = newTime - _time;
 		_time = newTime;
+
+		// If delta time is too large (more than 1 second), we must have resumed from a breakpoint.
+		// Frame-lock to the target rate of 30fps.
+		// From Game Engine Architecture 3rd Edition by Jason Gregory 8.5.5 
+		if ( _deltaTime > 1.0f )
+		{
+			_deltaTime = 1.0f / 30.0f;
+		}
+
 		processInput();
 		drawGame();
 	}
@@ -144,9 +159,8 @@ void MainGame::processInput()
 	while (SDL_PollEvent(&test_event)) {
 		switch (test_event.type) {
 			case SDL_KEYDOWN:
-				break;
-
 			case SDL_KEYUP:
+				_keyboardInput.processKeyEvent ( test_event.key.keysym.sym, ( test_event.key.state == SDL_PRESSED ) , _deltaTime );
 				break;
 			case SDL_QUIT:
 				_gameState = GameState::EXIT;
@@ -158,6 +172,37 @@ void MainGame::processInput()
 void MainGame::drawGame()
 {
 	_gameDisplay.clearDisplay ( );
+	
+#pragma region Camera controls
+
+	const float cameraSpeed = 2.0f; // adjust accordingly
+
+	glm::vec3 newCameraPos = _mainCamera.GetTransform ( ).GetPosition ( );
+
+	if ( _keyboardInput.isPressed ( SDLK_LEFT ) )
+	{
+		newCameraPos -= glm::normalize ( glm::cross ( _mainCamera.GetCameraFront( ), _mainCamera.GetCameraUp( ) ) ) * cameraSpeed * _deltaTime;
+	}
+	if ( _keyboardInput.isPressed ( SDLK_RIGHT ) )
+	{
+		newCameraPos += glm::normalize ( glm::cross ( _mainCamera.GetCameraFront ( ), _mainCamera.GetCameraUp ( ) ) ) * cameraSpeed * _deltaTime;
+	}
+	if ( _keyboardInput.isPressed ( SDLK_UP ) )
+	{
+		newCameraPos += _mainCamera.GetCameraFront ( ) * cameraSpeed * _deltaTime;
+	}
+	if ( _keyboardInput.isPressed ( SDLK_DOWN ) )
+	{
+		newCameraPos -= _mainCamera.GetCameraFront ( ) * cameraSpeed * _deltaTime;
+	}
+
+	if ( newCameraPos != _mainCamera.GetTransform ( ).GetPosition ( ) )
+	{
+		_mainCamera.GetTransform ( ).SetPosition ( newCameraPos );
+	}
+
+#pragma endregion
+
 
 	float sinTime = sinf ( getTime ( ) * 0.5f );
 	//_transform.SetPos ( glm::vec3 ( sinTime, 0.0f, 0.0f ) );

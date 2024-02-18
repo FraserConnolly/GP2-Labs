@@ -9,6 +9,7 @@
 #include "Texture.h"
 #include "Transform.h"
 #include "Camera.h"
+#include "KeyboardInput.h"
 
 enum class GameState{PLAY, EXIT};
 
@@ -54,6 +55,7 @@ private:
 	GameState _gameState;
 	Shader _shaderProgram;
 	Camera _mainCamera;
+	KeyboardInput _keyboardInput;
 
 };
 
