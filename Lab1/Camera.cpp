@@ -7,40 +7,40 @@ Camera::Camera ( )
 Camera::~Camera ( )
 { }	
 
-void Camera::SetMode ( const CameraMode mode )
-{
-	_mode = mode;
-}
-
 Transform & Camera::GetTransform ( )
 {
 	return _transform;
 }
 
-glm::mat4 Camera::GetViewMatrix ( ) const
+glm::mat4 Camera::GetViewMatrix ( )
 {
-	glm::mat4 view = glm::mat4 ( 1.0f );
-	// note that we're translating the scene in the reverse direction of where we want to move
-	// FC - I'm not sure if this negation should be here or not.
-	view = glm::translate ( view, - _transform.GetPosition() );
-	return view;
+	return GetProjectionMatrix ( ) * glm::lookAt ( _transform.GetPosition ( ), _transform.GetPosition ( ) + _cameraForward, _cameraUp );
 }
 
-glm::mat4 Camera::GetProjectionMatrix ( ) const
+glm::mat4 Camera::GetProjectionMatrix ( )
 {
-	if ( _mode == CameraMode::PERSPECTIVE )
+	if ( _projectionMatrixIsDirty )
 	{
-		return glm::perspective ( 
-			_fov, _aspectRatio,
-			_clippingPlanes.x, _clippingPlanes.y );
+		// recalculate projection matrix
+		if ( _mode == CameraMode::PERSPECTIVE )
+		{
+
+			_projectionMatrix = glm::perspective (
+				_fov, _aspectRatio,
+				_clippingPlanes.x, _clippingPlanes.y );
+			_projectionMatrixIsDirty = false;
+		}
+		else if ( _mode == CameraMode::ORTHOGRAPHIC )
+		{
+			_projectionMatrix = glm::ortho (
+				_orthoRectangle.x,
+				_orthoRectangle.y,
+				_orthoRectangle.z,
+				_orthoRectangle.w,
+				_clippingPlanes.x, _clippingPlanes.y );
+			_projectionMatrixIsDirty = false;
+		}
 	}
-	else if ( _mode == CameraMode::ORTHOGRAPHIC )
-	{
-		return glm::ortho ( 
-			_orthoRectangle.x, 
-			_orthoRectangle.y, 
-			_orthoRectangle.z, 
-			_orthoRectangle.w, 
-			_clippingPlanes.x, _clippingPlanes.y );
-	}
+
+	return _projectionMatrix;
 }

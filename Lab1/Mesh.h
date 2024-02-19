@@ -3,15 +3,15 @@
 #include <glm\glm.hpp>
 #include <GL\glew.h>
 #include "Vertex.h"
+#include "obj_loader.h"
 
 class Mesh
 {
 public:
 	Mesh ( );
-	Mesh ( const Vertex1P1D1U * vertices, const unsigned int numVertices );
-	Mesh ( const Vertex1P1D1U * vertices, const unsigned int numVertices, const  unsigned int * indices, const int numIndicies);
-
 	~Mesh ( );
+
+	void loadModel ( const std::string & filename );
 
 	void SetMesh ( const Vertex1P1D1U * vertices, const unsigned int numVertices, const  unsigned int * indices, const int numIndicies );
 	void Draw ( );
@@ -31,6 +31,8 @@ private:
 		POSITION_VERTEXBUFFER,
 		NUM_BUFFERS
 	};
+
+	void initModel ( const IndexedModel & model );
 
 	GLuint _vertexArrayObject;
 	GLuint _vertexArrayBuffers [ NUM_BUFFERS ]; // create our array of buffers

@@ -2,6 +2,7 @@
 
 
 Display::Display()
+	: _glContext ( 0 )
 {
 	_window = nullptr; //initialise to generate null access violation for debugging. 
 	_screenWidth = 1920/2;
@@ -38,6 +39,16 @@ float Display::getTime ( )
 	return SDL_GetTicks ( ) / 1000.0f;
 }
 
+float Display::getWidth ( ) const
+{
+	return _screenWidth;
+}
+
+float Display::getHeight ( ) const
+{
+	return _screenHeight;
+}
+
 void Display::initDisplay()
 {
 	SDL_Init(SDL_INIT_EVERYTHING);
@@ -70,12 +81,31 @@ void Display::initDisplay()
 		return;
 	}
 
+	// enable depth testing
+	glEnable ( GL_DEPTH_TEST );
+
+	// enable back face culling
+	glEnable ( GL_CULL_FACE );
+
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 }
 
+void Display::initDisplay ( const float width, const float height )
+{ 
+	_screenWidth = (int) width;
+	_screenHeight = (int) height;
+	initDisplay ( );
+}
+
 void Display::clearDisplay ( )
 { 
-	glClearDepth ( 1.0 );
+	clearDisplay ( 0.0f, 0.0f, 0.0f, 1.0f );
+}
+
+void Display::clearDisplay ( const float r, const float g, const float b, const float a )
+{ 
+	glClearColor ( r, g, b, a );
+	// glClearDepth ( 1.0 ); // removed during lab 4
 	glClear ( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT ); // clear colour and depth buffer - set colour to colour defined in glClearColor
 }

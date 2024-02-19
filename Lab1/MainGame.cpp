@@ -27,8 +27,6 @@ void MainGame::initSystems ( )
 	_keyboardInput.registerKey ( SDLK_UP );
 	_keyboardInput.registerKey ( SDLK_DOWN );
 
-	// enable depth testing
-	glEnable ( GL_DEPTH_TEST );
 
 #pragma region Vertices for a triangle
 

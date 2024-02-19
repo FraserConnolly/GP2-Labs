@@ -120,6 +120,11 @@
   <ItemGroup>
     <CopyFileToFolders Include="..\res\bricks.jpg" />
   </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="..\res\monkey3.obj">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
