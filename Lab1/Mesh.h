@@ -11,7 +11,7 @@ public:
 	Mesh ( );
 	~Mesh ( );
 
-	void loadModel ( const std::string & filename );
+	void loadObjModel ( const std::string & filename );
 
 	void SetMesh ( const Vertex1P1D1U * vertices, const unsigned int numVertices, const  unsigned int * indices, const int numIndicies );
 	void Draw ( );
@@ -19,16 +19,21 @@ public:
 private:
 
 	/*
-	* Note that in Lab 3 Bryan has the vertex data split into multiple lists (vectors) of data (position and texture coordinates)
+	* Note that in Lab 3 Bryan has the vertex data split into multiple lists (vectors) of data (position, normal and texture coordinates)
 	* so that they can each have their own buffer in memory.
-	* For the time being I have decided to go with the approach on Lean OpenGL where only one OpenGL buffer is created.
+	* For the time being with SetMesh I have decided to go with the approach on Lean OpenGL where only one OpenGL buffer is created.
 	* Bryan's approach means that stride and offset (pointer) are left at 0 but at the expense of copying the vertex data
 	* into the mesh class instead of just holding a pointer to that data.
+	* I do however use the multiple buffer approach for objects loaded by obj_loader.
 	*/
 
 	enum
 	{
 		POSITION_VERTEXBUFFER,
+		TEXCOORD_VB,
+		NORMAL_VB,
+		INDEX_VB,
+
 		NUM_BUFFERS
 	};
 

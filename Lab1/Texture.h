@@ -17,6 +17,9 @@ public:
 protected: 
 
 private:
+
+	void SetDefaultTexture ( );
+
 	GLuint _texture = 0u;
 	int _width = 0;
 	int	_height = 0;

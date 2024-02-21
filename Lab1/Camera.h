@@ -75,15 +75,7 @@ public:
 		SetAspectRatio ( width / height );
 	}
 
-	void SetCameraTarget ( const glm::vec3 & target )
-	{
-		_cameraTarget = target;
-		_cameraDirection = glm::normalize( _transform.GetPosition( ) - _cameraTarget );
-		glm::vec3 up = glm::vec3 ( 0.0f, 1.0f, 0.0f );
-		_cameraRight = glm::normalize ( glm::cross ( up, _cameraDirection ) );
-		_cameraUp = glm::cross ( _cameraDirection, _cameraRight );
-		_cameraForward = glm::vec3 ( 0.0f, 0.0f, 1.0f );
-	}
+	void SetCameraTarget ( const glm::vec3 & target );
 
 	glm::vec3 GetCameraRight ( )
 	{

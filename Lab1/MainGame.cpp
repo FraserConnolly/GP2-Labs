@@ -27,9 +27,7 @@ void MainGame::initSystems ( )
 	_keyboardInput.registerKey ( SDLK_UP );
 	_keyboardInput.registerKey ( SDLK_DOWN );
 
-
 #pragma region Vertices for a triangle
-
 
 	_triangleVertices [ 0 ] = Vertex1P1D1U ( -0.5f, -0.5f, 0.0f );
 	_triangleVertices [ 1 ] = Vertex1P1D1U ( 0.5f, -0.5f, 0.0f );
@@ -118,7 +116,8 @@ void MainGame::initSystems ( )
 	// create a mesh object
 	//_mesh.SetMesh ( _vertices, 3, nullptr, 0 );
 	//_mesh.SetMesh( _triangleVertices, 3, _triangleIndices, 3 );
-	_mesh.SetMesh ( _cubeVertices, 36, nullptr, 0 );
+	//_mesh.SetMesh ( _cubeVertices, 36, nullptr, 0 );
+	_mesh.loadObjModel ( "monkey3.obj" );
 
 	_texture.LoadTexture ( "bricks.jpg" );
 
@@ -204,9 +203,9 @@ void MainGame::drawGame()
 
 	float sinTime = sinf ( getTime ( ) * 0.5f );
 	//_transform.SetPos ( glm::vec3 ( sinTime, 0.0f, 0.0f ) );
-	_transform.SetRotation ( 0.0f, getTime(), getTime ( ) ) ;
+	//_transform.SetRotation ( 0.0f, getTime(), getTime ( ) ) ;
 	//_transform.SetScale ( glm::vec3 ( sinTime , sinTime , sinTime ) );
-	_transform.SetScale ( 2.0f );
+	//_transform.SetScale ( 2.0f );
 
 	float t = glm::clamp ( ( sinf ( getTime ( ) * 0.5f ) + 1 ) /2, 0.0f, 1.0f );
 	//float fov = 20 * ( 1.f - t ) + 60 * t;

@@ -24,6 +24,12 @@ Texture::~Texture ( )
 
 void Texture::LoadTexture ( const char * filename )
 {
+	if ( _texture != 0u )
+	{
+		// delete any existing texture - to do 
+	}
+
+
 	// load and generate the texture
 	//    unsigned char *data = stbi_load(filename, &x, &y, &n, 0);
     // ... process data if not NULL ...
@@ -61,8 +67,38 @@ void Texture::Bind ( unsigned int unit )
 {
 	assert ( unit >= 0 && unit <= 31 ); // check we are working with one of the 32 textures
 
+	if ( _texture == 0u )
+	{
+		// generate a 1x1 white default texture
+		SetDefaultTexture ( );
+	}
+
 	glActiveTexture ( GL_TEXTURE0 + unit ); //set active texture unit 
 	glBindTexture(GL_TEXTURE_2D, _texture); //type of and texture to bind to unit
+}
+
+void Texture::SetDefaultTexture ( )
+{ 
+	if ( _texture != 0u )
+	{
+		// delete any existing texture - to do 
+	}
+
+	glGenTextures ( 1, &_texture );
+
+	glBindTexture ( GL_TEXTURE_2D, _texture );
+	// set the texture wrapping/filtering options (on the currently bound texture object)
+	glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
+	glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
+	glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR );
+	glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+
+	// RGBA values for a single pixel
+	unsigned char data[ ] = { 0xff, 0xff, 0xff, 0xff };
+
+	glTexImage2D ( GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, data );
+	glGenerateMipmap ( GL_TEXTURE_2D );
+
 }
 
 

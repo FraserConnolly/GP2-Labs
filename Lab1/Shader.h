@@ -8,6 +8,12 @@ class Shader
 {
 public:
 
+	// These match the locations of the attributes in the vertex shader.
+	static const int SHADER_ATTRIBUTE_INDEX_POSITION           = 0;
+	static const int SHADER_ATTRIBUTE_INDEX_NORMAL             = 1;
+	static const int SHADER_ATTRIBUTE_INDEX_COLOUR             = 2;
+	static const int SHADER_ATTRIBUTE_INDEX_TEXTURE_COORDINATE = 3;
+
 	Shader ( );
 	~Shader ( );
 	

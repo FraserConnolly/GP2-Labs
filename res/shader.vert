@@ -1,9 +1,10 @@
 #version 330 core
 
-// see Vertex::Attributes
+// see Shader consts
 layout (location = 0) in vec3 aPosition;      // the position variable has attribute position 0
-layout (location = 1) in vec3 aVertexColour;  // the colour variable has attribute position 1
-layout (location = 2) in vec2 aTextureCoord;  // the texture coordinate variable has attribute position 2
+layout (location = 1) in vec3 aNormal;        // not currently implemented
+layout (location = 2) in vec3 aVertexColour;  // the colour variable has attribute position 1
+layout (location = 3) in vec2 aTextureCoord;  // the texture coordinate variable has attribute position 2
   
 uniform mat4 model;
 uniform mat4 view;

@@ -33,15 +33,6 @@ public:
 	static const int VERTEX_COLOUR_OFFSET = 3 ;
 	static const int VERTEX_TEXTURE_OFFSET = 6 ;
 
-	enum Attributes
-	{
-		POSITION,
-		COLOUR,
-		TEXTURE,
-
-		NUMBER_OF_ATTRIBUTES
-	};
-
 	Vertex1P1D1U ( )
 	{ }
 
@@ -122,15 +113,6 @@ public:
 	static const int VERTEX_POSITION_OFFSET = 0 ;
 	static const int VERTEX_TEXTURE_OFFSET = 3 ;
 	static const int VERTEX_NORMAL_OFFSET = 5 ;
-
-	enum Attributes
-	{
-		POSITION,
-		TEXTURE,
-		NORMAL,
-
-		NUMBER_OF_ATTRIBUTES
-	};
 
 	Vertex1P1U1N ( )
 	{ }
