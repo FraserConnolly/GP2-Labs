@@ -10,6 +10,8 @@
 #include "Transform.h"
 #include "Camera.h"
 #include "KeyboardInput.h"
+#include "CameraFlyController.h"
+#include "MouseInput.h"
 
 enum class GameState{PLAY, EXIT};
 
@@ -55,7 +57,9 @@ private:
 	GameState _gameState;
 	Shader _shaderProgram;
 	Camera _mainCamera;
+	CameraFlyController _flyController;
 	KeyboardInput _keyboardInput;
+	MouseInput _mouseInput;
 
 };
 

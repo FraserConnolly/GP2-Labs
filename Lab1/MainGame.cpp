@@ -3,8 +3,9 @@
 #include <iostream>
 #include <string>
 
-MainGame::MainGame()
-	:_gameState(GameState::PLAY)
+MainGame::MainGame() :
+	_gameState(GameState::PLAY),
+	_triangleIndices( )
 {
 }
 
@@ -22,10 +23,14 @@ void MainGame::initSystems ( )
 {
 	_gameDisplay.initDisplay ( );
 	
-	_keyboardInput.registerKey ( SDLK_LEFT );
-	_keyboardInput.registerKey ( SDLK_RIGHT );
-	_keyboardInput.registerKey ( SDLK_UP );
-	_keyboardInput.registerKey ( SDLK_DOWN );
+	_keyboardInput.registerKey ( SDLK_a ); // left
+	_keyboardInput.registerKey ( SDLK_d ); // right
+	_keyboardInput.registerKey ( SDLK_w ); // forward
+	_keyboardInput.registerKey ( SDLK_s ); // back
+	_keyboardInput.registerKey ( SDLK_q ); // down
+	_keyboardInput.registerKey ( SDLK_e ); // up
+
+	_flyController.SetCamera ( _mainCamera );
 
 #pragma region Vertices for a triangle
 
@@ -151,14 +156,25 @@ void MainGame::gameLoop()
 
 void MainGame::processInput()
 {
-	SDL_Event test_event;
+	_mouseInput.ResetMouseOffsets ( );
 
-	while (SDL_PollEvent(&test_event)) {
-		switch (test_event.type) {
+	SDL_Event eventData;
+	while (SDL_PollEvent(&eventData)) {
+		switch (eventData.type) {
 			case SDL_KEYDOWN:
 			case SDL_KEYUP:
-				_keyboardInput.processKeyEvent ( test_event.key.keysym.sym, ( test_event.key.state == SDL_PRESSED ) , _deltaTime );
+				_keyboardInput.processKeyEvent ( eventData.key.keysym.sym, ( eventData.key.state == SDL_PRESSED ) , _deltaTime );
 				break;
+				
+			case SDL_MOUSEMOTION:
+				_mouseInput.ProcessMouseRelativePosition ( eventData.motion.xrel, eventData.motion.yrel );
+				break;
+
+			case SDL_MOUSEWHEEL:
+				// note that in later version of SDL a float precision version of this data is avilable.
+				_mouseInput.ProcessWheel ( eventData.wheel.x, eventData.wheel.y );
+				break;
+
 			case SDL_QUIT:
 				_gameState = GameState::EXIT;
 				break;
@@ -172,38 +188,40 @@ void MainGame::drawGame()
 	
 #pragma region Camera controls
 
-	const float cameraSpeed = 2.0f; // adjust accordingly
+	if ( _keyboardInput.isPressed ( SDLK_a ) )
+	{
+		_flyController.ProcessKeyboard ( Camera_Movement::LEFT, _deltaTime );
+	}
+	if ( _keyboardInput.isPressed ( SDLK_d ) )
+	{
+		_flyController.ProcessKeyboard ( Camera_Movement::RIGHT, _deltaTime );
+	}
+	if ( _keyboardInput.isPressed ( SDLK_w ) )
+	{
+		_flyController.ProcessKeyboard ( Camera_Movement::FORWARD, _deltaTime );
+	}
+	if ( _keyboardInput.isPressed ( SDLK_s ) )
+	{
+		_flyController.ProcessKeyboard ( Camera_Movement::BACKWARD, _deltaTime );
+	}
+	if ( _keyboardInput.isPressed ( SDLK_e ) )
+	{
+		_flyController.ProcessKeyboard ( Camera_Movement::UP, _deltaTime );
+	}
+	if ( _keyboardInput.isPressed ( SDLK_q ) )
+	{
+		_flyController.ProcessKeyboard ( Camera_Movement::DOWN, _deltaTime );
+	}
 
-	glm::vec3 newCameraPos = _mainCamera.GetTransform ( ).GetPosition ( );
-
-	if ( _keyboardInput.isPressed ( SDLK_LEFT ) )
-	{
-		newCameraPos -= glm::normalize ( glm::cross ( _mainCamera.GetCameraFront( ), _mainCamera.GetCameraUp( ) ) ) * cameraSpeed * _deltaTime;
-	}
-	if ( _keyboardInput.isPressed ( SDLK_RIGHT ) )
-	{
-		newCameraPos += glm::normalize ( glm::cross ( _mainCamera.GetCameraFront ( ), _mainCamera.GetCameraUp ( ) ) ) * cameraSpeed * _deltaTime;
-	}
-	if ( _keyboardInput.isPressed ( SDLK_UP ) )
-	{
-		newCameraPos += _mainCamera.GetCameraFront ( ) * cameraSpeed * _deltaTime;
-	}
-	if ( _keyboardInput.isPressed ( SDLK_DOWN ) )
-	{
-		newCameraPos -= _mainCamera.GetCameraFront ( ) * cameraSpeed * _deltaTime;
-	}
-
-	if ( newCameraPos != _mainCamera.GetTransform ( ).GetPosition ( ) )
-	{
-		_mainCamera.GetTransform ( ).SetPosition ( newCameraPos );
-	}
+	_flyController.ProcessMouseMovement ( _mouseInput.GetXOffset ( ), _mouseInput.GetYOffset ( ) );
+	_flyController.ProcessMouseScroll ( _mouseInput.GetVerticalWheelOffset ( ) );
+	_flyController.UpdateCamera ( );
 
 #pragma endregion
 
-
 	float sinTime = sinf ( getTime ( ) * 0.5f );
 	//_transform.SetPos ( glm::vec3 ( sinTime, 0.0f, 0.0f ) );
-	//_transform.SetRotation ( 0.0f, getTime(), getTime ( ) ) ;
+	_transform.SetRotation ( 0.0f, getTime ( ), 0.0f ) ;
 	//_transform.SetScale ( glm::vec3 ( sinTime , sinTime , sinTime ) );
 	//_transform.SetScale ( 2.0f );
 
@@ -225,3 +243,26 @@ void MainGame::drawGame()
 
 	_gameDisplay.swapBuffer();
 }
+
+//// glfw: whenever the mouse moves, this callback is called
+//// -------------------------------------------------------
+//void mouse_callback ( GLFWwindow * window, double xposIn, double yposIn )
+//{
+//	float xpos = static_cast< float >( xposIn );
+//	float ypos = static_cast< float >( yposIn );
+//
+//	if ( firstMouse )
+//	{
+//		lastX = xpos;
+//		lastY = ypos;
+//		firstMouse = false;
+//	}
+//
+//	float xoffset = xpos - lastX;
+//	float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+//
+//	lastX = xpos;
+//	lastY = ypos;
+//
+//	camera.ProcessMouseMovement ( xoffset, yoffset );
+//}

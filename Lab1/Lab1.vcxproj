@@ -72,23 +72,27 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CameraFlyController.cpp" />
     <ClCompile Include="Display.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="KeyboardInput.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainGame.cpp" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="MouseInput.cpp" />
     <ClCompile Include="obj_loader.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CameraFlyController.h" />
     <ClInclude Include="Display.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="KeyboardInput.h" />
     <ClInclude Include="MainGame.h" />
     <ClInclude Include="Mesh.h" />
+    <ClInclude Include="MouseInput.h" />
     <ClInclude Include="obj_loader.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="stb\stb_image.h" />

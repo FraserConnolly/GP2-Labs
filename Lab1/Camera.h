@@ -76,15 +76,19 @@ public:
 	}
 
 	void SetCameraTarget ( const glm::vec3 & target );
-
-	glm::vec3 GetCameraRight ( )
+	void SetCameraForward ( const glm::vec3 & forward )
 	{
-		return _cameraRight;
+		_cameraForward = forward;
 	}
 
-	glm::vec3 GetCameraFront ( )
+	glm::vec3 GetCameraForward ( )
 	{
-		return glm::vec3 ( 0.0f, 0.0f, -1.0f );
+		return _cameraForward;
+	}
+
+	void SetCameraUp ( const glm::vec3 & up )
+	{
+		_cameraUp = up;
 	}
 
 	glm::vec3 GetCameraUp ( )
@@ -111,9 +115,8 @@ private:
 	Transform _transform;
 	glm::vec3 _cameraTarget;
 	glm::vec3 _cameraDirection;
-	glm::vec3 _cameraForward;
-	glm::vec3 _cameraRight;
-	glm::vec3 _cameraUp;
+	glm::vec3 _cameraForward = glm::vec3 ( 0.0f, 0.0f, -1.0f );
+	glm::vec3 _cameraUp = glm::vec3 ( 0.0f, 1.0f, 0.0f );
 	glm::mat4 _projectionMatrix;
 
 	bool _projectionMatrixIsDirty = true;
