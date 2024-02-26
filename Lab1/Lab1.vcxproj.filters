@@ -19,6 +19,15 @@
     <Filter Include="DLLs">
       <UniqueIdentifier>{48c9bae6-6e08-417b-8906-a48f8fe27d54}</UniqueIdentifier>
     </Filter>
+    <Filter Include="FC_Console">
+      <UniqueIdentifier>{05701163-349c-47bf-b616-2127f1b8760f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FC_Console\Header Files">
+      <UniqueIdentifier>{8dfcef1b-52be-4316-bc72-413c63924d9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FC_Console\Source Files">
+      <UniqueIdentifier>{347baa87-02a4-49b1-9933-dc3ba002cab4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -36,9 +45,6 @@
     <ClCompile Include="Shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Image.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -46,6 +52,36 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="KeyboardInput.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MouseInput.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="obj_loader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Console\Button.cpp">
+      <Filter>FC_Console\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Image.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Console\GameScene.cpp">
+      <Filter>FC_Console\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraFlyController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Console\Resources.cpp">
+      <Filter>FC_Console\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Console\ScreenBuffer.cpp">
+      <Filter>FC_Console\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Console\Window.cpp">
+      <Filter>FC_Console\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ConsoleDebugScene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -77,10 +113,49 @@
     <ClInclude Include="Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="KeyboardInput.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraFlyController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MouseInput.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="obj_loader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Console\Button.h">
+      <Filter>FC_Console\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Console\Window.h">
+      <Filter>FC_Console\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Console\UiText.h">
+      <Filter>FC_Console\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Console\ScreenBuffer.h">
+      <Filter>FC_Console\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Console\Resources.h">
+      <Filter>FC_Console\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Console\RenderCellData.h">
+      <Filter>FC_Console\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Console\Point.h">
+      <Filter>FC_Console\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Console\GameObject.h">
+      <Filter>FC_Console\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Console\GameScene.h">
+      <Filter>FC_Console\Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Vertex.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="KeyboardInput.h">
+    <ClInclude Include="ConsoleDebugScene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -98,6 +173,9 @@
       <Filter>DLLs</Filter>
     </CopyFileToFolders>
     <CopyFileToFolders Include="..\res\bricks.jpg">
+      <Filter>Resource Files</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="..\res\monkey3.obj">
       <Filter>Resource Files</Filter>
     </CopyFileToFolders>
   </ItemGroup>

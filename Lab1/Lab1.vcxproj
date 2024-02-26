@@ -73,6 +73,12 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CameraFlyController.cpp" />
+    <ClCompile Include="ConsoleDebugScene.cpp" />
+    <ClCompile Include="Console\Button.cpp" />
+    <ClCompile Include="Console\GameScene.cpp" />
+    <ClCompile Include="Console\Resources.cpp" />
+    <ClCompile Include="Console\ScreenBuffer.cpp" />
+    <ClCompile Include="Console\Window.cpp" />
     <ClCompile Include="Display.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="KeyboardInput.cpp" />
@@ -87,6 +93,16 @@
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CameraFlyController.h" />
+    <ClInclude Include="ConsoleDebugScene.h" />
+    <ClInclude Include="Console\Button.h" />
+    <ClInclude Include="Console\GameObject.h" />
+    <ClInclude Include="Console\GameScene.h" />
+    <ClInclude Include="Console\Point.h" />
+    <ClInclude Include="Console\RenderCellData.h" />
+    <ClInclude Include="Console\Resources.h" />
+    <ClInclude Include="Console\ScreenBuffer.h" />
+    <ClInclude Include="Console\UiText.h" />
+    <ClInclude Include="Console\Window.h" />
     <ClInclude Include="Display.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="KeyboardInput.h" />

@@ -131,6 +131,9 @@ void MainGame::initSystems ( )
 
 	_shaderProgram.LoadDefaultShaders ( );
 	_shaderProgram.SetCamera ( &_mainCamera );
+
+	_debugScene.initaliseScene ( 0 );
+	_debugScene.SetTransformToMonitor ( _mainCamera.GetTransform( ) );
 }
 
 void MainGame::gameLoop()
@@ -151,6 +154,7 @@ void MainGame::gameLoop()
 
 		processInput();
 		drawGame();
+		_debugScene.processFrame ( );
 	}
 }
 

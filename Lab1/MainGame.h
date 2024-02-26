@@ -3,6 +3,8 @@
 #include <SDL\SDL.h>
 #include <GL\glew.h>
 
+#include "ConsoleDebugScene.h"
+
 #include "Display.h" 
 #include "Mesh.h"
 #include "Shader.h"
@@ -60,6 +62,8 @@ private:
 	CameraFlyController _flyController;
 	KeyboardInput _keyboardInput;
 	MouseInput _mouseInput;
+
+	ConsoleDebugScene _debugScene;
 
 };
 
