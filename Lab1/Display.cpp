@@ -2,14 +2,18 @@
 
 
 Display::Display()
+	: _glContext ( 0 )
 {
 	_window = nullptr; //initialise to generate null access violation for debugging. 
-	_screenWidth = 1024;
-	_screenHeight = 768; 
+	_screenWidth = 1920/2;
+	_screenHeight = 1080/2; 
 }
 
 Display::~Display()
 {
+	SDL_DestroyWindow ( _window );
+	SDL_GL_DeleteContext ( _glContext );
+	SDL_Quit ( );
 }
 
 void Display::returnError(std::string errorString)
@@ -25,6 +29,24 @@ void Display::returnError(std::string errorString)
 void Display::swapBuffer()
 {
 	SDL_GL_SwapWindow(_window);
+}
+
+/// <summary>
+/// Time in seconds since the game started
+/// </summary>
+float Display::getTime ( )
+{
+	return SDL_GetTicks ( ) / 1000.0f;
+}
+
+float Display::getWidth ( ) const
+{
+	return _screenWidth;
+}
+
+float Display::getHeight ( ) const
+{
+	return _screenHeight;
 }
 
 void Display::initDisplay()
@@ -43,9 +65,9 @@ void Display::initDisplay()
 		return;
 	}
 
-	SDL_GLContext glContext = SDL_GL_CreateContext(_window);
+	_glContext = SDL_GL_CreateContext(_window);
 
-	if (glContext == nullptr)
+	if (_glContext == nullptr)
 	{
 		returnError("Failed to OpenGL context.");
 		return;
@@ -59,6 +81,31 @@ void Display::initDisplay()
 		return;
 	}
 
-	glClearColor(0.0f, 1.0f, 1.0f, 1.0f);
+	// enable depth testing
+	glEnable ( GL_DEPTH_TEST );
 
+	// enable back face culling
+	glEnable ( GL_CULL_FACE );
+
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+}
+
+void Display::initDisplay ( const float width, const float height )
+{ 
+	_screenWidth = (int) width;
+	_screenHeight = (int) height;
+	initDisplay ( );
+}
+
+void Display::clearDisplay ( )
+{ 
+	clearDisplay ( 0.0f, 0.0f, 0.0f, 1.0f );
+}
+
+void Display::clearDisplay ( const float r, const float g, const float b, const float a )
+{ 
+	glClearColor ( r, g, b, a );
+	// glClearDepth ( 1.0 ); // removed during lab 4
+	glClear ( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT ); // clear colour and depth buffer - set colour to colour defined in glClearColor
 }

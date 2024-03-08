@@ -71,13 +71,79 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CameraFlyController.cpp" />
+    <ClCompile Include="ConsoleDebugScene.cpp" />
+    <ClCompile Include="Console\Button.cpp" />
+    <ClCompile Include="Console\GameScene.cpp" />
+    <ClCompile Include="Console\Resources.cpp" />
+    <ClCompile Include="Console\ScreenBuffer.cpp" />
+    <ClCompile Include="Console\Window.cpp" />
     <ClCompile Include="Display.cpp" />
+    <ClCompile Include="Image.cpp" />
+    <ClCompile Include="KeyboardInput.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainGame.cpp" />
+    <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="MouseInput.cpp" />
+    <ClCompile Include="obj_loader.cpp" />
+    <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="CameraFlyController.h" />
+    <ClInclude Include="ConsoleDebugScene.h" />
+    <ClInclude Include="Console\Button.h" />
+    <ClInclude Include="Console\GameObject.h" />
+    <ClInclude Include="Console\GameScene.h" />
+    <ClInclude Include="Console\Point.h" />
+    <ClInclude Include="Console\RenderCellData.h" />
+    <ClInclude Include="Console\Resources.h" />
+    <ClInclude Include="Console\ScreenBuffer.h" />
+    <ClInclude Include="Console\UiText.h" />
+    <ClInclude Include="Console\Window.h" />
     <ClInclude Include="Display.h" />
+    <ClInclude Include="Image.h" />
+    <ClInclude Include="KeyboardInput.h" />
     <ClInclude Include="MainGame.h" />
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="MouseInput.h" />
+    <ClInclude Include="obj_loader.h" />
+    <ClInclude Include="Shader.h" />
+    <ClInclude Include="stb\stb_image.h" />
+    <ClInclude Include="Texture.h" />
+    <ClInclude Include="Transform.h" />
+    <ClInclude Include="Vertex.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="..\res\glew32.dll">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="..\res\SDL2.dll">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="..\res\shader.frag">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="..\res\shader.vert">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Notes.txt">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="..\res\bricks.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="..\res\monkey3.obj">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
