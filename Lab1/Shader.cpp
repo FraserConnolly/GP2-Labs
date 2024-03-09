@@ -187,7 +187,7 @@ void Shader::SetTransform ( const glm::mat4 & modelMatrix )
 {
 }
 
-void Shader::Update ( const Transform & transform )
+void Shader::Update ( Transform & transform )
 { 
 	glm::mat4 model = transform.GetModel ( ); 
 	// The last parameter of glUnifromMatrix4fv the actual matrix data, 

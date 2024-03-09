@@ -3,17 +3,17 @@
 #include <SDL\SDL.h>
 #include <GL\glew.h>
 
-#include "ConsoleDebugScene.h"
-
 #include "Display.h" 
 #include "Mesh.h"
 #include "Shader.h"
 #include "Texture.h"
-#include "Transform.h"
+#include "GameObject.h"
 #include "Camera.h"
 #include "KeyboardInput.h"
 #include "CameraFlyController.h"
 #include "MouseInput.h"
+
+#include "ConsoleDebugScene.h"
 
 enum class GameState{PLAY, EXIT};
 
@@ -54,7 +54,7 @@ private:
 
 	Mesh _mesh;
 	Texture _texture;
-	Transform _transform;
+	GameObject m_object;
 	Display _gameDisplay;
 	GameState _gameState;
 	Shader _shaderProgram;

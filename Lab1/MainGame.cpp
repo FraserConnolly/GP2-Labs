@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <string>
+#include "GameObject.h"
 
 MainGame::MainGame() :
 	_gameState(GameState::PLAY),
@@ -225,7 +226,7 @@ void MainGame::drawGame()
 
 	float sinTime = sinf ( getTime ( ) * 0.5f );
 	//_transform.SetPos ( glm::vec3 ( sinTime, 0.0f, 0.0f ) );
-	_transform.SetRotation ( 0.0f, getTime ( ), 0.0f ) ;
+	//_transform.SetRotation ( 0.0f, getTime ( ), 0.0f ) ;
 	//_transform.SetScale ( glm::vec3 ( sinTime , sinTime , sinTime ) );
 	//_transform.SetScale ( 2.0f );
 
@@ -239,7 +240,7 @@ void MainGame::drawGame()
 
 	// bind and update the shader
 	_shaderProgram.Bind ( );
-	_shaderProgram.Update ( _transform );
+	_shaderProgram.Update ( m_object.GetTransform( ) );
 	_texture.Bind ( 0u );
 
 	// draw the mesh

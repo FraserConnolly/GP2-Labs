@@ -2,6 +2,7 @@
 #include <GL\glew.h>
 
 #include "Camera.h"
+#include "Transform.h"
 
 // Reference: https://learnopengl.com/code_viewer_gh.php?code=includes/learnopengl/camera.h
 

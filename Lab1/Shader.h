@@ -45,7 +45,7 @@ public:
 	void SetUniform ( const GLchar * name, const glm::mat4 & matrix );
 	void SetTransform ( const glm::mat4 & transform );
 
-	void Update ( const Transform & transform );
+	void Update ( Transform & transform );
 
 private:
 	

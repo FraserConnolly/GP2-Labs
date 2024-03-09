@@ -1,11 +1,13 @@
 #pragma once
 
+#include "Component.h"
+
 #include <glm/glm.hpp> 
 #include <glm/gtx/transform.hpp> 
 
-#include "Transform.h"
+class Transform;
 
-class Camera
+class Camera : public Component
 {
 public:
 	enum CameraMode
@@ -112,7 +114,6 @@ private:
 	glm::vec2 _clippingPlanes = glm::vec2 ( 0.1f, 100.0f );
 	glm::vec4 _orthoRectangle = glm::vec4 ( -10.0f, 10.0f, -10.0f, 10.0f );
 	
-	Transform _transform;
 	glm::vec3 _cameraTarget;
 	glm::vec3 _cameraDirection;
 	glm::vec3 _cameraForward = glm::vec3 ( 0.0f, 0.0f, -1.0f );

@@ -3,10 +3,10 @@
 #include "Console/UiText.h"
 #include "Transform.h"
 
-using namespace FC_Console;
+//using namespace FC_Console;
 
 class ConsoleDebugScene :
-    public GameScene
+    public FC_Console::GameScene
 {
 
 protected:
@@ -21,7 +21,7 @@ public:
 
     void initaliseScene ( int ) override;
 
-    int loadNextScene ( std::shared_ptr<GameScene> & newScene, bool & loadAdditively ) override;
+    int loadNextScene ( std::shared_ptr<FC_Console::GameScene> & newScene, bool & loadAdditively ) override;
 
     void SetTransformToMonitor ( const Transform & transform )
     {
@@ -31,7 +31,7 @@ public:
 
 private:
 
-    UiText _textbox = UiText ( "Camera Position (%06.2f, %06.2f, %06.2f)", 100 ) ;
+    FC_Console::UiText _textbox = FC_Console::UiText ( "Camera Position (%06.2f, %06.2f, %06.2f)", 100 ) ;
 
     const Transform * _monitor = nullptr;
 
