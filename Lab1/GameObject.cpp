@@ -16,12 +16,12 @@ GameObject::~GameObject ( )
 	RemoveAllComponents ( );
 }
 
-void GameObject::AddComponent ( Component * const pComponent )
+Component * GameObject::AddComponent ( Component * const pComponent )
 {
     if ( pComponent->m_gameObject != nullptr )
     {
         // to do - log this error - the component is already attached to an object.
-        return;
+        return nullptr;
     }
 
     //Make sure this component doesn't already exist in the components list
@@ -30,12 +30,14 @@ void GameObject::AddComponent ( Component * const pComponent )
 
     if ( found != m_components.end ( ) )
     {
-        return;
+        return pComponent;
     }
 
     //Set this object as the parent 
     pComponent->m_gameObject = this;
     m_components.push_back ( pComponent );
+
+    return pComponent;
 }
 
 void GameObject::RemoveComponent ( Component * const pToRemove )

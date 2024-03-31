@@ -12,7 +12,8 @@ public:
 	
 	void Update ( )
 	{
-		m_gameObject->GetTransform().SetRotation ( 0.0f, m_speed * Time::GetTime(), 0.0f );
+		float t = Time::GetTime ( );
+		m_gameObject->GetTransform ( ).SetRotation ( m_x_speed * t, m_y_speed * t, m_z_speed * t );
 	}
 	
 	void SetSpeed ( float speed )
@@ -20,7 +21,19 @@ public:
 		m_speed = speed;
 	}
 
+	void SetRotationAxis ( const bool x, const bool y, const bool z )
+	{
+		m_x_speed = x ? m_speed : 0.0f;
+		m_y_speed = y ? m_speed : 0.0f;
+		m_z_speed = z ? m_speed : 0.0f;
+	}
+
 private:
+
 	float m_speed = 1.0f;
+	float m_x_speed = 0.0f;
+	float m_y_speed = 0.0f;
+	float m_z_speed = 0.0f;
+
 };
 

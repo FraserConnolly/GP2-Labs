@@ -54,10 +54,10 @@ public:
 
 #pragma region Components
 
-	void     AddComponent ( Component * const pComponent );
-	void     RemoveComponent ( Component * const pToRemove );
-	void     RemoveAllComponents ( );
-	void     RemoveAllComponents ( ComponentTypes type );
+	Component * AddComponent ( Component * const pComponent );
+	void        RemoveComponent ( Component * const pToRemove );
+	void        RemoveAllComponents ( );
+	void        RemoveAllComponents ( ComponentTypes type );
 	
 	template<typename T>
 	void GetComponent ( ComponentTypes type, T *& pComp );

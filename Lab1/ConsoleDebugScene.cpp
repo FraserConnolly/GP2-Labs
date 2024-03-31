@@ -9,13 +9,17 @@ int ConsoleDebugScene::loadNextScene ( std::shared_ptr<GameScene> & newScene, bo
 
 void ConsoleDebugScene::initaliseLevel ( )
 { 
-    _textbox.setGridPosition ( 10, 10 );
-    _textbox.setActive ( true );
+    _positionTextbox.setGridPosition ( 4, 3 );
+    _positionTextbox.setActive ( true );
+ 
+    _rotationTextbox.setGridPosition ( 4, 4 );
+    _rotationTextbox.setActive ( true );
 }
 
 void ConsoleDebugScene::drawScene ( )
 {
-    drawGameObject ( _textbox );
+    drawGameObject ( _positionTextbox );
+    drawGameObject ( _rotationTextbox );
 }
 
 void ConsoleDebugScene::updateScene ( )
@@ -24,7 +28,9 @@ void ConsoleDebugScene::updateScene ( )
     if ( _monitor != nullptr )
     {
         const glm::vec3 & position = _monitor->GetPosition ( );
-        _textbox.updateText ( position.x, position.y, position.z );
+        const glm::vec3 & rotation = _monitor->GetRotation ( );
+        _positionTextbox.updateText ( position.x, position.y, position.z );
+        _rotationTextbox.updateText ( rotation.x, rotation.y, rotation.z );
     }
 
 }

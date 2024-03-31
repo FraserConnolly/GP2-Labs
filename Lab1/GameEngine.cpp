@@ -126,15 +126,21 @@ void GameEngine::initSystems ( )
 
 	m_monkey = _gameObjectManager.CreateObject ( );
 	m_monkey->AddComponent ( &_mesh );
-	m_monkey->AddComponent ( new Rotator ( ) );
+	Rotator * r = (Rotator *) m_monkey->AddComponent ( new Rotator ( ) );
+
+	r -> SetRotationAxis ( false, true, false );
+
 	m_mainCamera = _gameObjectManager.CreateObject ( );
-	_mainCamera = new Camera ( );
-	m_mainCamera->AddComponent ( _mainCamera );
+	_mainCamera = ( Camera * ) m_mainCamera->AddComponent ( new Camera ( ) );
 
-	_flyController = new CameraFlyController ( );
+	_flyController = ( CameraFlyController * ) m_mainCamera->AddComponent ( new CameraFlyController ( ) );
 	_flyController->SetCamera ( *_mainCamera );
-	m_mainCamera->AddComponent ( _flyController );
 
+	_mainCamera->GetTransform ( ).SetPosition ( glm::vec3 ( 0.5f, 0.5f, 5.0f ) );
+	_mainCamera->SetCameraTarget ( glm::vec3 ( 0.0f, 0.0f, 0.0f ) );
+
+	_shaderProgram.LoadDefaultShaders ( );
+	_shaderProgram.SetCamera ( _mainCamera );
 
 	// create a mesh object
 	//_mesh.SetMesh ( _vertices, 3, nullptr, 0 );
@@ -144,14 +150,9 @@ void GameEngine::initSystems ( )
 
 	_texture.LoadTexture ( "bricks.jpg" );
 
-	_mainCamera->GetTransform ( ).SetPosition ( glm::vec3 ( 0.5f, 0.5f, 5.0f ) );
-	_mainCamera->SetCameraTarget ( glm::vec3 ( 0.0f, 0.0f, 0.0f ) );
-
-	_shaderProgram.LoadDefaultShaders ( );
-	_shaderProgram.SetCamera ( _mainCamera );
-
 	_debugScene.initaliseScene ( 0 );
-	_debugScene.SetTransformToMonitor ( _mainCamera->GetTransform( ) );
+	//_debugScene.SetTransformToMonitor ( _mainCamera->GetTransform ( ) );
+	_debugScene.SetTransformToMonitor ( m_monkey->GetTransform( ) );
 }
 
 void GameEngine::gameLoop()
