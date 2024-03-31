@@ -5,6 +5,7 @@
 #include "Component.h"
 #include "Transform.h"
 
+class GameEngine;
 
 /// <summary>
 /// The whether an object is active or not is defined by the enabled flag of its transform.
@@ -13,10 +14,16 @@ class GameObject
 { 
 public: 
 	
-	GameObject ( );
-	~GameObject ( );
-
-	virtual void Update ( ) { }; // override in base class if it should have an update routine.
+	void Update ( )
+	{
+		for ( auto & comp : m_components )
+		{
+			if ( comp->IsEnabled ( ) )
+			{
+				comp->Update ( );
+			}
+		}
+	};
 
 	Transform & GetTransform ( )
 	{
@@ -63,7 +70,12 @@ public:
 
 private: 
 	
-	int     m_id;
+	friend class GameObjectManager;
+	
+	GameObject ( );
+	~GameObject ( );
+
+	unsigned int m_id;
 	Transform m_transform;
 	
 	//Shorter name for my vector 
@@ -73,9 +85,9 @@ private:
 
 	ComponentVector m_components;
 	//ArcheTypes m_type;
-	
+
 	bool m_isDestroyed = false;
 
-	static int  s_objectIDCounter;
+	static unsigned int  s_objectIDCounter;
 };
 

@@ -1,15 +1,17 @@
 #pragma once
 
+#include "Component.h"
+
 #include <glm\glm.hpp>
 #include <GL\glew.h>
 #include "Vertex.h"
 #include "obj_loader.h"
 
-class Mesh
+class MeshRenderer : public Component
 {
 public:
-	Mesh ( );
-	~Mesh ( );
+	MeshRenderer ( );
+	~MeshRenderer ( );
 
 	void loadObjModel ( const std::string & filename );
 

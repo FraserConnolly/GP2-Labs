@@ -1,37 +1,42 @@
-#include "MainGame.h"
+#include "GameEngine.h"
 
 #include <iostream>
 #include <string>
 #include "GameObject.h"
+#include "Time.h"
+#include "Input.h"
+#include "Rotator.h"
 
-MainGame::MainGame() :
+GameEngine::GameEngine() :
 	_gameState(GameState::PLAY),
 	_triangleIndices( )
 {
 }
 
-MainGame::~MainGame()
+GameEngine::~GameEngine()
 {
 }
 
-void MainGame::run()
+void GameEngine::run()
 {
 	initSystems();
 	gameLoop();
+	shutdown();
 }
 
-void MainGame::initSystems ( )
+void GameEngine::initSystems ( )
 {
 	_gameDisplay.initDisplay ( );
-	
-	_keyboardInput.registerKey ( SDLK_a ); // left
-	_keyboardInput.registerKey ( SDLK_d ); // right
-	_keyboardInput.registerKey ( SDLK_w ); // forward
-	_keyboardInput.registerKey ( SDLK_s ); // back
-	_keyboardInput.registerKey ( SDLK_q ); // down
-	_keyboardInput.registerKey ( SDLK_e ); // up
 
-	_flyController.SetCamera ( _mainCamera );
+	Time::StartUp ( );
+	Input::StartUp ( );
+
+	Input::RegisterKey ( SDLK_a ); // left
+	Input::RegisterKey ( SDLK_d ); // right
+	Input::RegisterKey ( SDLK_w ); // forward
+	Input::RegisterKey ( SDLK_s ); // back
+	Input::RegisterKey ( SDLK_q ); // down
+	Input::RegisterKey ( SDLK_e ); // up
 
 #pragma region Vertices for a triangle
 
@@ -119,6 +124,18 @@ void MainGame::initSystems ( )
 
 #pragma endregion
 
+	m_monkey = _gameObjectManager.CreateObject ( );
+	m_monkey->AddComponent ( &_mesh );
+	m_monkey->AddComponent ( new Rotator ( ) );
+	m_mainCamera = _gameObjectManager.CreateObject ( );
+	_mainCamera = new Camera ( );
+	m_mainCamera->AddComponent ( _mainCamera );
+
+	_flyController = new CameraFlyController ( );
+	_flyController->SetCamera ( *_mainCamera );
+	m_mainCamera->AddComponent ( _flyController );
+
+
 	// create a mesh object
 	//_mesh.SetMesh ( _vertices, 3, nullptr, 0 );
 	//_mesh.SetMesh( _triangleVertices, 3, _triangleIndices, 3 );
@@ -127,57 +144,63 @@ void MainGame::initSystems ( )
 
 	_texture.LoadTexture ( "bricks.jpg" );
 
-	_mainCamera.GetTransform ( ).SetPosition ( glm::vec3 ( 0.5f, 0.5f, 5.0f ) );
-	_mainCamera.SetCameraTarget ( glm::vec3 ( 0.0f, 0.0f, 0.0f ) );
+	_mainCamera->GetTransform ( ).SetPosition ( glm::vec3 ( 0.5f, 0.5f, 5.0f ) );
+	_mainCamera->SetCameraTarget ( glm::vec3 ( 0.0f, 0.0f, 0.0f ) );
 
 	_shaderProgram.LoadDefaultShaders ( );
-	_shaderProgram.SetCamera ( &_mainCamera );
+	_shaderProgram.SetCamera ( _mainCamera );
 
 	_debugScene.initaliseScene ( 0 );
-	_debugScene.SetTransformToMonitor ( _mainCamera.GetTransform( ) );
+	_debugScene.SetTransformToMonitor ( _mainCamera->GetTransform( ) );
 }
 
-void MainGame::gameLoop()
+void GameEngine::gameLoop()
 {
 	while (_gameState != GameState::EXIT)
 	{
 		float newTime = _gameDisplay.getTime ( );
-		_deltaTime = newTime - _time;
-		_time = newTime;
+		Time::s_instance->m_deltaTime = newTime - Time::s_instance->m_time;
+		Time::s_instance->m_time = newTime;
 
 		// If delta time is too large (more than 1 second), we must have resumed from a breakpoint.
 		// Frame-lock to the target rate of 30fps.
 		// From Game Engine Architecture 3rd Edition by Jason Gregory 8.5.5 
-		if ( _deltaTime > 1.0f )
+		if ( Time::s_instance->m_deltaTime > 1.0f )
 		{
-			_deltaTime = 1.0f / 30.0f;
+			Time::s_instance->m_deltaTime = 1.0f / 30.0f;
 		}
 
 		processInput();
+		_gameObjectManager.UpdateObjects ( );
 		drawGame();
 		_debugScene.processFrame ( );
 	}
 }
 
-void MainGame::processInput()
-{
-	_mouseInput.ResetMouseOffsets ( );
+void GameEngine::shutdown ( )
+{ 
+	Time::Shutdown ( );
+	Input::Shutdown ( );
+}
 
+void GameEngine::processInput()
+{
 	SDL_Event eventData;
+	
 	while (SDL_PollEvent(&eventData)) {
 		switch (eventData.type) {
 			case SDL_KEYDOWN:
 			case SDL_KEYUP:
-				_keyboardInput.processKeyEvent ( eventData.key.keysym.sym, ( eventData.key.state == SDL_PRESSED ) , _deltaTime );
+				Input::ProcessKeyEvent( eventData.key.keysym.sym, ( eventData.key.state == SDL_PRESSED ) );
 				break;
 				
 			case SDL_MOUSEMOTION:
-				_mouseInput.ProcessMouseRelativePosition ( eventData.motion.xrel, eventData.motion.yrel );
+				Input::ProcessMouseRelativePosition( eventData.motion.xrel, eventData.motion.yrel );
 				break;
 
 			case SDL_MOUSEWHEEL:
-				// note that in later version of SDL a float precision version of this data is avilable.
-				_mouseInput.ProcessWheel ( eventData.wheel.x, eventData.wheel.y );
+				// note that in later version of SDL a float precision version of this data is available.
+				Input::ProcessWheel ( eventData.wheel.x, eventData.wheel.y );
 				break;
 
 			case SDL_QUIT:
@@ -187,60 +210,13 @@ void MainGame::processInput()
 	}
 }
 
-void MainGame::drawGame()
+void GameEngine::drawGame()
 {
 	_gameDisplay.clearDisplay ( );
 	
-#pragma region Camera controls
-
-	if ( _keyboardInput.isPressed ( SDLK_a ) )
-	{
-		_flyController.ProcessKeyboard ( Camera_Movement::LEFT, _deltaTime );
-	}
-	if ( _keyboardInput.isPressed ( SDLK_d ) )
-	{
-		_flyController.ProcessKeyboard ( Camera_Movement::RIGHT, _deltaTime );
-	}
-	if ( _keyboardInput.isPressed ( SDLK_w ) )
-	{
-		_flyController.ProcessKeyboard ( Camera_Movement::FORWARD, _deltaTime );
-	}
-	if ( _keyboardInput.isPressed ( SDLK_s ) )
-	{
-		_flyController.ProcessKeyboard ( Camera_Movement::BACKWARD, _deltaTime );
-	}
-	if ( _keyboardInput.isPressed ( SDLK_e ) )
-	{
-		_flyController.ProcessKeyboard ( Camera_Movement::UP, _deltaTime );
-	}
-	if ( _keyboardInput.isPressed ( SDLK_q ) )
-	{
-		_flyController.ProcessKeyboard ( Camera_Movement::DOWN, _deltaTime );
-	}
-
-	_flyController.ProcessMouseMovement ( _mouseInput.GetXOffset ( ), _mouseInput.GetYOffset ( ) );
-	_flyController.ProcessMouseScroll ( _mouseInput.GetVerticalWheelOffset ( ) );
-	_flyController.UpdateCamera ( );
-
-#pragma endregion
-
-	float sinTime = sinf ( getTime ( ) * 0.5f );
-	//_transform.SetPos ( glm::vec3 ( sinTime, 0.0f, 0.0f ) );
-	//_transform.SetRotation ( 0.0f, getTime ( ), 0.0f ) ;
-	//_transform.SetScale ( glm::vec3 ( sinTime , sinTime , sinTime ) );
-	//_transform.SetScale ( 2.0f );
-
-	float t = glm::clamp ( ( sinf ( getTime ( ) * 0.5f ) + 1 ) /2, 0.0f, 1.0f );
-	//float fov = 20 * ( 1.f - t ) + 60 * t;
-	//_mainCamera.SetFoV ( fov );
-
-	float z = 2.0f * ( 1.f - t ) + 10.0f * t;
-	//_mainCamera.GetTransform ( ).SetPosition ( 0.0f, 0.0f, z );
-	//_mainCamera.GetTransform ( ).SetPosition ( 0.0f, 0.0f, z );
-
 	// bind and update the shader
 	_shaderProgram.Bind ( );
-	_shaderProgram.Update ( m_object.GetTransform( ) );
+	_shaderProgram.Update ( m_monkey->GetTransform( ) );
 	_texture.Bind ( 0u );
 
 	// draw the mesh

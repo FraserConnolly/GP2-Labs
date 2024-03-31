@@ -4,14 +4,9 @@
 class MouseInput
 {
 
-public:
+	friend class Input;
 
-	// call each frame
-	void ResetMouseOffsets ( )
-	{
-		_mouseOffset.x = 0;
-		_mouseOffset.y = 0;
-	}
+public:
 
 	void ProcessMouseRelativePosition ( const float x, const float y )
 	{
@@ -58,5 +53,20 @@ private:
 
 	glm::vec2 _mouseOffset;
 	glm::ivec2 _wheelOffset;
+
+	void Service ( ) 
+	{
+		ResetMouseOffsets ( );
+	}
+
+	// call each frame
+	void ResetMouseOffsets ( )
+	{
+		_mouseOffset.x = 0;
+		_mouseOffset.y = 0;
+	}
+
+	MouseInput ( ) { }
+	~MouseInput ( )	{ }
 };
 

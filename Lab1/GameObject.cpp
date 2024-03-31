@@ -1,12 +1,15 @@
 #include "GameObject.h"
 
+unsigned int GameObject::s_objectIDCounter = 0;
+
 GameObject::GameObject ( )
 {
+    m_id = s_objectIDCounter++;
+
     // Reset transform and add it to the components vector
     m_transform.Reset ( );
     AddComponent ( &m_transform );
 }
-
 
 GameObject::~GameObject ( )
 {

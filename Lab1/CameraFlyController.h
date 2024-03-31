@@ -1,8 +1,13 @@
 #pragma once
 #include <GL\glew.h>
 
+#include "Component.h"
 #include "Camera.h"
 #include "Transform.h"
+#include "Input.h"
+#include "Time.h"
+
+#include <SDL/SDL_keycode.h>
 
 // Reference: https://learnopengl.com/code_viewer_gh.php?code=includes/learnopengl/camera.h
 
@@ -25,14 +30,15 @@ const float SPEED = 2.5f;
 const float SENSITIVITY = 0.1f;
 const float ZOOM = 45.0f;
 
-class CameraFlyController
+class CameraFlyController : public Component
 { 
 
 public:
 
 
 	CameraFlyController ( )
-	{
+        : Component ( ComponentTypes::CAMERA_FLY_CONTROLLER )
+    {
 		_camera = nullptr;
         WorldUp = glm::vec3 ( 0.0f, 1.0f, 0.0f );
         Yaw = YAW;
@@ -125,6 +131,42 @@ public:
     glm::vec3 Up;
     glm::vec3 Right;
     glm::vec3 WorldUp;
+
+    void Update ( ) override
+    {
+        Component::Update ( );
+    #pragma region Camera controls
+
+        float _deltaTime = Time::GetDeltaTime ( );
+
+        if (  Input::IsKeyPressed ( SDLK_a ) )
+        {
+            ProcessKeyboard ( Camera_Movement::LEFT, _deltaTime );
+        }
+        if ( Input::IsKeyPressed ( SDLK_d ) )
+        {
+            ProcessKeyboard ( Camera_Movement::RIGHT, _deltaTime );
+        }
+        if ( Input::IsKeyPressed ( SDLK_w ) )
+        {
+            ProcessKeyboard ( Camera_Movement::FORWARD, _deltaTime );
+        }
+        if ( Input::IsKeyPressed ( SDLK_s ) )
+        {
+            ProcessKeyboard ( Camera_Movement::BACKWARD, _deltaTime );
+        }
+        if ( Input::IsKeyPressed ( SDLK_e ) )
+        {
+            ProcessKeyboard ( Camera_Movement::UP, _deltaTime );
+        }
+        if ( Input::IsKeyPressed ( SDLK_q ) )
+        {
+            ProcessKeyboard ( Camera_Movement::DOWN, _deltaTime );
+        }
+
+    #pragma endregion
+
+    }
 
 private:
 

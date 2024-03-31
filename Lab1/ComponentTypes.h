@@ -6,4 +6,5 @@ enum ComponentTypes
 	SPHERE_COLIDER,
 	CAMERA,
 	CAMERA_FLY_CONTROLLER,
+	ROTATOR
 };
