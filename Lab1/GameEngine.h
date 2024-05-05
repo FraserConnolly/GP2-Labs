@@ -38,14 +38,14 @@ private:
 	
 	Vertex1P1D1U _cubeVertices [ 36 ];
 	GameObjectManager _gameObjectManager;
-	MeshRenderer _mesh;
-	Texture _texture;
-	GameObject * m_monkey;
-	GameObject * m_mainCamera;
+	MeshRenderer * _mesh = nullptr;
+	Texture * _texture = nullptr;
+	GameObject * m_monkey = nullptr;
+	GameObject * m_mainCamera = nullptr;
 	Display _gameDisplay;
 	GameState _gameState;
-	Shader _shaderProgram;
-	Camera * _mainCamera;
+	Shader * _shaderProgram = nullptr;
+	Camera * _mainCamera = nullptr;
 	CameraFlyController * _flyController;
 
 	ConsoleDebugScene _debugScene;

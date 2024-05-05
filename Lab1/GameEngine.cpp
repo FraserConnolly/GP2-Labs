@@ -128,10 +128,11 @@ void GameEngine::initSystems ( )
 #pragma endregion
 
 	m_monkey = _gameObjectManager.CreateObject ( );
-	m_monkey->AddComponent ( &_mesh );
+	_mesh = new MeshRenderer ( );
+	m_monkey->AddComponent ( _mesh );
 	Rotator * r = (Rotator *) m_monkey->AddComponent ( new Rotator ( ) );
 
-	r -> SetRotationAxis ( false, true, false );
+	r -> SetRotationAxis ( false, false, false );
 
 	m_mainCamera = _gameObjectManager.CreateObject ( );
 	_mainCamera = ( Camera * ) m_mainCamera->AddComponent ( new Camera ( ) );
@@ -139,19 +140,21 @@ void GameEngine::initSystems ( )
 	_flyController = ( CameraFlyController * ) m_mainCamera->AddComponent ( new CameraFlyController ( ) );
 	_flyController->SetCamera ( *_mainCamera );
 
-	_mainCamera->GetTransform ( ).SetPosition ( glm::vec3 ( 0.5f, 0.5f, 5.0f ) );
+	_mainCamera->GetGameObject ( ).GetTransform ( ).SetPosition ( glm::vec3 ( 0.5f, 0.5f, 5.0f ) );
 	_mainCamera->SetCameraTarget ( glm::vec3 ( 0.0f, 0.0f, 0.0f ) );
 
-	_shaderProgram.LoadDefaultShaders ( );
-	_shaderProgram.SetCamera ( _mainCamera );
+	_shaderProgram = new Shader ( );
+	_shaderProgram->LoadDefaultShaders ( );
+	_shaderProgram->SetCamera ( _mainCamera );
 
 	// create a mesh object
 	//_mesh.SetMesh ( _vertices, 3, nullptr, 0 );
 	//_mesh.SetMesh( _triangleVertices, 3, _triangleIndices, 3 );
 	//_mesh.SetMesh ( _cubeVertices, 36, nullptr, 0 );
-	_mesh.loadObjModel ( "monkey3.obj" );
+	_mesh->loadObjModel ( "monkey3.obj" );
 
-	_texture.LoadTexture ( "bricks.jpg" );
+	_texture = new Texture ( );
+	_texture->LoadTexture ( "bricks.jpg" );
 
 	_debugScene.initaliseScene ( 0 );
 	//_debugScene.SetTransformToMonitor ( _mainCamera->GetTransform ( ) );
@@ -221,12 +224,12 @@ void GameEngine::drawGame()
 	_gameDisplay.clearDisplay ( );
 	
 	// bind and update the shader
-	_shaderProgram.Bind ( );
-	_shaderProgram.Update ( m_monkey->GetTransform( ) );
-	_texture.Bind ( 0u );
+	_shaderProgram->Bind ( );
+	_shaderProgram->Update ( m_monkey->GetTransform( ) );
+	_texture->Bind ( 0u );
 
 	// draw the mesh
-	_mesh.Draw ( );
+	_mesh->Draw ( );
 
 	_gameDisplay.swapBuffer();
 }
