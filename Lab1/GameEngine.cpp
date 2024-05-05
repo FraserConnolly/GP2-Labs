@@ -31,6 +31,7 @@ void GameEngine::initSystems ( )
 	Time::StartUp ( );
 	Input::StartUp ( );
 
+	Input::RegisterKey ( SDLK_ESCAPE ); // escape
 	Input::RegisterKey ( SDLK_a ); // left
 	Input::RegisterKey ( SDLK_d ); // right
 	Input::RegisterKey ( SDLK_w ); // forward
@@ -207,6 +208,11 @@ void GameEngine::processInput()
 				_gameState = GameState::EXIT;
 				break;
 		}
+	}
+
+	if ( Input::IsKeyPressed ( SDLK_ESCAPE ) )
+	{
+		_gameState = GameState::EXIT;
 	}
 }
 
