@@ -7,8 +7,8 @@ GameObject::GameObject ( )
     m_id = s_objectIDCounter++;
 
     // Reset transform and add it to the components vector
-    m_transform.Reset ( );
-    AddComponent ( &m_transform );
+    m_transform = new Transform ( );
+    AddComponent ( m_transform );
 }
 
 GameObject::~GameObject ( )
@@ -61,7 +61,7 @@ void GameObject::RemoveAllComponents ( )
     while ( itor != end )
     {
         ( *itor )->OnDestroy ( );
-        delete ( *itor );
+        delete *itor;
         ++itor;
     }
     m_components.clear ( );

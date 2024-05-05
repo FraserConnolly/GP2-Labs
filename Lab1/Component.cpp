@@ -20,9 +20,9 @@ Component::Component ( const ComponentTypes type,  const bool enable )
 	}
 }
 
-GameObject * Component::GetGameObject ( ) const
+GameObject & Component::GetGameObject ( ) const
 {
-	return m_gameObject;
+	return *m_gameObject;
 }
 
 bool Component::IsDead ( ) const

@@ -109,8 +109,6 @@ public:
 
 #pragma endregion
 
-	Transform & GetTransform ( );
-
 	glm::mat4 GetViewMatrix ( );
 	glm::mat4 GetProjectionMatrix ( ) ;
 

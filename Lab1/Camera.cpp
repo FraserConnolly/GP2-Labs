@@ -14,7 +14,7 @@ Camera::~Camera ( )
 void Camera::SetCameraTarget ( const glm::vec3 & target )
 {
 	_cameraTarget = target;
-	_cameraDirection = glm::normalize ( GetTransform( ).GetPosition ( ) - _cameraTarget );
+	_cameraDirection = glm::normalize ( m_gameObject->GetTransform( ).GetPosition ( ) - _cameraTarget );
 	glm::vec3 up = glm::vec3 ( 0.0f, 1.0f, 0.0f );
 	glm::vec3 right = glm::normalize ( glm::cross ( up, _cameraDirection ) );
 	_cameraUp = glm::cross ( _cameraDirection, right );
@@ -22,10 +22,6 @@ void Camera::SetCameraTarget ( const glm::vec3 & target )
 
 
 
-Transform & Camera::GetTransform ( )
-{
-	return m_gameObject->GetTransform ( ) ;
-}
 
 glm::mat4 Camera::GetViewMatrix ( )
 {
@@ -41,7 +37,7 @@ glm::mat4 Camera::GetViewMatrix ( )
 
 	
 	// this line will result in a matrix where the camera will always look forward rather than at a defined target position in world space.
-	return glm::lookAt ( GetTransform ( ).GetPosition ( ), GetTransform ( ).GetPosition ( ) + _cameraForward, _cameraUp );
+	return glm::lookAt ( m_gameObject->GetTransform( ).GetPosition ( ), m_gameObject->GetTransform ( ).GetPosition ( ) + _cameraForward, _cameraUp );
 
 }
 

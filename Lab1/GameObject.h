@@ -25,9 +25,9 @@ public:
 		}
 	};
 
-	Transform & GetTransform ( )
+	Transform & GetTransform ( ) const
 	{
-		return m_transform;
+		return *m_transform;
 	}
 	
 	int GetID ( ) const
@@ -47,9 +47,9 @@ public:
 		return m_isDestroyed;
 	}
 
-	const bool IsActive ( )
+	const bool IsActive ( ) const
 	{
-		return m_transform.IsEnabled ( );
+		return m_transform->IsEnabled ( );
 	}
 
 #pragma region Components
@@ -76,7 +76,7 @@ private:
 	~GameObject ( );
 
 	unsigned int m_id;
-	Transform m_transform;
+	Transform * m_transform;
 	
 	//Shorter name for my vector 
 	typedef std::vector<Component *> ComponentVector;

@@ -25,7 +25,7 @@ public:
 
 	virtual void Reset ( ) { }
 
-	GameObject * GetGameObject ( ) const;
+	GameObject & GetGameObject ( ) const;
 
 	bool IsDead ( ) const;
 	void Kill ( );
