@@ -58,6 +58,7 @@ public:
 	void SetCamera ( Camera & camera )
 	{
 		_camera = &camera;
+        Zoom = camera.GetFoV ( );
 	}
 
     // processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
@@ -163,6 +164,14 @@ public:
         {
             ProcessKeyboard ( Camera_Movement::DOWN, _deltaTime );
         }
+
+        auto mouseDelta = Input::GetMouseDelta ( );
+        ProcessMouseMovement ( (float) mouseDelta.x, (float) mouseDelta.y, true );
+
+        auto wheelDelta = Input::GetMouseWheelDelta ( );
+        ProcessMouseScroll ( wheelDelta.y );
+
+        UpdateCamera ( );
 
     #pragma endregion
 

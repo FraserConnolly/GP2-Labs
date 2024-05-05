@@ -38,6 +38,8 @@ void GameEngine::initSystems ( )
 	Input::RegisterKey ( SDLK_q ); // down
 	Input::RegisterKey ( SDLK_e ); // up
 
+	SDL_SetRelativeMouseMode ( SDL_TRUE );
+
 #pragma region Vertices for a triangle
 
 	_triangleVertices [ 0 ] = Vertex1P1D1U ( -0.5f, -0.5f, 0.0f );
@@ -182,10 +184,13 @@ void GameEngine::shutdown ( )
 { 
 	Time::Shutdown ( );
 	Input::Shutdown ( );
+	SDL_SetRelativeMouseMode ( SDL_FALSE );
 }
 
 void GameEngine::processInput()
 {
+	Input::Service ( );
+
 	SDL_Event eventData;
 	
 	while (SDL_PollEvent(&eventData)) {
@@ -194,16 +199,10 @@ void GameEngine::processInput()
 			case SDL_KEYUP:
 				Input::ProcessKeyEvent( eventData.key.keysym.sym, ( eventData.key.state == SDL_PRESSED ) );
 				break;
-				
-			case SDL_MOUSEMOTION:
-				Input::ProcessMouseRelativePosition( eventData.motion.xrel, eventData.motion.yrel );
-				break;
-
 			case SDL_MOUSEWHEEL:
 				// note that in later version of SDL a float precision version of this data is available.
 				Input::ProcessWheel ( eventData.wheel.x, eventData.wheel.y );
 				break;
-
 			case SDL_QUIT:
 				_gameState = GameState::EXIT;
 				break;

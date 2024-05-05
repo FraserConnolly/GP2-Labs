@@ -30,6 +30,12 @@ public:
 
 #pragma region Mouse Functions
 
+	static const glm::ivec2 & Input::GetMousePosition ( );
+	static const glm::ivec2 & Input::GetMouseDelta ( );
+	static const glm::ivec2 & Input::GetMouseWheelDelta ( );
+	static const bool Input::GetButtonStateLeft ( );
+	static const bool Input::GetButtonStateRight ( );
+
 
 #pragma endregion
 

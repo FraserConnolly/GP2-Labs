@@ -29,6 +29,15 @@ public:
 	}
 
 	/// <summary>
+	/// Gets the camera's field of view
+	/// </summary>
+	/// <returns>In degrees.</returns>
+	const float GetFoV ( )
+	{
+		return glm::degrees( _fov );
+	}
+
+	/// <summary>
 	/// Set the camera's field of view.
 	/// </summary>
 	/// <param name="fov">In degrees.</param>

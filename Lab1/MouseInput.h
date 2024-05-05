@@ -1,5 +1,6 @@
 #pragma once
 #include <glm/glm.hpp> 
+#include <SDL/SDL.h>
 
 class MouseInput
 {
@@ -7,12 +8,6 @@ class MouseInput
 	friend class Input;
 
 public:
-
-	void ProcessMouseRelativePosition ( const float x, const float y )
-	{
-		_mouseOffset.x += x;
-		_mouseOffset.y += y;
-	}
 
 	void ProcessWheel ( const int horizontalMovement, const int verticalMovement )
 	{
@@ -22,48 +17,78 @@ public:
 
 #pragma region Getters
 	
-	glm::vec2 GetMouseOffset ( )
+	const glm::ivec2 GetMouseOffset ( ) const
 	{
 		return _mouseOffset;
 	}
 
-	float GetXOffset ( )
+	const float GetXOffset ( ) const
 	{
 		return _mouseOffset.y;
 	}
 	
-	float GetYOffset ( )
+	const float GetYOffset ( ) const
 	{
 		return _mouseOffset.y;
 	}
 
-	int GetHorizontalWheelOffset ( )
+	const glm::ivec2 & GetMousePosition ( ) const
+	{
+		return _mousePosition;
+	}
+
+	const float GetXPosition ( ) const
+	{
+		return _mousePosition.y;
+	}
+
+	const float GetYPosition ( ) const
+	{
+		return _mousePosition.y;
+	}
+
+	const glm::ivec2 & GetMouseWheelOffset ( ) const
+	{
+		return _wheelOffset;
+	}
+
+	const int GetHorizontalWheelOffset ( ) const
 	{
 		return _wheelOffset.x;
 	}
 
-	int GetVerticalWheelOffset ( )
+	const int GetVerticalWheelOffset ( ) const
 	{
 		return _wheelOffset.y;
+	}
+
+	const bool GetIsLeftClicked ( ) const
+	{
+		return _buttonState & SDL_BUTTON ( SDL_BUTTON_LEFT );
+	}
+
+	const bool GetIsRightClicked ( ) const
+	{
+		return _buttonState & SDL_BUTTON ( SDL_BUTTON_RIGHT );
 	}
 
 #pragma endregion
 
 private:
 
-	glm::vec2 _mouseOffset;
+	glm::ivec2 _mouseOffset;
+	glm::ivec2 _mousePosition;
 	glm::ivec2 _wheelOffset;
+	unsigned int _buttonState = 0u;
 
 	void Service ( ) 
 	{
-		ResetMouseOffsets ( );
-	}
+		_buttonState = SDL_GetRelativeMouseState ( &_mouseOffset.x, &_mouseOffset.y );
+		SDL_GetMouseState ( &_mousePosition.x, &_mousePosition.y );
 
-	// call each frame
-	void ResetMouseOffsets ( )
-	{
-		_mouseOffset.x = 0;
-		_mouseOffset.y = 0;
+		// reset wheel offset each frame
+		_wheelOffset.x = 0;
+		_wheelOffset.y = 0;
 	}
 
 	MouseInput ( ) { }
