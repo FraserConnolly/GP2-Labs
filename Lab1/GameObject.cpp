@@ -37,6 +37,12 @@ Component * GameObject::AddComponent ( Component * const pComponent )
     pComponent->m_gameObject = this;
     m_components.push_back ( pComponent );
 
+    pComponent->Awake ( );
+    if ( pComponent->IsEnabled ( ) )
+    {
+        pComponent->OnEnable ( );
+    }
+
     return pComponent;
 }
 

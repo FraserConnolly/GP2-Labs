@@ -5,20 +5,13 @@ Component::Component ( const ComponentTypes type ) :
 	m_isEnabled ( true )
 { 
 	m_componentType = type;
-	Awake ( );
-	OnEnable ( );
 }
 
 Component::Component ( const ComponentTypes type,  const bool enable )
 { 
 	m_componentType = type;
 	m_isEnabled = enable;
-	Awake ( );
-	if ( m_isEnabled )
-	{
-		OnEnable ( );
 	}
-}
 
 GameObject & Component::GetGameObject ( ) const
 {
