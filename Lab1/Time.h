@@ -12,7 +12,7 @@ class Time
 public:
 	
 	static void StartUp ( );
-
+	static void Service ( float newTime );
 	static void Shutdown ( );
 
 	// Returns the time in seconds

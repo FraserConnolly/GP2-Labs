@@ -59,10 +59,10 @@ public:
 		_projectionMatrixIsDirty = true;
 	}
 
-	void SetClippingPlanes ( const float near, const float far )
+	void SetClippingPlanes ( const float nearPlane, const float farPlane )
 	{
-		_clippingPlanes.x = near;
-		_clippingPlanes.y = far;
+		_clippingPlanes.x = nearPlane;
+		_clippingPlanes.y = farPlane;
 		_projectionMatrixIsDirty = true;
 	}
 
