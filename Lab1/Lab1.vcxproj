@@ -73,6 +73,8 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CameraFlyController.cpp" />
+    <ClCompile Include="Component.cpp" />
+    <ClCompile Include="ComponentTypes.h" />
     <ClCompile Include="ConsoleDebugScene.cpp" />
     <ClCompile Include="Console\Button.cpp" />
     <ClCompile Include="Console\GameScene.cpp" />
@@ -80,19 +82,28 @@
     <ClCompile Include="Console\ScreenBuffer.cpp" />
     <ClCompile Include="Console\Window.cpp" />
     <ClCompile Include="Display.cpp" />
+    <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GameObjectManager.cpp" />
     <ClCompile Include="Image.cpp" />
+    <ClCompile Include="Input.cpp" />
     <ClCompile Include="KeyboardInput.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="MainGame.cpp" />
+    <ClCompile Include="GameEngine.cpp" />
+    <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MouseInput.cpp" />
     <ClCompile Include="obj_loader.cpp" />
+    <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="Rotator.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="Time.cpp" />
+    <ClCompile Include="Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CameraFlyController.h" />
+    <ClInclude Include="Component.h" />
     <ClInclude Include="ConsoleDebugScene.h" />
     <ClInclude Include="Console\Button.h" />
     <ClInclude Include="Console\GameObject.h" />
@@ -104,15 +115,22 @@
     <ClInclude Include="Console\UiText.h" />
     <ClInclude Include="Console\Window.h" />
     <ClInclude Include="Display.h" />
+    <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GameObjectManager.h" />
     <ClInclude Include="Image.h" />
+    <ClInclude Include="Input.h" />
     <ClInclude Include="KeyboardInput.h" />
-    <ClInclude Include="MainGame.h" />
+    <ClInclude Include="GameEngine.h" />
+    <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MouseInput.h" />
     <ClInclude Include="obj_loader.h" />
+    <ClInclude Include="Renderer.h" />
+    <ClInclude Include="Rotator.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="stb\stb_image.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="Time.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Vertex.h" />
   </ItemGroup>

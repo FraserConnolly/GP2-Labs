@@ -2,6 +2,7 @@
 #include "stb/stb_image.h"
 #include <cassert> 
 #include <iostream>
+#include "Renderer.h"
 
 Texture::Texture ( )
 { 
@@ -63,9 +64,11 @@ void Texture::LoadTexture ( const char * filename )
 	stbi_image_free ( data );
 }
 
-void Texture::Bind ( unsigned int unit )
+void Texture::Bind ( GLint unit )
 {
-	assert ( unit >= 0 && unit <= 31 ); // check we are working with one of the 32 textures
+	// check we are working with one of the available textures
+	// from OpenGL 4.0 there must be at least 80.
+	assert ( unit >= 0 && unit <= Renderer::GetMaxTextureUnits( ) ); 
 
 	if ( _texture == 0u )
 	{
@@ -73,8 +76,12 @@ void Texture::Bind ( unsigned int unit )
 		SetDefaultTexture ( );
 	}
 
-	glActiveTexture ( GL_TEXTURE0 + unit ); //set active texture unit 
-	glBindTexture(GL_TEXTURE_2D, _texture); //type of and texture to bind to unit
+	glBindTextureUnit ( GL_TEXTURE0 + unit, _texture );
+	_activeBind = unit;
+	
+	// these two functions can be called together with glBindtextureUnit
+	//glActiveTexture ( GL_TEXTURE0 + unit ); //set active texture unit 
+	//glBindTexture(GL_TEXTURE_2D, _texture); //type of and texture to bind to unit
 }
 
 void Texture::SetDefaultTexture ( )

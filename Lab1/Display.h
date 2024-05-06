@@ -18,8 +18,8 @@ public:
 	void swapBuffer();
 	float getTime ( );
 
-	float getWidth  ( ) const;
-	float getHeight ( ) const;
+	int getWidth  ( ) const;
+	int getHeight ( ) const;
 
 private:
 

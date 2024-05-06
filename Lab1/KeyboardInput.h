@@ -18,13 +18,9 @@ typedef struct
 
 class KeyboardInput
 {
+	friend class Input;
 
 public:
-
-	KeyboardInput ( );
-	~KeyboardInput ( );
-
-	void tick ( const float deltaTime );
 
 	bool registerKey ( int keyCode );
 	bool registerOnKeyPressed ( int keyCode, std::function<void ( int )> callback );
@@ -34,15 +30,20 @@ public:
 
 	// Call this whenever the scene loads to ensure that key holds are reset
 	void resetKeyPresses ( );
-
-	void processKeyEvent ( const int keyCode, const bool pressed, const float deltaTime );
 	 
 private:
+
 	HANDLE m_bufferHandle = nullptr;
 	BOOL m_ready = false;
 	DWORD fdwSaveOldMode = 0;
 	
-	void init ( );
+	void StartUp ( );
 	std::map<int, pKeyEventStatus> m_keyRegistrations;
+
+	void Service ( );
+	void processKeyEvent ( const int keyCode, const bool pressed );
+
+	KeyboardInput ( );
+	~KeyboardInput ( );
 
 };

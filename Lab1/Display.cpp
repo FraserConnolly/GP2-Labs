@@ -39,12 +39,12 @@ float Display::getTime ( )
 	return SDL_GetTicks ( ) / 1000.0f;
 }
 
-float Display::getWidth ( ) const
+int Display::getWidth ( ) const
 {
 	return _screenWidth;
 }
 
-float Display::getHeight ( ) const
+int Display::getHeight ( ) const
 {
 	return _screenHeight;
 }

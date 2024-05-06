@@ -1,8 +1,9 @@
 #include "KeyboardInput.h"
+#include "Time.h"
 
 KeyboardInput::KeyboardInput ( )  
 {
-    init ( );
+    StartUp ( );
 }
 
 KeyboardInput::~KeyboardInput ( )
@@ -19,7 +20,7 @@ KeyboardInput::~KeyboardInput ( )
     m_keyRegistrations.clear ( );
 }
 
-void KeyboardInput::tick ( const float deltaTime )
+void KeyboardInput::Service ( )
 {
     if ( !m_ready )
     {
@@ -31,7 +32,7 @@ void KeyboardInput::tick ( const float deltaTime )
         // key is down
         if ( key.second->isPressed )
         {
-            key.second->pressedDuration += deltaTime;
+            key.second->pressedDuration += Time::GetDeltaTime( );
         }
     }
 }
@@ -96,7 +97,7 @@ void KeyboardInput::resetKeyPresses ( )
     }
 }
 
-void KeyboardInput::processKeyEvent ( const int keyCode, const bool pressed, const float deltaTime )
+void KeyboardInput::processKeyEvent ( const int keyCode, const bool pressed )
 { 
     if ( m_keyRegistrations.find ( keyCode ) == m_keyRegistrations.end ( ) )
 	{
@@ -110,8 +111,8 @@ void KeyboardInput::processKeyEvent ( const int keyCode, const bool pressed, con
         key->isPressed = true;
 
         // if this is the first frame for this scene then don't process on pressed or wasPressedThisFrame.
-        key->pressedDuration = deltaTime > 0 ? 0 : 0.001f;
-        if ( key->onPressCallback != nullptr && deltaTime > 0 )
+        key->pressedDuration = Time::GetDeltaTime( ) > 0 ? 0 : 0.001f;
+        if ( key->onPressCallback != nullptr && Time::GetDeltaTime ( ) > 0 )
         {
             key->onPressCallback ( keyCode );
         }
@@ -123,7 +124,7 @@ void KeyboardInput::processKeyEvent ( const int keyCode, const bool pressed, con
     }
 }
 
-void KeyboardInput::init ( )
+void KeyboardInput::StartUp ( )
 {
     m_ready = true;
 }

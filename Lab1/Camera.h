@@ -1,11 +1,13 @@
 #pragma once
 
+#include "Component.h"
+
 #include <glm/glm.hpp> 
 #include <glm/gtx/transform.hpp> 
 
-#include "Transform.h"
+class Transform;
 
-class Camera
+class Camera : public Component
 {
 public:
 	enum CameraMode
@@ -14,8 +16,14 @@ public:
 		ORTHOGRAPHIC
 	};
 	
-	Camera ( );
+
+	friend class GameObject;
+
+private:
+	Camera ( GameObject & hostObject );
 	~Camera ( );
+
+public:
 
 #pragma region Getters and Setters
 
@@ -24,6 +32,15 @@ public:
 	{
 		_mode = mode;
 		_projectionMatrixIsDirty = true;
+	}
+
+	/// <summary>
+	/// Gets the camera's field of view
+	/// </summary>
+	/// <returns>In degrees.</returns>
+	const float GetFoV ( )
+	{
+		return glm::degrees( _fov );
 	}
 
 	/// <summary>
@@ -98,8 +115,6 @@ public:
 
 #pragma endregion
 
-	Transform & GetTransform ( );
-
 	glm::mat4 GetViewMatrix ( );
 	glm::mat4 GetProjectionMatrix ( ) ;
 
@@ -112,7 +127,6 @@ private:
 	glm::vec2 _clippingPlanes = glm::vec2 ( 0.1f, 100.0f );
 	glm::vec4 _orthoRectangle = glm::vec4 ( -10.0f, 10.0f, -10.0f, 10.0f );
 	
-	Transform _transform;
 	glm::vec3 _cameraTarget;
 	glm::vec3 _cameraDirection;
 	glm::vec3 _cameraForward = glm::vec3 ( 0.0f, 0.0f, -1.0f );

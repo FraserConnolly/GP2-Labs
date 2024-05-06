@@ -2,25 +2,27 @@
 #include "stb/stb_image.h"
 #include <iostream>
 #include "Shader.h"
+#include "Renderer.h"
 
-Mesh::Mesh ( )
-	: _vertexArrayBuffers ( ), _vertexArrayObject ( 0u ), _elementBufferObject ( 0u ), _drawCount ( 0 )
+MeshRenderer::MeshRenderer ( GameObject & hostObject )
+	: Component ( ComponentTypes:: MESH_RENDERER, hostObject),
+	_vertexArrayBuffers ( ), _vertexArrayObject ( 0u ), _elementBufferObject ( 0u ), _drawCount ( 0 ), _indiciesCount ( 0 )
 { }
 
 
-Mesh::~Mesh ( )
+MeshRenderer::~MeshRenderer ( )
 {
 	glDeleteVertexArrays ( 1, &_vertexArrayObject );
 }
 
-void Mesh::loadObjModel ( const std::string & filename )
+void MeshRenderer::loadObjModel ( const std::string & filename )
 { 
 	IndexedModel model = OBJModel ( filename ).ToIndexedModel ( );
 
 	initModel ( model );
 }
 
-void Mesh::SetMesh ( const Vertex1P1D1U * vertices, const unsigned int numVertices, const unsigned int * indices, const int indiciesCount )
+void MeshRenderer::SetMesh ( const Vertex1P1D1U * vertices, const unsigned int numVertices, const unsigned int * indices, const int indiciesCount )
 {
 	// This method only uses a single buffer rather than NUM_BUFFERS.
 	if ( _vertexArrayObject != NULL )
@@ -60,7 +62,7 @@ void Mesh::SetMesh ( const Vertex1P1D1U * vertices, const unsigned int numVertic
 	glBindVertexArray ( 0 ); // unbind our VAO
 }
 
-void Mesh::Draw ( )
+void MeshRenderer::Draw ( ) const
 {
 	glBindVertexArray ( _vertexArrayObject );
 	if ( _indiciesCount > 0 )
@@ -74,7 +76,17 @@ void Mesh::Draw ( )
 	glBindVertexArray ( 0 );
 }
 
-void Mesh::initModel ( const IndexedModel & model )
+void MeshRenderer::Awake ( )
+{ 
+	Renderer::RegisterMeshRenderer ( this );
+}
+
+void MeshRenderer::OnDestroy ( )
+{ 
+	Renderer::DeregisterMeshRenderer ( this );
+}
+
+void MeshRenderer::initModel ( const IndexedModel & model )
 { 
 	_drawCount = model.indices.size ( );
 	_indiciesCount = model.indices.size ( );

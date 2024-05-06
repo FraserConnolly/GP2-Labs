@@ -3,65 +3,51 @@
 #include <SDL\SDL.h>
 #include <GL\glew.h>
 
-#include "ConsoleDebugScene.h"
-
 #include "Display.h" 
+#include "GameObjectManager.h"
 #include "Mesh.h"
 #include "Shader.h"
 #include "Texture.h"
-#include "Transform.h"
+#include "GameObject.h"
 #include "Camera.h"
-#include "KeyboardInput.h"
 #include "CameraFlyController.h"
-#include "MouseInput.h"
+
+#include "ConsoleDebugScene.h"
 
 enum class GameState{PLAY, EXIT};
 
-class MainGame
+class GameEngine
 {
 public:
 
-	MainGame();
-	~MainGame();
+	GameEngine();
+	~GameEngine();
 
 	void run();
-
-	float getTime ( )
-	{
-		return _time;
-	}
-
-	float getDeltaTime ( )
-	{
-		return _deltaTime;
-	}
 
 private:
 
 	void initSystems();
 	void processInput();
 	void gameLoop();
+	void shutdown ();
 	void drawGame();
 
-	// in seconds
-	float _time = 0.0f;
-	float _deltaTime = 0.0f;
-	
 	Vertex1P1D1U _triangleVertices[ 3 ];
 	unsigned int _triangleIndices [ 3 ];
 	
 	Vertex1P1D1U _cubeVertices [ 36 ];
-
-	Mesh _mesh;
-	Texture _texture;
-	Transform _transform;
+	GameObjectManager _gameObjectManager;
+	MeshRenderer * _mesh = nullptr;
+	Material * _material = nullptr;
+	Texture * _texture = nullptr;
+	GameObject * m_monkey = nullptr;
+	GameObject * m_mainCamera = nullptr;
 	Display _gameDisplay;
 	GameState _gameState;
-	Shader _shaderProgram;
-	Camera _mainCamera;
-	CameraFlyController _flyController;
-	KeyboardInput _keyboardInput;
-	MouseInput _mouseInput;
+	Shader * _shaderProgram = nullptr;
+	Camera * _mainCamera = nullptr;
+	CameraFlyController * _flyController;
 
 	ConsoleDebugScene _debugScene;
 

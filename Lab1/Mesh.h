@@ -1,20 +1,51 @@
 #pragma once
 
+#include "Component.h"
+
 #include <glm\glm.hpp>
 #include <GL\glew.h>
 #include "Vertex.h"
 #include "obj_loader.h"
+//#include "Renderer.h"
+#include "Material.h"
 
-class Mesh
+class MeshRenderer : public Component
 {
 public:
-	Mesh ( );
-	~Mesh ( );
+
+	friend class Renderer;
+	friend class GameObject;
+
+private:
+
+	MeshRenderer ( GameObject & hostObject );
+	~MeshRenderer ( );
+
+public:
 
 	void loadObjModel ( const std::string & filename );
 
 	void SetMesh ( const Vertex1P1D1U * vertices, const unsigned int numVertices, const  unsigned int * indices, const int numIndicies );
-	void Draw ( );
+	
+	/// <summary>
+	/// Set the material to be associated with this object.
+	/// The game engine is limited to a single material per mesh.
+	/// </summary>
+	/// <param name="materials"></param>
+	void SetMaterial ( Material * material )
+	{
+		_material = material;
+	}
+
+	Material * GetMaterial ( ) const
+	{
+		return _material;
+	}
+
+	void Draw ( ) const;
+
+	void Awake ( ) override;
+	void OnDestroy ( ) override;
 
 private:
 
@@ -45,4 +76,6 @@ private:
 
 	unsigned int _drawCount; //how much of the vertexArrayObject do we want to draw
 	unsigned int _indiciesCount; 
+
+	Material * _material = nullptr;
 };
