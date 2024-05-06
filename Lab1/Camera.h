@@ -16,8 +16,14 @@ public:
 		ORTHOGRAPHIC
 	};
 	
-	Camera ( );
+
+	friend class GameObject;
+
+private:
+	Camera ( GameObject & hostObject );
 	~Camera ( );
+
+public:
 
 #pragma region Getters and Setters
 

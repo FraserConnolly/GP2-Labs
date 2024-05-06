@@ -47,6 +47,6 @@ void Transform::Destroy ( )
 		child->Destroy ( );
 	}
 
-	m_gameObject->Destroy ( );
+	m_gameObject.Destroy ( );
 	Kill ( );
 }

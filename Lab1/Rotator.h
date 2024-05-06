@@ -6,14 +6,19 @@
 
 class Rotator : public Component
 { 
-public:
-	Rotator() : Component( ComponentTypes::ROTATOR ) { }
+	friend class GameObject;
+
+private:
+
+	Rotator( GameObject & hostObject ) : Component( ComponentTypes::ROTATOR, hostObject ) { }
 	~Rotator() { }
 	
+public:
+
 	void Update ( )
 	{
 		float t = Time::GetTime ( );
-		m_gameObject->GetTransform ( ).SetRotation ( m_x_speed * t, m_y_speed * t, m_z_speed * t );
+		m_gameObject.GetTransform ( ).SetRotation ( m_x_speed * t, m_y_speed * t, m_z_speed * t );
 	}
 	
 	void SetSpeed ( float speed )

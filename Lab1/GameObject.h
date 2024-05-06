@@ -27,7 +27,7 @@ public:
 
 	Transform & GetTransform ( ) const
 	{
-		return *m_transform;
+		return m_transform;
 	}
 	
 	int GetID ( ) const
@@ -49,31 +49,31 @@ public:
 
 	const bool IsActive ( ) const
 	{
-		return m_transform->IsEnabled ( );
+		return m_transform.IsEnabled ( );
 	}
 
 	const bool IsActiveInHierarchy ( ) const
 	{
-		if ( !m_transform->IsEnabled ( ) )
+		if ( !m_transform.IsEnabled ( ) )
 		{
 			return false;
 		}
 		
 		// check parents
 
-		if ( m_transform->m_parent == nullptr )
+		if ( m_transform.m_parent == nullptr )
 		{
 			// no parents
 			return true;
 		}
 
 		// will call recursively up the hierarchy 
-		return m_transform->m_parent->m_gameObject->IsActiveInHierarchy ( );
+		return m_transform.m_parent->m_gameObject.IsActiveInHierarchy ( );
 	}
 
 #pragma region Components
 
-	Component * AddComponent ( Component * const pComponent );
+	Component * AddComponent ( ComponentTypes Component );
 	void        RemoveComponent ( Component * const pToRemove );
 	void        RemoveAllComponents ( );
 	void        RemoveAllComponents ( ComponentTypes type );
@@ -91,11 +91,13 @@ private:
 	
 	friend class GameObjectManager;
 	
+	Component * AddComponent ( Component * const pComponent );
+
 	GameObject ( );
 	~GameObject ( );
 
 	unsigned int m_id;
-	Transform * m_transform;
+	Transform & m_transform;
 	
 	//Shorter name for my vector 
 	typedef std::vector<Component *> ComponentVector;
@@ -108,5 +110,7 @@ private:
 	bool m_isDestroyed = false;
 
 	static unsigned int  s_objectIDCounter;
+
+	static Component * CreateComponent ( ComponentTypes component, GameObject & hostObject );
 };
 

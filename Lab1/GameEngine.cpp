@@ -124,16 +124,14 @@ void GameEngine::initSystems ( )
 #pragma endregion
 
 	m_monkey = _gameObjectManager.CreateObject ( );
-	_mesh = new MeshRenderer ( );
-	m_monkey->AddComponent ( _mesh );
-	Rotator * r = (Rotator *) m_monkey->AddComponent ( new Rotator ( ) );
-
+	_mesh = (MeshRenderer *) m_monkey->AddComponent ( ComponentTypes::MESH_RENDERER );
+	Rotator * r = (Rotator *) m_monkey->AddComponent ( ComponentTypes::ROTATOR );
 	r -> SetRotationAxis ( false, true, false );
 
 	m_mainCamera = _gameObjectManager.CreateObject ( );
-	_mainCamera = ( Camera * ) m_mainCamera->AddComponent ( new Camera ( ) );
+	_mainCamera = ( Camera * ) m_mainCamera->AddComponent ( ComponentTypes::CAMERA );
 
-	_flyController = ( CameraFlyController * ) m_mainCamera->AddComponent ( new CameraFlyController ( ) );
+	_flyController = ( CameraFlyController * ) m_mainCamera->AddComponent ( ComponentTypes::CAMERA_FLY_CONTROLLER );
 	_flyController->SetCamera ( *_mainCamera );
 
 	_mainCamera->GetGameObject ( ).GetTransform ( ).SetPosition ( glm::vec3 ( 0.5f, 0.5f, 5.0f ) );

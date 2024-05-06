@@ -4,8 +4,8 @@
 #include "Shader.h"
 #include "Renderer.h"
 
-MeshRenderer::MeshRenderer ( )
-	: Component ( ComponentTypes:: MESH_RENDERER ),
+MeshRenderer::MeshRenderer ( GameObject & hostObject )
+	: Component ( ComponentTypes:: MESH_RENDERER, hostObject),
 	_vertexArrayBuffers ( ), _vertexArrayObject ( 0u ), _elementBufferObject ( 0u ), _drawCount ( 0 ), _indiciesCount ( 0 )
 { }
 

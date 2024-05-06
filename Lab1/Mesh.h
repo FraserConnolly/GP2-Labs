@@ -14,9 +14,14 @@ class MeshRenderer : public Component
 public:
 
 	friend class Renderer;
+	friend class GameObject;
 
-	MeshRenderer ( );
+private:
+
+	MeshRenderer ( GameObject & hostObject );
 	~MeshRenderer ( );
+
+public:
 
 	void loadObjModel ( const std::string & filename );
 

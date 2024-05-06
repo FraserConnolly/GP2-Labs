@@ -10,9 +10,6 @@ public:
 	
 	friend class GameObject;
 
-	Component ( const ComponentTypes type );
-	Component ( const ComponentTypes type, const bool enable );
-
 	virtual void Update ( ) { }
 	virtual void LateUpdate ( ) { }
 	
@@ -46,6 +43,10 @@ protected:
 	bool m_isDead = false;
 	ComponentTypes m_componentType;
 
-	GameObject * m_gameObject = nullptr;
+	GameObject & m_gameObject;
+
+	Component ( const ComponentTypes type, GameObject & hostObject );
+	Component ( const ComponentTypes type, GameObject & hostObject, const bool enable );
+
 };
 

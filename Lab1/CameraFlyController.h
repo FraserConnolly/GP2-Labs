@@ -34,11 +34,12 @@ const float ZOOM = 45.0f;
 class CameraFlyController : public Component
 { 
 
-public:
+    friend class GameObject;
 
+private:
 
-	CameraFlyController ( )
-        : Component ( ComponentTypes::CAMERA_FLY_CONTROLLER )
+	CameraFlyController ( GameObject & hostObject )
+        : Component ( ComponentTypes::CAMERA_FLY_CONTROLLER, hostObject )
     {
 		m_camera = nullptr;
         WorldUp = glm::vec3 ( 0.0f, 1.0f, 0.0f );
@@ -48,6 +49,8 @@ public:
         MouseSensitivity = SENSITIVITY;
         updateCameraVectors ( );
 	}
+
+public:
 
     void Awake ( ) override
     {

@@ -1,14 +1,16 @@
 #include "GameObject.h"
+#include "Camera.h"
+#include "Mesh.h"
+#include "CameraFlyController.h"
+#include "Rotator.h"
 
 unsigned int GameObject::s_objectIDCounter = 0;
 
 GameObject::GameObject ( )
+    : m_transform ( *new Transform ( *this ) )
 {
     m_id = s_objectIDCounter++;
-
-    // Reset transform and add it to the components vector
-    m_transform = new Transform ( );
-    AddComponent ( m_transform );
+    AddComponent ( &m_transform );
 }
 
 GameObject::~GameObject ( )
@@ -16,14 +18,43 @@ GameObject::~GameObject ( )
 	RemoveAllComponents ( );
 }
 
-Component * GameObject::AddComponent ( Component * const pComponent )
+Component * GameObject::CreateComponent ( ComponentTypes component, GameObject & hostObject )
 {
-    if ( pComponent->m_gameObject != nullptr )
+    switch ( component )
     {
-        // to do - log this error - the component is already attached to an object.
+        case TRANSFORM:
+            return new Transform ( hostObject );
+        case MESH_RENDERER:
+            return new MeshRenderer ( hostObject );
+        case BOX_COLIDER:
+            return nullptr; // to do 
+        case SPHERE_COLIDER:
+            return nullptr; // to do 
+        case CAMERA:
+            return new Camera ( hostObject );
+        case CAMERA_FLY_CONTROLLER:
+            return new CameraFlyController ( hostObject );
+        case ROTATOR:
+            return new Rotator ( hostObject );
+    }
+
+    return nullptr;
+}
+
+Component * GameObject::AddComponent ( ComponentTypes component )
+{
+    Component * pComponent = CreateComponent ( component , *this );
+
+    if ( pComponent == nullptr )
+    {
         return nullptr;
     }
 
+    return AddComponent ( pComponent );
+}
+
+Component * GameObject::AddComponent ( Component * const pComponent )
+{
     //Make sure this component doesn't already exist in the components list
     VectorItor found = std::find ( m_components.begin ( ),
                                    m_components.end ( ), pComponent );
@@ -33,8 +64,6 @@ Component * GameObject::AddComponent ( Component * const pComponent )
         return pComponent;
     }
 
-    //Set this object as the parent 
-    pComponent->m_gameObject = this;
     m_components.push_back ( pComponent );
 
     pComponent->Awake ( );

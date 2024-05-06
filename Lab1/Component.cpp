@@ -1,21 +1,19 @@
 #include "Component.h"
 #include "GameObject.h"
 
-Component::Component ( const ComponentTypes type ) :
-	m_isEnabled ( true )
+Component::Component ( const ComponentTypes type, GameObject & hostObject ) :
+	m_isEnabled ( true ), m_componentType ( type ), m_gameObject ( hostObject )
 { 
-	m_componentType = type;
 }
 
-Component::Component ( const ComponentTypes type,  const bool enable )
-{ 
-	m_componentType = type;
-	m_isEnabled = enable;
+Component::Component ( const ComponentTypes type, GameObject & hostObject,  const bool enable ) :
+	m_isEnabled ( enable ), m_componentType ( type ), m_gameObject ( hostObject )
+{
 }
 
 GameObject & Component::GetGameObject ( ) const
 {
-	return *m_gameObject;
+	return m_gameObject;
 }
 
 bool Component::IsDead ( ) const
@@ -41,7 +39,7 @@ bool Component::IsActiveAndEnabled ( ) const
 		return false;
 	}
 
-	return m_gameObject->IsActiveInHierarchy ( );
+	return m_gameObject.IsActiveInHierarchy ( );
 }
 
 void Component::SetActive ( const bool enable )
