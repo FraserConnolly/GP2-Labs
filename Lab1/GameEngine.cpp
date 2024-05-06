@@ -6,6 +6,7 @@
 #include "Time.h"
 #include "Input.h"
 #include "Rotator.h"
+#include "Renderer.h"
 
 GameEngine::GameEngine() :
 	_gameState(GameState::PLAY),
@@ -30,6 +31,7 @@ void GameEngine::initSystems ( )
 
 	Time::StartUp ( );
 	Input::StartUp ( );
+	Renderer::Startup ( );
 
 	Input::RegisterKey ( SDLK_ESCAPE ); // escape
 
@@ -126,7 +128,7 @@ void GameEngine::initSystems ( )
 	m_monkey->AddComponent ( _mesh );
 	Rotator * r = (Rotator *) m_monkey->AddComponent ( new Rotator ( ) );
 
-	r -> SetRotationAxis ( false, false, false );
+	r -> SetRotationAxis ( false, true, false );
 
 	m_mainCamera = _gameObjectManager.CreateObject ( );
 	_mainCamera = ( Camera * ) m_mainCamera->AddComponent ( new Camera ( ) );
@@ -149,6 +151,11 @@ void GameEngine::initSystems ( )
 
 	_texture = new Texture ( );
 	_texture->LoadTexture ( "bricks.jpg" );
+
+	_material = new Material ( _shaderProgram );
+	_material->SetTexture ( "diffuse", _texture );
+
+	_mesh->SetMaterial ( _material );
 
 	_debugScene.initaliseScene ( 0 );
 	//_debugScene.SetTransformToMonitor ( _mainCamera->GetTransform ( ) );
@@ -183,6 +190,7 @@ void GameEngine::shutdown ( )
 	_gameObjectManager.DeleteAllObjects ( );
 	Time::Shutdown ( );
 	Input::Shutdown ( );
+	Renderer::Shutdown ( );
 	SDL_SetRelativeMouseMode ( SDL_FALSE );
 }
 
@@ -218,36 +226,8 @@ void GameEngine::drawGame()
 {
 	_gameDisplay.clearDisplay ( );
 	
-	// bind and update the shader
-	_shaderProgram->Bind ( );
-	_shaderProgram->Update ( m_monkey->GetTransform( ) );
-	_texture->Bind ( 0u );
-
-	// draw the mesh
-	_mesh->Draw ( );
+	Renderer::Service ( );
 
 	_gameDisplay.swapBuffer();
 }
 
-//// glfw: whenever the mouse moves, this callback is called
-//// -------------------------------------------------------
-//void mouse_callback ( GLFWwindow * window, double xposIn, double yposIn )
-//{
-//	float xpos = static_cast< float >( xposIn );
-//	float ypos = static_cast< float >( yposIn );
-//
-//	if ( firstMouse )
-//	{
-//		lastX = xpos;
-//		lastY = ypos;
-//		firstMouse = false;
-//	}
-//
-//	float xoffset = xpos - lastX;
-//	float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
-//
-//	lastX = xpos;
-//	lastY = ypos;
-//
-//	camera.ProcessMouseMovement ( xoffset, yoffset );
-//}

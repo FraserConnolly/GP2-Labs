@@ -2,10 +2,11 @@
 #include "stb/stb_image.h"
 #include <iostream>
 #include "Shader.h"
+#include "Renderer.h"
 
 MeshRenderer::MeshRenderer ( )
 	: Component ( ComponentTypes:: MESH_RENDERER ),
-	_vertexArrayBuffers ( ), _vertexArrayObject ( 0u ), _elementBufferObject ( 0u ), _drawCount ( 0 )
+	_vertexArrayBuffers ( ), _vertexArrayObject ( 0u ), _elementBufferObject ( 0u ), _drawCount ( 0 ), _indiciesCount ( 0 )
 { }
 
 
@@ -61,7 +62,7 @@ void MeshRenderer::SetMesh ( const Vertex1P1D1U * vertices, const unsigned int n
 	glBindVertexArray ( 0 ); // unbind our VAO
 }
 
-void MeshRenderer::Draw ( )
+void MeshRenderer::Draw ( ) const
 {
 	glBindVertexArray ( _vertexArrayObject );
 	if ( _indiciesCount > 0 )
@@ -73,6 +74,16 @@ void MeshRenderer::Draw ( )
 		glDrawArrays ( GL_TRIANGLES, 0, _drawCount );
 	}
 	glBindVertexArray ( 0 );
+}
+
+void MeshRenderer::Awake ( )
+{ 
+	Renderer::RegisterMeshRenderer ( this );
+}
+
+void MeshRenderer::OnDestroy ( )
+{ 
+	Renderer::DeregisterMeshRenderer ( this );
 }
 
 void MeshRenderer::initModel ( const IndexedModel & model )

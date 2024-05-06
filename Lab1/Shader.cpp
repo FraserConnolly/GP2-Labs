@@ -70,7 +70,7 @@ void Shader::LoadShaders ( const char * vertexShader, const char * fargmentShade
 	}
 }
 
-void Shader::Bind ( )
+void Shader::Bind ( ) const
 { 
 	glUseProgram ( _program );
 }

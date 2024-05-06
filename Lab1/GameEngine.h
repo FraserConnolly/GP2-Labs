@@ -39,6 +39,7 @@ private:
 	Vertex1P1D1U _cubeVertices [ 36 ];
 	GameObjectManager _gameObjectManager;
 	MeshRenderer * _mesh = nullptr;
+	Material * _material = nullptr;
 	Texture * _texture = nullptr;
 	GameObject * m_monkey = nullptr;
 	GameObject * m_mainCamera = nullptr;

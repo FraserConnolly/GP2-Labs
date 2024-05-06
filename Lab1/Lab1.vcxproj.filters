@@ -117,6 +117,12 @@
     <ClCompile Include="Rotator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Display.h">
@@ -200,14 +206,20 @@
     <ClInclude Include="Time.h">
       <Filter>Header Files\Game Engine\Sub Systems</Filter>
     </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>Header Files\Game Engine\Sub Systems</Filter>
-    </ClInclude>
     <ClInclude Include="KeyboardInput.h">
       <Filter>Header Files\Game Engine\Sub Systems</Filter>
     </ClInclude>
     <ClInclude Include="Rotator.h">
       <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>Header Files\Game Engine\Sub Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Header Files\Game Engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

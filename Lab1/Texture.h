@@ -1,9 +1,11 @@
 #pragma once 
+
 #include <string> 
 #include <GL\glew.h>
 
 class Texture
 {
+	friend class Renderer;
 
 public: 
 	Texture ( );
@@ -12,7 +14,11 @@ public:
 	~Texture ( );
 	
 	void LoadTexture ( const char * filename );
-	void Bind ( unsigned int unit ); // bind upto 32 textures
+
+	// bind up to 80 in OpenGL 4 textures. 
+	// true limit is determined at runtime.
+	// On Nvidia GForce 1050TI it is 192.
+	void Bind ( unsigned int unit ); 
 
 protected: 
 
@@ -25,5 +31,6 @@ private:
 	int	_height = 0;
 	int _nrChannels = 0;
 	bool _fileLoaded = false;
+	GLint _activeBind = -1;
 
 };

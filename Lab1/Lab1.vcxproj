@@ -89,9 +89,11 @@
     <ClCompile Include="KeyboardInput.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="GameEngine.cpp" />
+    <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MouseInput.cpp" />
     <ClCompile Include="obj_loader.cpp" />
+    <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Rotator.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Texture.cpp" />
@@ -119,9 +121,11 @@
     <ClInclude Include="Input.h" />
     <ClInclude Include="KeyboardInput.h" />
     <ClInclude Include="GameEngine.h" />
+    <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MouseInput.h" />
     <ClInclude Include="obj_loader.h" />
+    <ClInclude Include="Renderer.h" />
     <ClInclude Include="Rotator.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="stb\stb_image.h" />

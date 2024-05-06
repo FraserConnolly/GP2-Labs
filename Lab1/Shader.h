@@ -26,7 +26,7 @@ public:
 		_camera = camera;
 	}
 
-	void Bind ( ); //Set GPU to use our shaders
+	void Bind ( ) const; //Set GPU to use our shaders
 
 	std::string LoadShader ( const std::string & fileName );
 	
@@ -44,6 +44,7 @@ public:
 	void SetUniform ( const GLchar * name, const GLfloat x, const GLfloat y, const GLfloat z, const GLfloat w ) const;
 	void SetUniform ( const GLchar * name, const glm::mat4 & matrix );
 	void SetTransform ( const glm::mat4 & transform );
+	GLint GetUnifromLocation ( const GLchar * name ) const;
 
 	void Update ( Transform & transform );
 
@@ -72,5 +73,4 @@ private:
 
 	Camera * _camera = nullptr;
 
-	GLint GetUnifromLocation ( const GLchar * name ) const;
 };
