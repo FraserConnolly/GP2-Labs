@@ -11,7 +11,7 @@ Component::Component ( const ComponentTypes type,  const bool enable )
 { 
 	m_componentType = type;
 	m_isEnabled = enable;
-	}
+}
 
 GameObject & Component::GetGameObject ( ) const
 {
@@ -32,6 +32,16 @@ void Component::Kill ( )
 bool Component::IsEnabled ( ) const
 {
 	return m_isEnabled;
+}
+
+bool Component::IsActiveAndEnabled ( ) const
+{
+	if ( ! m_isEnabled )
+	{
+		return false;
+	}
+
+	return m_gameObject->IsActiveInHierarchy ( );
 }
 
 void Component::SetActive ( const bool enable )

@@ -52,6 +52,25 @@ public:
 		return m_transform->IsEnabled ( );
 	}
 
+	const bool IsActiveInHierarchy ( ) const
+	{
+		if ( !m_transform->IsEnabled ( ) )
+		{
+			return false;
+		}
+		
+		// check parents
+
+		if ( m_transform->m_parent == nullptr )
+		{
+			// no parents
+			return true;
+		}
+
+		// will call recursively up the hierarchy 
+		return m_transform->m_parent->m_gameObject->IsActiveInHierarchy ( );
+	}
+
 #pragma region Components
 
 	Component * AddComponent ( Component * const pComponent );

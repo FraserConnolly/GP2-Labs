@@ -31,6 +31,8 @@ public:
 	void Kill ( );
 
 	bool IsEnabled ( ) const;
+	bool IsActiveAndEnabled ( ) const;
+
 	void SetActive ( const bool enable );
 
 	ComponentTypes GetType ( )
