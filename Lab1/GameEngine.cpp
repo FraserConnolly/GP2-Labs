@@ -32,12 +32,6 @@ void GameEngine::initSystems ( )
 	Input::StartUp ( );
 
 	Input::RegisterKey ( SDLK_ESCAPE ); // escape
-	Input::RegisterKey ( SDLK_a ); // left
-	Input::RegisterKey ( SDLK_d ); // right
-	Input::RegisterKey ( SDLK_w ); // forward
-	Input::RegisterKey ( SDLK_s ); // back
-	Input::RegisterKey ( SDLK_q ); // down
-	Input::RegisterKey ( SDLK_e ); // up
 
 	SDL_SetRelativeMouseMode ( SDL_TRUE );
 

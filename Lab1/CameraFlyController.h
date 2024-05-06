@@ -40,7 +40,7 @@ public:
 	CameraFlyController ( )
         : Component ( ComponentTypes::CAMERA_FLY_CONTROLLER )
     {
-		_camera = nullptr;
+		m_camera = nullptr;
         WorldUp = glm::vec3 ( 0.0f, 1.0f, 0.0f );
         Yaw = YAW;
         Pitch = PITCH;
@@ -49,23 +49,28 @@ public:
         updateCameraVectors ( );
 	}
 
-	void UpdateCamera ( )
-    { 
-        _camera->SetCameraForward ( Front );
-        _camera->SetCameraUp ( Up );
-        _camera->SetFoV ( Zoom );
+    void Awake ( ) override
+    {
+        // Technically these only need to be called on the first script.
+        // But there currently isn't away of doing that.
+        Input::RegisterKey ( SDLK_a ); // left
+        Input::RegisterKey ( SDLK_d ); // right
+        Input::RegisterKey ( SDLK_w ); // forward
+        Input::RegisterKey ( SDLK_s ); // back
+        Input::RegisterKey ( SDLK_q ); // down
+        Input::RegisterKey ( SDLK_e ); // up
     }
 
 	void SetCamera ( Camera & camera )
 	{
-		_camera = &camera;
+		m_camera = &camera;
         Zoom = camera.GetFoV ( );
 	}
 
     // processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
     void ProcessKeyboard ( Camera_Movement direction, float deltaTime )
     {
-        glm::vec3 Position = _camera->GetGameObject( ).GetTransform ( ).GetPosition ( );
+        glm::vec3 Position = m_camera->GetGameObject( ).GetTransform ( ).GetPosition ( );
 
         float velocity = MovementSpeed * deltaTime;
 
@@ -82,7 +87,7 @@ public:
         if ( direction == DOWN )
             Position -= Up * velocity;
 
-        _camera->GetGameObject ( ).GetTransform ( ).SetPosition ( Position );
+        m_camera->GetGameObject ( ).GetTransform ( ).SetPosition ( Position );
     }
 
     // processes input received from a mouse input system. Expects the offset value in both the x and y direction.
@@ -119,25 +124,11 @@ public:
             Zoom = 45.0f;
     }
 
-
-	// euler Angles
-	float Yaw;
-	float Pitch;
-
-	// camera options
-	float MovementSpeed;
-	float MouseSensitivity;
-	float Zoom;
-
-    glm::vec3 Front;
-    glm::vec3 Up;
-    glm::vec3 Right;
-    glm::vec3 WorldUp;
-
     void Update ( ) override
     {
         Component::Update ( );
-    #pragma region Camera controls
+
+        #pragma region Camera controls
 
         float _deltaTime = Time::GetDeltaTime ( );
 
@@ -174,11 +165,27 @@ public:
 
         UpdateCamera ( );
 
-    #pragma endregion
+        #pragma endregion
 
     }
 
 private:
+
+    // euler Angles
+    float Yaw;
+    float Pitch;
+
+    // camera options
+    float MovementSpeed;
+    float MouseSensitivity;
+    float Zoom;
+
+    glm::vec3 Front;
+    glm::vec3 Up;
+    glm::vec3 Right;
+    glm::vec3 WorldUp;
+
+    Camera * m_camera;
 
     // calculates the front vector from the Camera's (updated) Euler Angles
     void updateCameraVectors ( )
@@ -194,7 +201,13 @@ private:
         Up = glm::normalize ( glm::cross ( Right, Front ) );
     }
 
-	Camera * _camera;
+    void UpdateCamera ( )
+    {
+        m_camera->SetCameraForward ( Front );
+        m_camera->SetCameraUp ( Up );
+        m_camera->SetFoV ( Zoom );
+    }
+
 
 };
 
