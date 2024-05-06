@@ -186,6 +186,7 @@ void GameEngine::gameLoop()
 
 void GameEngine::shutdown ( )
 { 
+	_gameObjectManager.DeleteAllObjects ( );
 	Time::Shutdown ( );
 	Input::Shutdown ( );
 	SDL_SetRelativeMouseMode ( SDL_FALSE );

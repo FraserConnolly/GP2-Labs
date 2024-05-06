@@ -48,3 +48,14 @@ void GameObjectManager::CleanUpObjects ( )
 	
 	m_gameObjectsToBeDeleted.clear ( );
 }
+
+void GameObjectManager::DeleteAllObjects ( )
+{ 
+	for ( auto & object : m_gameObjects )
+	{
+		delete object;
+	}
+
+	m_gameObjects.clear ( );
+	m_gameObjectsToBeDeleted.clear ( );
+}

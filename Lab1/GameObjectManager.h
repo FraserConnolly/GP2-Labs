@@ -16,6 +16,8 @@ public:
 
 	void CleanUpObjects( );
 
+	void DeleteAllObjects ( );
+
 private:
 
 	std::vector<GameObject *> m_gameObjects;
