@@ -17,17 +17,17 @@ public:
 
 #pragma region Getters
 	
-	const glm::ivec2 GetMouseOffset ( ) const
+	const glm::ivec2 & GetMouseOffset ( ) const
 	{
 		return _mouseOffset;
 	}
 
-	const float GetXOffset ( ) const
+	const int GetXOffset ( ) const
 	{
 		return _mouseOffset.y;
 	}
 	
-	const float GetYOffset ( ) const
+	const int GetYOffset ( ) const
 	{
 		return _mouseOffset.y;
 	}
@@ -37,12 +37,12 @@ public:
 		return _mousePosition;
 	}
 
-	const float GetXPosition ( ) const
+	const int GetXPosition ( ) const
 	{
 		return _mousePosition.y;
 	}
 
-	const float GetYPosition ( ) const
+	const int GetYPosition ( ) const
 	{
 		return _mousePosition.y;
 	}

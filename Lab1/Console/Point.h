@@ -5,7 +5,7 @@
 namespace FC_Console
 {
 
-#define M_PI 3.14159265358979323846
+#define FC_PI 3.14159265358979323846
 
 	typedef struct _vector2Int
 	{
@@ -307,7 +307,7 @@ namespace FC_Console
 		void rotateVector ( float angleInDegree )
 		{
 			// Convert degrees to radians
-			double angleToRotate = ( angleInDegree * ( M_PI / 180.0f ) );
+			double angleToRotate = ( angleInDegree * ( FC_PI / 180.0f ) );
 
 			rotateRadians ( angleToRotate );
 		}

@@ -18,7 +18,7 @@ public:
 	// bind up to 80 in OpenGL 4 textures. 
 	// true limit is determined at runtime.
 	// On Nvidia GForce 1050TI it is 192.
-	void Bind ( unsigned int unit ); 
+	void Bind ( GLint unit ); 
 
 protected: 
 

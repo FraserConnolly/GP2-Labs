@@ -64,7 +64,7 @@ void Texture::LoadTexture ( const char * filename )
 	stbi_image_free ( data );
 }
 
-void Texture::Bind ( unsigned int unit )
+void Texture::Bind ( GLint unit )
 {
 	// check we are working with one of the available textures
 	// from OpenGL 4.0 there must be at least 80.

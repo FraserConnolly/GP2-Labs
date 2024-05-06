@@ -15,7 +15,7 @@ void Renderer::Startup ( )
 
     s_lastUsedTextureUnit = 0;
 
-    for ( size_t i = 0; i < s_maxTextureUnit; i++ )
+    for ( GLint i = 0; i < s_maxTextureUnit; i++ )
     {
         s_activeTextures [ i ] = nullptr;
     }
@@ -50,7 +50,7 @@ void Renderer::Service ( )
 
         int textureCount = 0;
 
-        for ( auto pair : material->m_textures )
+        for ( auto & pair : material->m_textures )
         {
             Texture * texture = pair.second;
             if ( texture->_activeBind < 0 )
@@ -72,7 +72,7 @@ void Renderer::Service ( )
             FreeAllTextureUnits ( );
         }
 
-        for ( auto pair : material->m_textures )
+        for ( auto & pair : material->m_textures )
         {
             Texture * texture = pair.second;
             
@@ -166,7 +166,7 @@ GLint Renderer::FindFreeTextureUnit ( )
 
 void Renderer::FreeAllTextureUnits ( )
 {
-    for ( size_t i = 0; i < s_maxTextureUnit; i++ )
+    for ( GLint i = 0; i < s_maxTextureUnit; i++ )
     {
         Texture * texture = s_activeTextures [ i ];
         
@@ -197,7 +197,7 @@ void Renderer::BindTexture ( Texture * pTexture )
 
 bool Renderer::CheckUnitsAvilable ( unsigned int count )
 {
-    for ( size_t i = 0; i < s_maxTextureUnit; i++ )
+    for ( GLint i = 0; i < s_maxTextureUnit; i++ )
     {
         if ( count == 0 )
         {

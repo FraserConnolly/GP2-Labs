@@ -143,10 +143,6 @@ void GameObject::CleanUpComponents ( )
                 - 1 ];
             m_components.pop_back ( );
         }
-     //   else
-     //   {
-     //       m_components [ endIndex ]->Update ( dt );
-     //   }
     }
 }
 

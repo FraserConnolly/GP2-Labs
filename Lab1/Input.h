@@ -52,8 +52,6 @@ private:
 	MouseInput * m_mouseInput;
 
 	static void ProcessKeyEvent ( const int keyCode, const bool pressed );
-
-	static void ProcessMouseRelativePosition ( const float x, const float y );
 	static void ProcessWheel ( const int horizontalMovement, const int verticalMovement );
 
 };

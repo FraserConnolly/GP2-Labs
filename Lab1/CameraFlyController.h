@@ -118,7 +118,7 @@ public:
     }
 
     // processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis
-    void ProcessMouseScroll ( float yoffset )
+    void ProcessMouseScroll ( int yoffset )
     {
         Zoom -= ( float ) yoffset;
         if ( Zoom < 1.0f )
@@ -160,10 +160,10 @@ public:
             ProcessKeyboard ( Camera_Movement::DOWN, _deltaTime );
         }
 
-        auto mouseDelta = Input::GetMouseDelta ( );
+        auto & mouseDelta = Input::GetMouseDelta ( );
         ProcessMouseMovement ( (float) mouseDelta.x, (float) mouseDelta.y, true );
 
-        auto wheelDelta = Input::GetMouseWheelDelta ( );
+        auto & wheelDelta = Input::GetMouseWheelDelta ( );
         ProcessMouseScroll ( wheelDelta.y );
 
         UpdateCamera ( );
