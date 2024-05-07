@@ -10,6 +10,7 @@
 #include "Rotator.h"
 #include "Renderer.h"
 #include "CameraFlyController.h"
+#include "Audio.h"
 
 GameEngine::GameEngine ( ) { }
 
@@ -26,14 +27,16 @@ void GameEngine::initSystems ( )
 {
 	_gameDisplay.initDisplay ( );
 
-	GameObjectManager::Startup ( );
+	SDL_SetRelativeMouseMode ( SDL_TRUE );
+
 	Time::StartUp ( );
 	Input::StartUp ( );
 	Renderer::Startup ( );
+	Audio::Startup ( );
+	GameObjectManager::Startup ( );
 
 	Input::RegisterKey ( SDLK_ESCAPE ); // escape
 
-	SDL_SetRelativeMouseMode ( SDL_TRUE );
 
 //#pragma region Vertices for a triangle
 //
@@ -158,6 +161,16 @@ void GameEngine::initSystems ( )
 		r->SetRotationAxis ( false, true, false );
 	}
 
+#pragma region Audio
+
+	Audio::LoadBank ( "Master.bank", FMOD_STUDIO_LOAD_BANK_NORMAL );
+	Audio::LoadBank ( "Master.strings.bank", FMOD_STUDIO_LOAD_BANK_NORMAL );
+	Audio::LoadEvent ( "event:/Lighthearted LOOP SHORT" );
+	Audio::PlayEvent ( "event:/Lighthearted LOOP SHORT" );
+
+#pragma endregion
+
+
 #if _DEBUG
 	_debugScene.initaliseScene ( 0 );
 	//_debugScene.SetTransformToMonitor ( _mainCamera->GetTransform ( ) );
@@ -174,6 +187,7 @@ void GameEngine::gameLoop ( )
 		processInput ( );
 
 		GameObjectManager::Service ( );
+		Audio::Service ( );
 
 		drawGame ( );
 
@@ -185,13 +199,14 @@ void GameEngine::gameLoop ( )
 
 void GameEngine::shutdown ( )
 {
-	GameObjectManager::Shutdown ( );
 	delete _material;
 	delete _shaderProgram;
 	delete _texture;
-	Time::Shutdown ( );
-	Input::Shutdown ( );
+	GameObjectManager::Shutdown ( );
+	Audio::Shutdown ( );
 	Renderer::Shutdown ( );
+	Input::Shutdown ( );
+	Time::Shutdown ( );
 	SDL_SetRelativeMouseMode ( SDL_FALSE );
 }
 

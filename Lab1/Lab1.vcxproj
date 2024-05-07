@@ -77,6 +77,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Audio.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CameraFlyController.cpp" />
     <ClCompile Include="Component.cpp" />
@@ -88,6 +89,7 @@
     <ClCompile Include="Console\ScreenBuffer.cpp" />
     <ClCompile Include="Console\Window.cpp" />
     <ClCompile Include="Display.cpp" />
+    <ClCompile Include="FMOD.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameObjectManager.cpp" />
     <ClCompile Include="Image.cpp" />
@@ -107,6 +109,7 @@
     <ClCompile Include="Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Audio.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CameraFlyController.h" />
     <ClInclude Include="Component.h" />
@@ -121,6 +124,7 @@
     <ClInclude Include="Console\UiText.h" />
     <ClInclude Include="Console\Window.h" />
     <ClInclude Include="Display.h" />
+    <ClInclude Include="FMOD.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameObjectManager.h" />
     <ClInclude Include="Image.h" />
