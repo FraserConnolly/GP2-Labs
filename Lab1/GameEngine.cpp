@@ -2,7 +2,9 @@
 
 #include <iostream>
 #include <string>
+#include "GameObjectManager.h"
 #include "GameObject.h"
+
 #include "Time.h"
 #include "Input.h"
 #include "Rotator.h"
@@ -24,6 +26,7 @@ void GameEngine::initSystems ( )
 {
 	_gameDisplay.initDisplay ( );
 
+	GameObjectManager::Startup ( );
 	Time::StartUp ( );
 	Input::StartUp ( );
 	Renderer::Startup ( );
@@ -118,7 +121,7 @@ void GameEngine::initSystems ( )
 //
 //#pragma endregion
 
-	auto mainCameraobj = _gameObjectManager.CreateObject ( );
+	auto mainCameraobj = GameObjectManager::CreateObject ( );
 	auto mainCamera = ( Camera * ) mainCameraobj->AddComponent ( ComponentTypes::CAMERA );
 
 	auto flyController = ( CameraFlyController * ) mainCameraobj->AddComponent ( ComponentTypes::CAMERA_FLY_CONTROLLER );
@@ -139,7 +142,7 @@ void GameEngine::initSystems ( )
 
 	for ( size_t i = 0; i < 10; i++ )
 	{
-		auto obj = _gameObjectManager.CreateObject ( );
+		auto obj = GameObjectManager::CreateObject ( );
 		obj->GetTransform ( ).SetPosition ( (float) ( i * 3 ) , 0, 0 );
 
 		// create a mesh object
@@ -166,11 +169,12 @@ void GameEngine::gameLoop ( )
 {
 	while ( _gameState != GameState::EXIT )
 	{
-		float newTime = _gameDisplay.getTime ( );
-		Time::Service ( newTime );
+		Time::Service ( _gameDisplay.getTime ( ) );
 
 		processInput ( );
-		_gameObjectManager.UpdateObjects ( );
+
+		GameObjectManager::Service ( );
+
 		drawGame ( );
 
 #if _DEBUG
@@ -181,7 +185,7 @@ void GameEngine::gameLoop ( )
 
 void GameEngine::shutdown ( )
 {
-	_gameObjectManager.DeleteAllObjects ( );
+	GameObjectManager::Shutdown ( );
 	delete _material;
 	delete _shaderProgram;
 	delete _texture;

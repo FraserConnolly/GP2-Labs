@@ -4,7 +4,6 @@
 #include <GL\glew.h>
 
 #include "Display.h"
-#include "GameObjectManager.h"
 
 #if _DEBUG
 #include "ConsoleDebugScene.h"
@@ -36,11 +35,11 @@ private:
 	void shutdown ( );
 	void drawGame ( );
 
-	GameObjectManager _gameObjectManager;
+	GameState _gameState = GameState::PLAY;
+	Display _gameDisplay;
+
 	Material * _material = nullptr;
 	Texture * _texture = nullptr;
-	Display _gameDisplay;
-	GameState _gameState = GameState::PLAY;
 	Shader * _shaderProgram = nullptr;
 
 #if _DEBUG

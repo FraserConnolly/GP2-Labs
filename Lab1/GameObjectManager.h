@@ -7,21 +7,24 @@
 class GameObjectManager
 { 
 public:
-	GameObjectManager( );
-	~GameObjectManager( );
 
-	void UpdateObjects( );
+	static void Startup ( );
+	static void Service ( );
+	static void Shutdown ( );
 
-	GameObject * CreateObject( );
-
-	void CleanUpObjects( );
-
-	void DeleteAllObjects ( );
+	static GameObject * CreateObject( );
 
 private:
 
+	GameObjectManager ( );
+
+	void DeleteAllObjects ( );
+	void CleanUpObjects ( );
+
 	std::vector<GameObject *> m_gameObjects;
 	std::vector<GameObject*> m_gameObjectsToBeDeleted;
+
+	static GameObjectManager * s_instance;
 
 };
 

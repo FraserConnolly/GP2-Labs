@@ -188,9 +188,6 @@
     <ClInclude Include="GameObject.h">
       <Filter>Header Files\Game Engine</Filter>
     </ClInclude>
-    <ClInclude Include="GameObjectManager.h">
-      <Filter>Header Files\Game Engine</Filter>
-    </ClInclude>
     <ClInclude Include="GameEngine.h">
       <Filter>Header Files\Game Engine</Filter>
     </ClInclude>
@@ -220,6 +217,9 @@
     </ClInclude>
     <ClInclude Include="Material.h">
       <Filter>Header Files\Game Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjectManager.h">
+      <Filter>Header Files\Game Engine\Sub Systems</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

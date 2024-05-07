@@ -1,32 +1,37 @@
 #include "GameObjectManager.h"
 
+void GameObjectManager::Startup ( )
+{ 
+	s_instance = new GameObjectManager ( );
+}
+
 GameObjectManager::GameObjectManager ( )
 {
 	m_gameObjects.reserve ( GAME_OBJECT_MANAGER_CAPACITY );
 	m_gameObjectsToBeDeleted.reserve ( GAME_OBJECT_MANAGER_CAPACITY );
 }
 
-GameObjectManager::~GameObjectManager ( )
-{ 
-	CleanUpObjects ( );
+void GameObjectManager::Shutdown ( )
+{
+	s_instance->CleanUpObjects ( );
 
-	for ( auto & object : m_gameObjects )
+	for ( auto & object : s_instance->m_gameObjects )
 	{
 		delete object;
 	}
 
-	m_gameObjects.clear ( );
+	s_instance->m_gameObjects.clear ( );
 }
 
-void GameObjectManager::UpdateObjects ( )
-{ 
-	for ( auto& object : m_gameObjects )
+void GameObjectManager::Service ( )
+{
+	for ( auto & object : s_instance->m_gameObjects )
 	{
 		object->Update ( );
 
 		if ( object->GetIsDestroyed ( ) )
 		{
-			m_gameObjectsToBeDeleted.push_back ( object );
+			s_instance->m_gameObjectsToBeDeleted.push_back ( object );
 		}
 	}
 }
@@ -34,7 +39,7 @@ void GameObjectManager::UpdateObjects ( )
 GameObject * GameObjectManager::CreateObject ( )
 {
 	GameObject* object = new GameObject ( );
-	m_gameObjects.push_back ( object );
+	s_instance->m_gameObjects.push_back ( object );
 	return object;
 }
 
@@ -59,3 +64,5 @@ void GameObjectManager::DeleteAllObjects ( )
 	m_gameObjects.clear ( );
 	m_gameObjectsToBeDeleted.clear ( );
 }
+
+GameObjectManager * GameObjectManager::s_instance = nullptr;
