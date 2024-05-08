@@ -9,9 +9,7 @@ class PathFollow : public Component
 
 private:
 
-	PathFollow ( GameObject & hostObject ) :
-		Component ( ComponentTypes::PATH_FOLLOW, hostObject )
-	{ }
+	PathFollow ( GameObject & hostObject );
 
 	~PathFollow ( )
 	{ }
@@ -24,11 +22,8 @@ public:
 
 private:
 
-	// for future use
-	int m_listenerIndex = 0;
-
-	float m_speed = 1.0f;
-	float m_checkDistance = 1.0f;
+	float m_speed;
+	float m_checkDistance;
 	int m_nextPointIndex = 0;
 	std::vector<glm::vec3> m_path;
 

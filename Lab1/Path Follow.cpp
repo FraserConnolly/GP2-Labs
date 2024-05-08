@@ -1,5 +1,10 @@
 #include "Path Follow.h"
 
+PathFollow::PathFollow ( GameObject & hostObject ) :
+	Component ( ComponentTypes::PATH_FOLLOW, hostObject ),
+	m_nextPointIndex ( 0 ), m_speed ( 1.0f ), m_checkDistance ( 0.1f )
+{ }
+
 void PathFollow::Update ( )
 {
 	if ( m_path.size ( ) == 0 )
