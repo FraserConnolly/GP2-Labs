@@ -92,47 +92,46 @@ public:
 		SetAspectRatio ( width / height );
 	}
 
-	void SetCameraTarget ( const glm::vec3 & target );
-	void SetCameraForward ( const glm::vec3 & forward )
+#if _DEBUG
+
+	/// <summary>
+	/// Used to have an object elsewhere in the scene track the movement and rotation 
+	/// of the camera to help visualise the system.
+	/// </summary>
+	/// <param name="t">The transform that will replicate the rotation of the camera.</param>
+	/// <param name="positionOffset">How far away from the camera should the debug transform be.</param>
+	void SetDebugTransform ( Transform & t, glm::vec3 & positionOffset )
 	{
-		_cameraForward = forward;
+		m_debugTransform = &t;
+		m_debugTargetPositionOffset = positionOffset;
 	}
 
-	glm::vec3 GetCameraForward ( )
-	{
-		return _cameraForward;
-	}
-
-	void SetCameraUp ( const glm::vec3 & up )
-	{
-		_cameraUp = up;
-	}
-
-	glm::vec3 GetCameraUp ( )
-	{
-		return _cameraUp;
-	}
+#endif
 
 #pragma endregion
 
 	glm::mat4 GetViewMatrix ( );
 	glm::mat4 GetProjectionMatrix ( ) ;
 
+	void Update ( ) override;
+
 private:
 	
 	CameraMode _mode;
-	
+
 	float _fov = glm::radians( 45.0f );
 	float _aspectRatio = 16.0f / 9.0f;
 	glm::vec2 _clippingPlanes = glm::vec2 ( 0.1f, 100.0f );
 	glm::vec4 _orthoRectangle = glm::vec4 ( -10.0f, 10.0f, -10.0f, 10.0f );
 	
-	glm::vec3 _cameraTarget;
-	glm::vec3 _cameraDirection;
-	glm::vec3 _cameraForward = glm::vec3 ( 0.0f, 0.0f, -1.0f );
-	glm::vec3 _cameraUp = glm::vec3 ( 0.0f, 1.0f, 0.0f );
 	glm::mat4 _projectionMatrix;
 
 	bool _projectionMatrixIsDirty = true;
+
+#if _DEBUG
+	Transform * m_debugTransform = nullptr;
+	glm::vec3 m_debugTargetPositionOffset;
+#endif
+
 };
 
