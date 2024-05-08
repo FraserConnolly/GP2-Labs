@@ -186,8 +186,22 @@ void GameEngine::initSystems ( )
 		mesh->SetMaterial ( _material );
 
 		auto r = ( Rotator * ) obj->AddComponent ( ComponentTypes::ROTATOR );
-		r->SetRotationAxis ( false, true, false );
-		r->SetActive ( false );
+		switch ( i % 4 )
+		{
+			case 0:
+				r->SetRotationAxis ( true, !true, !true );
+				break;
+			case 1:
+				r->SetRotationAxis ( !true, true, !true );
+				break;
+			case 2:
+				r->SetRotationAxis ( !true, !true, true );
+				break;
+			case 3:
+				r->SetRotationAxis ( !true, !true, !true );
+				break;
+		}
+		
 
 		//if ( i == 0 )
 		//{
@@ -210,7 +224,9 @@ void GameEngine::initSystems ( )
 		{
 			mesh->loadObjModel ( "ArrowNegZ.obj" );
 			obj->GetTransform ( ).SetPosition ( ( float ) ( 0 ), 0, 0 );
-			
+			r->SetRotationAxis ( !true, !true, !true );
+			r->SetActive ( false );
+
 			auto path = ( PathFollow * ) obj->AddComponent ( PATH_FOLLOW );
 			
 			for ( auto & point : points )

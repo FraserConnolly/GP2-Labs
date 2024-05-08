@@ -1,8 +1,6 @@
 #pragma once
-
 #include "Component.h"
-#include "GameObject.h"
-#include "Time.h"
+#include <glm/glm.hpp>
 
 class Rotator : public Component
 { 
@@ -15,23 +13,28 @@ private:
 	
 public:
 
-	void Update ( )
-	{
-		float t = Time::GetTime ( );
-		m_gameObject.GetTransform ( ).SetRotationEuler ( m_x_speed * t, m_y_speed * t, m_z_speed * t );
-	}
+	void Update ( );
 	
 	void SetSpeed ( float speed )
 	{
 		m_speed = speed;
+		SetRotationAxis ( m_axisRotation );
 	}
 
-	void SetRotationAxis ( const bool x, const bool y, const bool z )
+	float GetSpeed ( ) const
 	{
-		m_x_speed = x ? m_speed : 0.0f;
-		m_y_speed = y ? m_speed : 0.0f;
-		m_z_speed = z ? m_speed : 0.0f;
+		return m_speed;
 	}
+
+	void SetRotationAxis ( const bool x, const bool y, const bool z );
+
+	void SetRotationAxis ( glm::bvec3 & axisRotation );
+
+	const glm::bvec3 & GetRotationAxis ( ) const
+	{
+		return m_axisRotation;
+	}
+
 
 private:
 
@@ -39,6 +42,8 @@ private:
 	float m_x_speed = 0.0f;
 	float m_y_speed = 0.0f;
 	float m_z_speed = 0.0f;
+
+	glm::bvec3 m_axisRotation;
 
 };
 
