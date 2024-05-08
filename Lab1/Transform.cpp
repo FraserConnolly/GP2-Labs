@@ -50,3 +50,36 @@ void Transform::Destroy ( )
 	m_gameObject.Destroy ( );
 	Kill ( );
 }
+
+void Transform::ApplyNewData ( ) const
+{
+	if ( !m_isDirty )
+	{
+		return;
+	}
+
+	glm::mat4 posMat = glm::translate ( m_position );
+
+	//// won't this result in Gimble lock? - It could do so I replaced this with a quaternion.
+	//glm::mat4 rotX = glm::rotate ( m_rotation.x, glm::vec3 ( 1.0f, 0.0f, 0.0f ) );
+	//glm::mat4 rotY = glm::rotate ( m_rotation.y, glm::vec3 ( 0.0f, 1.0f, 0.0f ) );
+	//glm::mat4 rotZ = glm::rotate ( m_rotation.z, glm::vec3 ( 0.0f, 0.0f, 1.0f ) );
+	//glm::mat4 rotMat = rotX * rotY * rotZ;
+	
+	glm::mat4 rotMat = glm::toMat4 ( m_rotation );
+
+	glm::mat4 scaleMat = glm::scale ( m_scale );
+
+	// matrices are multiplied in reverse order, so we scale, then rotate, then translate.
+	m_modelMatrix = posMat * rotMat * scaleMat;
+
+	// calculate the new unit vectors for this object.
+	m_forward = rotMat * WorldForward;
+	m_up = rotMat * WorldUp;
+	m_right = rotMat * WorldRight;
+
+	// used for debugging
+	m_rotationEuler = glm::degrees ( glm::eulerAngles ( m_rotation ) );
+
+	m_isDirty = false;
+}

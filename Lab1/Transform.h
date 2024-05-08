@@ -1,6 +1,9 @@
 #pragma once
 #include <glm/glm.hpp> 
 #include <glm/gtx/transform.hpp> 
+#include <glm/gtx/euler_angles.hpp> 
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/quaternion.hpp>
 
 #include "Component.h"
 #include <vector>
@@ -11,24 +14,9 @@ public:
 
 #pragma region Getters
 
-	inline glm::mat4 & GetModel ( )
+	inline glm::mat4 & GetModel ( ) const
 	{
-		if ( m_isDirty )
-		{
-			glm::mat4 posMat = glm::translate ( m_position );
-			glm::mat4 scaleMat = glm::scale ( m_scale );
-
-			// won't this result in Gimble lock?
-			glm::mat4 rotX = glm::rotate ( m_rotation.x, glm::vec3 ( 1.0f, 0.0f, 0.0f ) );
-			glm::mat4 rotY = glm::rotate ( m_rotation.y, glm::vec3 ( 0.0f, 1.0f, 0.0f ) );
-			glm::mat4 rotZ = glm::rotate ( m_rotation.z, glm::vec3 ( 0.0f, 0.0f, 1.0f ) );
-			glm::mat4 rotMat = rotX * rotY * rotZ;
-
-			// matrices are multiplied in reverse order, so we scale, then rotate, then translate.
-			m_modelMatrix = posMat * rotMat * scaleMat;
-
-			m_isDirty = false;
-		}
+		ApplyNewData ( );
 		return m_modelMatrix;
 	}
 
@@ -37,14 +25,39 @@ public:
 		return m_position;
 	} 
 
-	inline const glm::vec3 & GetRotation() const
+	inline const glm::quat & GetRotation ( ) const
 	{ 
 		return m_rotation; 
 	} 
 
-	inline const glm::vec3 & GetScale() const
+	/// <returns>Euler angles in degrees.</returns>
+	inline const glm::vec3 & GetRotationEuler ( ) const
+	{
+		ApplyNewData ( );
+		return m_rotationEuler;
+	}
+
+	inline const glm::vec3 & GetScale ( ) const
 	{ 
 		return m_scale; 
+	}
+
+	inline const glm::vec3 & GetForward ( ) const
+	{
+		ApplyNewData ( );
+		return m_forward;
+	}
+
+	inline const glm::vec3 & GetUp ( ) const
+	{
+		ApplyNewData ( );
+		return m_up;
+	}
+
+	inline const glm::vec3 & GetRight ( ) const
+	{
+		ApplyNewData ( );
+		return m_right;
 	}
 
 #pragma endregion
@@ -65,26 +78,64 @@ public:
 		SetDirty ( );
 	}
 
-	inline void SetRotation( const glm::vec3 & rot ) 
+	inline void Translate ( float x, float y, float z )
 	{
-		m_rotation = rot; 
+		Translate ( glm::vec3 ( x, y, z ) );
+	}
+
+	inline void Translate ( glm::vec3 & offset )
+	{
+		m_position += offset;
 		SetDirty ( );
 	}
 
-	inline void SetRotation ( const float x, const float y, const float z )
+	inline void SetRotation( const glm::quat & rot ) 
 	{
-		m_rotation.x = x;
-		m_rotation.y = y;
-		m_rotation.z = z;
+		m_rotation = rot;
 		SetDirty ( );
 	}
-	
-	inline void SetEulerRotation ( const float x, const float y, const float z )
-	{ 
-		m_rotation.x = glm::radians( x );
-		m_rotation.y = glm::radians( y );
-		m_rotation.z = glm::radians( z );
+
+
+	inline void SetRotationEuler ( const glm::vec3 & eulerAngles )
+	{
+		m_rotation = glm::quat ( eulerAngles );
 		SetDirty ( );
+	}
+
+	inline void SetRotationEuler ( const float x, const float y, const float z )
+	{
+		SetRotationEuler ( glm::vec3 ( x, y, z ) );
+	}
+	
+	inline void SetRotationEulerInDegrees ( const float x, const float y, const float z )
+	{
+		SetRotationEuler ( glm::vec3 (
+			glm::radians ( x ),
+			glm::radians ( y ),
+			glm::radians ( z ) ) );
+	}
+
+	inline void SetRotationNormalisedAxis ( glm::vec3 & forward, glm::vec3 & up )
+	{
+		m_rotation = glm::quat ( forward, up );
+		SetDirty ( );
+	}
+
+	// This function was taken significantly written by ChatGPT. 
+	// Please see Chat GPT Capture 1.png and Chat GPT Capture 2.png for query and response.
+	// I don't really understand why this works but I lost a day trying to make it work
+	// directly with the quaternion and failed miserably so going via Euler was the compromise.
+	inline void LookAt ( glm::vec3 & target )
+	{
+		glm::vec3 direction = glm::normalize ( target - m_position );
+
+		// Calculate yaw angle (horizontal rotation around the y-axis)
+		float yaw = atan2 ( -direction.z, direction.x ) - glm::pi<float> ( ) / 2.0f; // Adding 90 degrees to adjust for convention
+
+		// Calculate pitch angle (vertical rotation around the x-axis)
+		float pitch = asin ( direction.y );
+
+		SetRotationEuler ( pitch, yaw, 0.0f );
 	}
 
 	inline void SetScale ( const glm::vec3 & scale )
@@ -132,7 +183,7 @@ public:
 	void Reset ( ) override
 	{
 		SetPosition ( 0.0f, 0.0f, 0.0f );
-		SetRotation ( 0.0f, 0.0f, 0.0f );
+		SetRotationEuler ( 0.0f, 0.0f, 0.0f );
 		SetScale ( 1.0f, 1.0f, 1.0f );
 	}
 
@@ -179,15 +230,33 @@ private:
 		SetScale ( scale );
 	}
 
-	bool m_isDirty;
+	mutable bool m_isDirty;
 
 	glm::vec3 m_position; 
-	glm::vec3 m_rotation; 
+	glm::quat m_rotation;
 	glm::vec3 m_scale; 
 	
-	glm::mat4 m_modelMatrix;
+	// These member variables are holding cached values 
+	// that may be updated when they are retrieved which is why
+	// they have the mutable keyword.
+	mutable glm::vec3 m_forward = WorldForward; 
+	mutable glm::vec3 m_up = WorldUp;
+	mutable glm::vec3 m_right = WorldRight;
+	
+	mutable glm::vec3 m_rotationEuler; // for reading only - set by apply data.
+	mutable glm::mat4 m_modelMatrix;
 
 	Transform * m_parent = nullptr;
 	std::vector<Transform *> m_children;
+
+	/// <summary>
+	/// Updates the cached values.
+	/// </summary>
+	void ApplyNewData ( ) const;
+
+	// Right handed world unit vectors.
+	const glm::vec4 WorldUp = glm::vec4 ( 0.0f, 1.0f, 0.0f, 0.0f );
+	const glm::vec4 WorldForward = glm::vec4 ( 0.0f, 0.0f, -1.0f, 0.0f );
+	const glm::vec4 WorldRight = glm::vec4 ( 1.0f, 0.0f, 0.0f, 0.0f );
 
 };

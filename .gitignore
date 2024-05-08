@@ -360,3 +360,4 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/Audio/FMOD Project/GP2/Metadata/ProfilerSession/{e18edd3e-fe53-4e93-b95e-5e48534e9931}

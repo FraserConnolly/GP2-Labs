@@ -3,6 +3,9 @@
 #include "Mesh.h"
 #include "CameraFlyController.h"
 #include "Rotator.h"
+#include "Audio Event Emitter.h"
+#include "Audio Listener.h"
+#include "Path Follow.h"
 
 unsigned int GameObject::s_objectIDCounter = 0;
 
@@ -36,6 +39,12 @@ Component * GameObject::CreateComponent ( ComponentTypes component, GameObject &
             return new CameraFlyController ( hostObject );
         case ROTATOR:
             return new Rotator ( hostObject );
+        case AUDIO_EVENT_EMITTER:
+            return new AudioEventEmitter ( hostObject );
+        case AUDIO_LISTENER:
+            return new AudioListener ( hostObject );
+        case PATH_FOLLOW:
+            return new PathFollow ( hostObject );
     }
 
     return nullptr;

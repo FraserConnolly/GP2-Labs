@@ -11,18 +11,6 @@ Camera::Camera ( GameObject & hostObject )
 Camera::~Camera ( )
 { }	
 
-void Camera::SetCameraTarget ( const glm::vec3 & target )
-{
-	_cameraTarget = target;
-	_cameraDirection = glm::normalize ( m_gameObject.GetTransform( ).GetPosition ( ) - _cameraTarget );
-	glm::vec3 up = glm::vec3 ( 0.0f, 1.0f, 0.0f );
-	glm::vec3 right = glm::normalize ( glm::cross ( up, _cameraDirection ) );
-	_cameraUp = glm::cross ( _cameraDirection, right );
-}
-
-
-
-
 glm::mat4 Camera::GetViewMatrix ( )
 {
 	// in lab 4 Bryan multiples the View Matrix with the Projection matrix here instead of passing the projection matrix separately as a uniform.
@@ -31,13 +19,9 @@ glm::mat4 Camera::GetViewMatrix ( )
 	// I have opted to pass the three matrices to the vertex shader separately so that the GPU can do this calculation.
 
 
-	// these lines of code will result in a camera that is always looking at the target position in world space.
-	//glm::vec3 up = glm::vec3 ( 0.0f, 1.0f, 0.0f );
-	//return glm::lookAt ( _transform.GetPosition( ), _cameraTarget, up );
-
-	
 	// this line will result in a matrix where the camera will always look forward rather than at a defined target position in world space.
-	return glm::lookAt ( m_gameObject.GetTransform( ).GetPosition ( ), m_gameObject.GetTransform ( ).GetPosition ( ) + _cameraForward, _cameraUp );
+	//return glm::lookAt ( m_transform.GetPosition ( ), m_transform.GetPosition ( ) + m_transform.GetForward ( ), glm::vec3 ( 0.0f, 1.0f, 0.0f ) );
+	return glm::lookAt ( m_transform.GetPosition ( ), m_transform.GetPosition ( ) + m_transform.GetForward ( ), m_transform.GetUp( ) );
 
 }
 
@@ -68,3 +52,18 @@ glm::mat4 Camera::GetProjectionMatrix ( )
 
 	return _projectionMatrix;
 }
+
+#if _DEBUG
+
+	void Camera::Update ( )
+	{
+		if ( m_debugTransform != nullptr )
+		{
+			m_debugTransform->SetRotation ( m_transform.GetRotation ( ) );
+			m_debugTransform->SetPosition (
+				m_transform.GetPosition ( ) + m_debugTargetPositionOffset
+			);
+		}
+	}
+
+#endif

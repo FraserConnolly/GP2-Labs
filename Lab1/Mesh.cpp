@@ -19,6 +19,12 @@ void MeshRenderer::loadObjModel ( const std::string & filename )
 { 
 	IndexedModel model = OBJModel ( filename ).ToIndexedModel ( );
 
+	if ( model.positions.size ( ) == 0 )
+	{
+		// file did not load
+		return;
+	}
+
 	initModel ( model );
 }
 

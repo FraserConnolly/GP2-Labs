@@ -10,6 +10,10 @@
 #include "Rotator.h"
 #include "Renderer.h"
 #include "CameraFlyController.h"
+#include "Audio Event Emitter.h"
+#include "Audio Listener.h"
+#include "Audio.h"
+#include "Path Follow.h"
 
 GameEngine::GameEngine ( ) { }
 
@@ -26,14 +30,25 @@ void GameEngine::initSystems ( )
 {
 	_gameDisplay.initDisplay ( );
 
-	GameObjectManager::Startup ( );
+	SDL_SetRelativeMouseMode ( SDL_TRUE );
+
 	Time::StartUp ( );
 	Input::StartUp ( );
 	Renderer::Startup ( );
+	Audio::Startup ( );
+	GameObjectManager::Startup ( );
 
 	Input::RegisterKey ( SDLK_ESCAPE ); // escape
 
-	SDL_SetRelativeMouseMode ( SDL_TRUE );
+#pragma region Audio
+
+	Audio::LoadBank ( "Master.bank", FMOD_STUDIO_LOAD_BANK_NORMAL );
+	Audio::LoadBank ( "Master.strings.bank", FMOD_STUDIO_LOAD_BANK_NORMAL );
+	//Audio::LoadEvent ( "event:/Lighthearted LOOP SHORT" );
+	//Audio::SetEvent3dAttributes ( "event:/Lighthearted LOOP SHORT", glm::vec3 ( 0 ) );
+	//Audio::PlayEvent ( "event:/Lighthearted LOOP SHORT" );
+
+#pragma endregion
 
 //#pragma region Vertices for a triangle
 //
@@ -121,14 +136,16 @@ void GameEngine::initSystems ( )
 //
 //#pragma endregion
 
-	auto mainCameraobj = GameObjectManager::CreateObject ( );
-	auto mainCamera = ( Camera * ) mainCameraobj->AddComponent ( ComponentTypes::CAMERA );
+	auto mainCameraObj = GameObjectManager::CreateObject ( );
+	auto mainCamera = ( Camera * ) mainCameraObj->AddComponent ( ComponentTypes::CAMERA );
 
-	auto flyController = ( CameraFlyController * ) mainCameraobj->AddComponent ( ComponentTypes::CAMERA_FLY_CONTROLLER );
+	auto flyController = ( CameraFlyController * ) mainCameraObj->AddComponent ( ComponentTypes::CAMERA_FLY_CONTROLLER );
 	flyController->SetCamera ( *mainCamera );
 
-	mainCameraobj->GetTransform ( ).SetPosition ( glm::vec3 ( 0.5f, 0.5f, 5.0f ) );
-	mainCamera->SetCameraTarget ( glm::vec3 ( 0.0f, 0.0f, 0.0f ) );
+	mainCameraObj->GetTransform ( ).SetPosition ( glm::vec3 ( 0.0f, 20.0f, 20.0f ) );
+	mainCameraObj->GetTransform ( ).SetRotationEulerInDegrees ( -45, 0, 0 );
+	mainCameraObj->AddComponent ( ComponentTypes::AUDIO_LISTENER );
+
 
 	_shaderProgram = new Shader ( );
 	_shaderProgram->LoadDefaultShaders ( );
@@ -136,14 +153,28 @@ void GameEngine::initSystems ( )
 
 	_texture = new Texture ( );
 	_texture->LoadTexture ( "bricks.jpg" );
+	//_texture->LoadTexture ( "PolygonPrototype_Texture_01.png" );
 
 	_material = new Material ( _shaderProgram );
 	_material->SetTexture ( "diffuse", _texture );
 
-	for ( size_t i = 0; i < 10; i++ )
+	Transform * toFollow = nullptr;
+
+	std::vector<glm::vec3> points;
+
+	points.push_back ( glm::vec3 ( -2.5, 0, -2.5 ) );
+	points.push_back ( glm::vec3 ( +2.5, 5, -2.5 ) );
+	points.push_back ( glm::vec3 ( +2.5, 0, +2.5 ) );
+	points.push_back ( glm::vec3 ( -2.5, 0, +2.5 ) );
+
+	for ( size_t i = 0; i < points.size( ) + 1; i++ )
 	{
 		auto obj = GameObjectManager::CreateObject ( );
-		obj->GetTransform ( ).SetPosition ( (float) ( i * 3 ) , 0, 0 );
+		if ( i != points.size ( ) )
+		{
+			obj->GetTransform ( ).SetPosition ( points [ i ] );
+			obj->GetTransform ( ).SetScale ( 1.0f );
+		}
 
 		// create a mesh object
 		auto mesh = ( MeshRenderer * ) obj->AddComponent ( ComponentTypes::MESH_RENDERER );
@@ -155,13 +186,65 @@ void GameEngine::initSystems ( )
 		mesh->SetMaterial ( _material );
 
 		auto r = ( Rotator * ) obj->AddComponent ( ComponentTypes::ROTATOR );
-		r->SetRotationAxis ( false, true, false );
+		switch ( i % 4 )
+		{
+			case 0:
+				r->SetRotationAxis ( true, !true, !true );
+				break;
+			case 1:
+				r->SetRotationAxis ( !true, true, !true );
+				break;
+			case 2:
+				r->SetRotationAxis ( !true, !true, true );
+				break;
+			case 3:
+				r->SetRotationAxis ( !true, !true, !true );
+				break;
+		}
+		
+
+		//if ( i == 0 )
+		//{
+		//	//mesh->loadObjModel ( "SM_Icon_Camera_01.obj" );
+		//	obj->GetTransform ( ).SetRotationEulerInDegrees ( 0, 0, 0 );
+		//	auto emitter  = ( AudioEventEmitter * ) obj->AddComponent ( ComponentTypes::AUDIO_EVENT_EMITTER );
+		//	emitter->LoadEvent ( "event:/Test" ); // ( "event:/Lighthearted LOOP SHORT" );
+		//	//emitter->PlayEvent ( );
+		//}
+
+		//if ( i == 1 )
+		//{
+		//	mesh->loadObjModel ( "ArrowNegZ.obj" );
+		//	//obj->AddComponent ( ComponentTypes::AUDIO_LISTENER );
+		//	r->SetActive ( false );
+		//	mainCamera->SetDebugTransform ( obj->GetTransform ( ), glm::vec3 ( 0, -1, -3 ) );
+		//}
+
+		if ( i == points.size( ) )
+		{
+			mesh->loadObjModel ( "ArrowNegZ.obj" );
+			obj->GetTransform ( ).SetPosition ( ( float ) ( 0 ), 0, 0 );
+			r->SetRotationAxis ( !true, !true, !true );
+			r->SetActive ( false );
+
+			auto path = ( PathFollow * ) obj->AddComponent ( PATH_FOLLOW );
+			
+			for ( auto & point : points )
+			{
+				path->AddWayPoint ( point );
+			}
+
+			toFollow = &obj->GetTransform ( );
+		}
 	}
+
+
+
 
 #if _DEBUG
 	_debugScene.initaliseScene ( 0 );
-	//_debugScene.SetTransformToMonitor ( _mainCamera->GetTransform ( ) );
-	//_debugScene.SetTransformToMonitor ( m_monkey->GetTransform( ) );
+	_debugScene.SetTransformToMonitor ( mainCameraObj->GetTransform ( ) );
+	_debugScene.SetTransformToMonitor ( *toFollow );
 #endif
 }
 
@@ -174,6 +257,7 @@ void GameEngine::gameLoop ( )
 		processInput ( );
 
 		GameObjectManager::Service ( );
+		Audio::Service ( );
 
 		drawGame ( );
 
@@ -185,13 +269,14 @@ void GameEngine::gameLoop ( )
 
 void GameEngine::shutdown ( )
 {
-	GameObjectManager::Shutdown ( );
 	delete _material;
 	delete _shaderProgram;
 	delete _texture;
-	Time::Shutdown ( );
-	Input::Shutdown ( );
+	GameObjectManager::Shutdown ( );
+	Audio::Shutdown ( );
 	Renderer::Shutdown ( );
+	Input::Shutdown ( );
+	Time::Shutdown ( );
 	SDL_SetRelativeMouseMode ( SDL_FALSE );
 }
 

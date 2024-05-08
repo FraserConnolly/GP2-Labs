@@ -62,7 +62,7 @@ void ConsoleDebugScene::updateScene ( )
     if ( _monitor != nullptr )
     {
         const glm::vec3 & position = _monitor->GetPosition ( );
-        const glm::vec3 & rotation = _monitor->GetRotation ( );
+        const glm::vec3 & rotation = _monitor->GetRotationEuler ( );
         _positionTextbox.updateText ( position.x, position.y, position.z );
         _rotationTextbox.updateText ( rotation.x, rotation.y, rotation.z );
     }
