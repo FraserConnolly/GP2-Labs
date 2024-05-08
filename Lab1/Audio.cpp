@@ -1,9 +1,10 @@
 #include "Audio.h"
 #include "FMOD.h"
+#include "Transform.h"
 
 void Audio::Startup ( )
 {
-	s_pFmodIntegration = new FMOD_Intergration;
+	s_pFmodIntegration = new FMOD_Intergration ( );
 }
 
 void Audio::Service ( )
@@ -33,7 +34,12 @@ void Audio::LoadBank ( const std::string & strBankName, FMOD_STUDIO_LOAD_BANK_FL
 	}
 }
 
-void Audio::Set3dListenerAndOrientation ( const int listenerIndex, const glm::vec3 & vPosition )
+void Audio::Set3dListenerAndOrientation ( const int listenerIndex, const Transform & transform )
+{
+	Set3dListenerAndOrientation ( listenerIndex, transform.GetPosition ( ), transform.GetForward ( ), transform.GetUp ( ) );
+}
+
+void Audio::Set3dListenerAndOrientation ( const int listenerIndex, const glm::vec3 & vPosition, const glm::vec3 & vForward, const glm::vec3 & vUp )
 {
 	FMOD_3D_ATTRIBUTES attributes { };
 
@@ -41,9 +47,15 @@ void Audio::Set3dListenerAndOrientation ( const int listenerIndex, const glm::ve
 	attributes.position.y = vPosition.y;
 	attributes.position.z = vPosition.z;
 
-	// attributes for forward, up, and velocity all left at 0. - Future work.
+	attributes.forward.x = vForward.x;
+	attributes.forward.y = vForward.y;
+	attributes.forward.z = vForward.z;
+	
+	attributes.up.x = vUp.x;
+	attributes.up.y = vUp.y;
+	attributes.up.z = vUp.z;
 
-	s_pFmodIntegration->mpStudioSystem->setListenerAttributes ( listenerIndex, &attributes );
+	FMOD_Intergration::ErrorCheck ( s_pFmodIntegration->mpStudioSystem->setListenerAttributes ( listenerIndex, &attributes ) );
 }
 
 #pragma region Sounds
@@ -180,10 +192,34 @@ void Audio::LoadEvent ( const std::string & strEventName )
 	}
 }
 
-void Audio::SetEvent3dAttributes ( const std::string & strEventName, glm::vec3 & vPosition )
+void Audio::SetEvent3dAttributes ( const std::string & strEventName, const Transform & transform )
 {
 	auto tFoundit = s_pFmodIntegration->m_Events.find ( strEventName );
-	if ( tFoundit != s_pFmodIntegration->m_Events.end ( ) )
+	if ( tFoundit == s_pFmodIntegration->m_Events.end ( ) )
+	{
+		return;
+	}
+
+	FMOD_3D_ATTRIBUTES attributes { };
+	attributes.position.x = transform.GetPosition ( ).x;
+	attributes.position.y = transform.GetPosition ( ).y;
+	attributes.position.z = transform.GetPosition ( ).z;
+
+	attributes.forward.x = transform.GetForward ( ).x;
+	attributes.forward.y = transform.GetForward ( ).y;
+	attributes.forward.z = transform.GetForward ( ).z;
+
+	attributes.up.x = transform.GetUp ( ).x;
+	attributes.up.y = transform.GetUp ( ).y;
+	attributes.up.z = transform.GetUp ( ).z;
+
+	FMOD_Intergration::ErrorCheck ( tFoundit->second->set3DAttributes ( &attributes ) );
+}
+
+void Audio::SetEvent3dAttributes ( const std::string & strEventName, const glm::vec3 & vPosition )
+{
+	auto tFoundit = s_pFmodIntegration->m_Events.find ( strEventName );
+	if ( tFoundit == s_pFmodIntegration->m_Events.end ( ) )
 	{
 		return;
 	}
@@ -193,7 +229,9 @@ void Audio::SetEvent3dAttributes ( const std::string & strEventName, glm::vec3 &
 	attributes.position.y = vPosition.y;
 	attributes.position.z = vPosition.z;
 
-	// attributes for forward, up, and velocity all left at 0. - Future work.
+	// default right handed coordinates
+	attributes.forward.z = -1;
+	attributes.up.y = 1;
 
 	FMOD_Intergration::ErrorCheck ( tFoundit->second->set3DAttributes ( &attributes ) );
 }

@@ -17,6 +17,7 @@
 #include <glm\glm.hpp>
 
 class FMOD_Intergration;
+class Transform; 
 
 class Audio
 {
@@ -27,7 +28,8 @@ public:
 
     static void LoadBank ( const std::string & strBankName, FMOD_STUDIO_LOAD_BANK_FLAGS flags );
     
-    static void Set3dListenerAndOrientation ( const int listenerIndex, const glm::vec3 & vPosition = glm::vec3 { 0, 0, 0 } );
+    static void Set3dListenerAndOrientation ( const int listenerIndex, const Transform & transform );
+    static void Set3dListenerAndOrientation ( const int listenerIndex, const glm::vec3 & vPosition, const glm::vec3 & vForward, const glm::vec3 & vUp );
 
 #pragma region Sounds
     
@@ -55,7 +57,8 @@ public:
 #pragma region FMOD Events
 
     static void LoadEvent ( const std::string & strEventName );
-    static void SetEvent3dAttributes ( const std::string & strEventName, glm::vec3 & vPosition );
+    static void SetEvent3dAttributes ( const std::string & strEventName, const Transform & transform );
+    static void SetEvent3dAttributes ( const std::string & strEventName, const glm::vec3 & vPosition );
     static void PlayEvent ( const std::string & strEventName );
     static void StopEvent ( const std::string & strEventName, bool bImmediate = false );
     static void GetEventParameter ( const std::string & strEventName, const std::string & strEventParameter, float & parameter );

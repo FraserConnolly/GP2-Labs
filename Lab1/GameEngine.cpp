@@ -10,6 +10,8 @@
 #include "Rotator.h"
 #include "Renderer.h"
 #include "CameraFlyController.h"
+#include "Audio Event Emitter.h"
+#include "Audio Listener.h"
 #include "Audio.h"
 
 GameEngine::GameEngine ( ) { }
@@ -37,6 +39,15 @@ void GameEngine::initSystems ( )
 
 	Input::RegisterKey ( SDLK_ESCAPE ); // escape
 
+#pragma region Audio
+
+	Audio::LoadBank ( "Master.bank", FMOD_STUDIO_LOAD_BANK_NORMAL );
+	Audio::LoadBank ( "Master.strings.bank", FMOD_STUDIO_LOAD_BANK_NORMAL );
+	//Audio::LoadEvent ( "event:/Lighthearted LOOP SHORT" );
+	//Audio::SetEvent3dAttributes ( "event:/Lighthearted LOOP SHORT", glm::vec3 ( 0 ) );
+	//Audio::PlayEvent ( "event:/Lighthearted LOOP SHORT" );
+
+#pragma endregion
 
 //#pragma region Vertices for a triangle
 //
@@ -124,14 +135,15 @@ void GameEngine::initSystems ( )
 //
 //#pragma endregion
 
-	auto mainCameraobj = GameObjectManager::CreateObject ( );
-	auto mainCamera = ( Camera * ) mainCameraobj->AddComponent ( ComponentTypes::CAMERA );
+	auto mainCameraObj = GameObjectManager::CreateObject ( );
+	auto mainCamera = ( Camera * ) mainCameraObj->AddComponent ( ComponentTypes::CAMERA );
 
-	auto flyController = ( CameraFlyController * ) mainCameraobj->AddComponent ( ComponentTypes::CAMERA_FLY_CONTROLLER );
+	auto flyController = ( CameraFlyController * ) mainCameraObj->AddComponent ( ComponentTypes::CAMERA_FLY_CONTROLLER );
 	flyController->SetCamera ( *mainCamera );
 
 	mainCameraobj->GetTransform ( ).SetPosition ( glm::vec3 ( 0.5f, 0.5f, 5.0f ) );
 	mainCamera->SetCameraTarget ( glm::vec3 ( 0.0f, 0.0f, 0.0f ) );
+	mainCameraObj->AddComponent ( ComponentTypes::AUDIO_LISTENER );
 
 	_shaderProgram = new Shader ( );
 	_shaderProgram->LoadDefaultShaders ( );

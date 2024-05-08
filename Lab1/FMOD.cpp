@@ -19,11 +19,11 @@ FMOD_Intergration::FMOD_Intergration ( ) :
     ErrorCheck ( FMOD::Studio::System::create ( &mpStudioSystem ) );
 
     auto studioFlag = FMOD_STUDIO_INIT_NORMAL;
-    auto coreFlag = FMOD_INIT_NORMAL;
+    auto coreFlag = FMOD_INIT_NORMAL ;// | FMOD_INIT_3D_RIGHTHANDED; // Open GL is a right handed system where as FMOD defaults to left handed.
 
 #if _DEBUG
-    studioFlag = FMOD_STUDIO_INIT_LIVEUPDATE;
-    coreFlag = FMOD_INIT_PROFILE_ENABLE;
+    studioFlag |= FMOD_STUDIO_INIT_LIVEUPDATE;
+    coreFlag |= FMOD_INIT_PROFILE_ENABLE;
 #endif
 
     ErrorCheck ( mpStudioSystem->initialize ( 32, studioFlag, coreFlag, NULL ) );
