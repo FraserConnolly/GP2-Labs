@@ -2,14 +2,15 @@
 #include "GameObject.h"
 
 Component::Component ( const ComponentTypes type, GameObject & hostObject ) :
-	m_isEnabled ( true ), m_componentType ( type ), m_gameObject ( hostObject )
-{ 
-}
+	Component ( type, hostObject, true )
+{ }
 
-Component::Component ( const ComponentTypes type, GameObject & hostObject,  const bool enable ) :
-	m_isEnabled ( enable ), m_componentType ( type ), m_gameObject ( hostObject )
-{
-}
+Component::Component ( const ComponentTypes type, GameObject & hostObject, const bool enable ) :
+	m_componentType ( type ), 
+	m_gameObject ( hostObject ), 
+	m_transform ( hostObject.GetTransform ( ) ),
+	m_isEnabled ( enable )
+{ }
 
 GameObject & Component::GetGameObject ( ) const
 {

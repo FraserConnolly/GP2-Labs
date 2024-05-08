@@ -3,6 +3,7 @@
 #include "ComponentTypes.h"
 
 class GameObject;
+class Transform;
 
 class Component
 {
@@ -44,6 +45,7 @@ protected:
 	ComponentTypes m_componentType;
 
 	GameObject & m_gameObject;
+	Transform & m_transform;
 
 	Component ( const ComponentTypes type, GameObject & hostObject );
 	Component ( const ComponentTypes type, GameObject & hostObject, const bool enable );
