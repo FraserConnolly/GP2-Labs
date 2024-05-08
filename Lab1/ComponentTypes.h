@@ -9,4 +9,5 @@ enum ComponentTypes
 	ROTATOR,
 	AUDIO_LISTENER,
 	AUDIO_EVENT_EMITTER,
+	PATH_FOLLOW,
 };

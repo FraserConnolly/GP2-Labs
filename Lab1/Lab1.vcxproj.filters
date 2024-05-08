@@ -129,6 +129,9 @@
     <ClCompile Include="FMOD.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Path Follow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Audio Listener.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -242,6 +245,9 @@
     <ClInclude Include="Audio Listener.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
+    <ClInclude Include="Path Follow.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="..\res\shader.frag">
@@ -273,6 +279,18 @@
     </CopyFileToFolders>
     <CopyFileToFolders Include="..\deps\lib\FMODx86\fmod.dll">
       <Filter>DLLs</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="..\res\SM_Icon_Camera_01.obj">
+      <Filter>Resource Files</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="..\res\SM_Icon_Light_Directional_02.obj">
+      <Filter>Resource Files</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="..\res\PolygonPrototype_Texture_01.png">
+      <Filter>Resource Files</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="..\res\ArrowNegZ.obj">
+      <Filter>Resource Files</Filter>
     </CopyFileToFolders>
   </ItemGroup>
   <ItemGroup>
