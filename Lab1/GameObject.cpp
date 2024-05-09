@@ -6,6 +6,9 @@
 #include "Audio Event Emitter.h"
 #include "Audio Listener.h"
 #include "Path Follow.h"
+#include "ColliderBase.h"
+#include "ColliderBox.h"
+#include "ColliderSphere.h"
 
 unsigned int GameObject::s_objectIDCounter = 0;
 
@@ -31,9 +34,9 @@ Component * GameObject::CreateComponent ( ComponentTypes component, GameObject &
         case MESH_RENDERER:
             return new MeshRenderer ( hostObject );
         case BOX_COLIDER:
-            return nullptr; // to do 
+            return new ColliderBox ( hostObject );
         case SPHERE_COLIDER:
-            return nullptr; // to do 
+            return new ColliderSphere ( hostObject );
         case CAMERA:
             return new Camera ( hostObject );
         case CAMERA_FLY_CONTROLLER:
@@ -49,6 +52,39 @@ Component * GameObject::CreateComponent ( ComponentTypes component, GameObject &
     }
 
     return nullptr;
+}
+
+void GameObject::Update ( )
+{
+    for ( auto & comp : m_components )
+    {
+        if ( comp->IsEnabled ( ) )
+        {
+            comp->Update ( );
+        }
+    }
+}
+
+void GameObject::OnCollisionEnter ( const Collider & otherCollider )
+{
+    for ( auto & comp : m_components )
+    {
+        if ( comp->IsEnabled ( ) )
+        {
+            comp->OnCollisionEnter ( otherCollider );
+        }
+    }
+}
+
+void GameObject::OnCollisionExit ( const Collider & otherCollider )
+{
+    for ( auto & comp : m_components )
+    {
+        if ( comp->IsEnabled ( ) )
+        {
+            comp->OnCollisionExit ( otherCollider );
+        }
+    }
 }
 
 Component * GameObject::AddComponent ( ComponentTypes component )

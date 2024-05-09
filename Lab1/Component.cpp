@@ -28,12 +28,12 @@ void Component::Kill ( )
 	m_isDead = true;
 }
 
-bool Component::IsEnabled ( ) const
+const bool Component::IsEnabled ( ) const
 {
 	return m_isEnabled;
 }
 
-bool Component::IsActiveAndEnabled ( ) const
+const bool Component::IsActiveAndEnabled ( ) const
 {
 	if ( ! m_isEnabled )
 	{

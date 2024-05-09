@@ -6,6 +6,7 @@
 #include "Transform.h"
 
 class GameEngine;
+class Collider;
 
 /// <summary>
 /// The whether an object is active or not is defined by the enabled flag of its transform.
@@ -14,16 +15,11 @@ class GameObject
 { 
 public: 
 	
-	void Update ( )
-	{
-		for ( auto & comp : m_components )
-		{
-			if ( comp->IsEnabled ( ) )
-			{
-				comp->Update ( );
-			}
-		}
-	};
+	void Update ( );
+
+	void OnCollisionEnter ( const Collider & otherCollider );
+
+	void OnCollisionExit ( const Collider & otherCollider );
 
 	Transform & GetTransform ( ) const
 	{
