@@ -12,18 +12,6 @@
 
 // Reference: https://learnopengl.com/code_viewer_gh.php?code=includes/learnopengl/camera.h
 
-// Defines several possible options for camera movement. Used as abstraction to stay away from window-system specific input methods
-enum Camera_Movement
-{
-    FORWARD,
-    BACKWARD,
-    LEFT,
-    RIGHT,
-    UP,
-    DOWN
-};
-
-
 // Default camera values
 const float SPEED = 2.5f;
 const float SENSITIVITY = 0.05f;
@@ -34,6 +22,9 @@ class CameraFlyController : public Component
     friend class GameObject;
 
 private:
+    
+    // Defines several possible options for camera movement. Used as abstraction to stay away from window-system specific input methods
+    enum Camera_Movement;
 
 	CameraFlyController ( GameObject & hostObject )
         : Component ( hostObject, ComponentTypes::CAMERA_FLY_CONTROLLER ),

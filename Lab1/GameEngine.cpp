@@ -2,14 +2,18 @@
 
 #include <iostream>
 #include <string>
-#include "GameObjectManager.h"
-#include "CollisionManager.h"
-#include "GameObject.h"
 
+// Sub systems
+#include "GameObjectManager.h"
 #include "Time.h"
 #include "Input.h"
-#include "Rotator.h"
 #include "Renderer.h"
+#include "CollisionManager.h"
+
+#include "GameObject.h"
+
+// Components
+#include "Rotator.h"
 #include "CameraFlyController.h"
 #include "Audio Event Emitter.h"
 #include "Audio Listener.h"

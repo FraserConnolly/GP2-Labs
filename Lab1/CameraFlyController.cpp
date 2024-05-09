@@ -1,5 +1,15 @@
 #include "CameraFlyController.h"
 
+enum CameraFlyController::Camera_Movement
+{
+    FORWARD,
+    BACKWARD,
+    LEFT,
+    RIGHT,
+    UP,
+    DOWN
+};
+
 // processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
 void CameraFlyController::ProcessKeyboard ( Camera_Movement direction, float deltaTime )
 {
