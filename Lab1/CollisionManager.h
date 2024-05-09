@@ -33,15 +33,16 @@ private:
 	/// </summary>
 	std::vector<ColliderData *> m_collisionWorld;
 
-	static bool AreIntersecting ( const Collider * pCollider, const Collider * pOtherCollider );
+	static bool AreIntersecting ( const Collider & pCollider, const Collider & pOtherCollider );
 
-	static bool AreIntersecting ( const ColliderSphere * pCollider, const ColliderSphere * pOtherCollider );
-	static bool AreIntersecting ( const ColliderBox * pCollider, const ColliderBox * pOtherCollider );
-	static bool AreIntersecting ( const ColliderSphere * pCollider, const ColliderBox * pOtherCollider );
-	static bool AreIntersecting ( const ColliderBox * pCollider, const ColliderSphere * pOtherCollider );
+	static bool AreIntersecting ( const ColliderSphere & pCollider, const ColliderSphere & pOtherCollider );
+	static bool AreIntersecting ( const ColliderBox & pCollider, const ColliderBox & pOtherCollider );
+	static bool AreIntersecting ( const ColliderSphere & pCollider, const ColliderBox & pOtherCollider );
+	static bool AreIntersecting ( const ColliderBox & pCollider, const ColliderSphere & pOtherCollider );
 
 	static glm::vec3 ClosestPointOnBox ( const glm::vec3 & point, const ColliderBox & box );
 	static glm::vec3 TransformToLocalSpace ( const glm::vec3 & point, const ColliderBox & box );
+	static bool GetSeparatingPlane ( const glm::vec3 & RPos, const glm::vec3 & Plane, const ColliderBox & pCollider, const ColliderBox & pOtherCollider );
 
 	static ColliderData * GetColliderDataFor ( const Collider * pCollider );
 	static void EndAllCollisionsWith ( ColliderData * pColliderData );

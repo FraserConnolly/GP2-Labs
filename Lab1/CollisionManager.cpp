@@ -208,7 +208,7 @@ void CollisionManager::Service ( )
 				continue;
 			}
 
-			auto collided = AreIntersecting ( &pColliderData->m_collider, &pOtherCollider->m_collider );
+			auto collided = AreIntersecting ( pColliderData->m_collider, pOtherCollider->m_collider );
 
 			std::vector<ColliderData *>::iterator itorator;
 
@@ -286,7 +286,6 @@ void CollisionManager::DeregisterCollider ( const Collider * pCollider )
 	}
 
 	// end any active collisions ( to do this we have to check every collider )
-
 	EndAllCollisionsWith ( pColliderData );
 
 	// find the iterator for this pointer in the vector and remove it.
@@ -296,48 +295,37 @@ void CollisionManager::DeregisterCollider ( const Collider * pCollider )
 	if ( itor == end )
 		return;
 
-	s_instance->m_collisionWorld.erase ( itor, end );
+	s_instance->m_collisionWorld.erase ( itor );
 }
 
-bool CollisionManager::AreIntersecting ( const Collider * pCollider, const Collider * pOtherCollider )
+bool CollisionManager::AreIntersecting ( const Collider & pCollider, const Collider & pOtherCollider )
 {
-	if ( pCollider == nullptr )
-	{
-		// log this error.
-		return false;
-	}
 
-	if ( pOtherCollider == nullptr )
-	{
-		// log this error.
-		return false;
-	}
-
-	if ( pCollider == pOtherCollider )
+	if ( &pCollider == &pOtherCollider )
 	{
 		// log this error.
 		return false;
 	}
 
 	ComponentTypes typeA, typeB;
-	typeA = pCollider->GetType ( );
-	typeB = pOtherCollider->GetType ( );
+	typeA = pCollider.GetType ( );
+	typeB = pOtherCollider.GetType ( );
 
 	if ( typeA == SPHERE_COLIDER && typeB == SPHERE_COLIDER )
 	{
-		return AreIntersecting ( ( ColliderSphere * ) pCollider, ( ColliderSphere * ) pOtherCollider );
+		return AreIntersecting ( ( ColliderSphere & ) pCollider, ( ColliderSphere & ) pOtherCollider );
 	}
 	else if ( typeA == BOX_COLIDER && typeB == BOX_COLIDER )
 	{
-		return AreIntersecting ( ( ColliderBox * ) pCollider, ( ColliderBox * ) pOtherCollider );
+		return AreIntersecting ( ( ColliderBox & ) pCollider, ( ColliderBox & ) pOtherCollider );
 	}
 	else if ( typeA == SPHERE_COLIDER && typeB == BOX_COLIDER )
 	{
-		return AreIntersecting ( ( ColliderSphere * ) pCollider, ( ColliderBox * ) pOtherCollider );
+		return AreIntersecting ( ( ColliderSphere & ) pCollider, ( ColliderBox & ) pOtherCollider );
 	}
 	else if ( typeA == BOX_COLIDER && typeB == SPHERE_COLIDER )
 	{
-		return AreIntersecting ( ( ColliderBox * ) pCollider, ( ColliderSphere * ) pOtherCollider );
+		return AreIntersecting ( ( ColliderBox & ) pCollider, ( ColliderSphere & ) pOtherCollider );
 	}
 	else
 	{
@@ -346,62 +334,70 @@ bool CollisionManager::AreIntersecting ( const Collider * pCollider, const Colli
 	}
 }
 
-bool CollisionManager::AreIntersecting ( const ColliderSphere * pCollider, const ColliderSphere * pOtherCollider )
+bool CollisionManager::AreIntersecting ( const ColliderSphere & pCollider, const ColliderSphere & pOtherCollider )
 {
-	float distanceSquared = glm::distance2 ( pCollider->GetGameObject().GetTransform().GetPosition(), 
-											 pOtherCollider->GetGameObject ( ).GetTransform ( ).GetPosition ( ) );
+	float distanceSquared = glm::distance2 ( pCollider.GetGameObject().GetTransform().GetPosition(), 
+											 pOtherCollider.GetGameObject ( ).GetTransform ( ).GetPosition ( ) );
 
-	auto & pColliderScale = pCollider->GetGameObject ( ).GetTransform ( ).GetScale ( );
+	auto & pColliderScale = pCollider.GetGameObject ( ).GetTransform ( ).GetScale ( );
 	float pColliderScaleMultiplyer = fmax ( fmax ( pColliderScale.x, pColliderScale.y ), pColliderScale.z );
 
-	auto & pColliderOtherScale = pCollider->GetGameObject ( ).GetTransform ( ).GetScale ( );
+	auto & pColliderOtherScale = pCollider.GetGameObject ( ).GetTransform ( ).GetScale ( );
 	float pColliderOtherScaleMultiplyer = fmax ( fmax ( pColliderOtherScale.x, pColliderOtherScale.y ), pColliderOtherScale.z );
 
-	float sumOfRadiuses = ( pCollider->GetRadious ( )      * pColliderScaleMultiplyer )
-		                + ( pOtherCollider->GetRadious ( ) * pColliderOtherScaleMultiplyer );
+	float sumOfRadiuses = ( pCollider.GetRadious ( )      * pColliderScaleMultiplyer )
+		                + ( pOtherCollider.GetRadious ( ) * pColliderOtherScaleMultiplyer );
 	
 	float sumRadiusesSquared = ( sumOfRadiuses ) * ( sumOfRadiuses );
 
 	return distanceSquared <= sumRadiusesSquared;
 }
 
-bool CollisionManager::AreIntersecting ( const ColliderBox * pCollider, const ColliderBox * pOtherCollider )
+// modified from https://stackoverflow.com/questions/47866571/simple-oriented-bounding-box-obb-collision-detection-explaining
+// check if there's a separating plane in between the selected axes
+bool CollisionManager::GetSeparatingPlane ( const glm::vec3 & RPos, const glm::vec3 & Plane, const ColliderBox & box1, const ColliderBox & box2 )
 {
-	glm::vec3 axes [ 3 ] = { glm::vec3 ( 1, 0, 0 ), glm::vec3 ( 0, 1, 0 ), glm::vec3 ( 0, 0, 1 ) };
-	for ( int i = 0; i < 3; ++i )
-	{
-		glm::vec3 axis = glm::normalize ( pCollider->GetGameObject().GetTransform().GetRotation() * axes [ i ] );
-		float projectionA = glm::dot ( axis, pCollider->GetExtents() );
-		float projectionB = glm::dot ( axis, pOtherCollider->GetExtents() );
-		float distance = glm::abs ( glm::dot ( axis, pOtherCollider->GetGameObject ( ).GetTransform ( ).GetPosition ( ) - pCollider->GetGameObject ( ).GetTransform ( ).GetPosition ( ) ) );
-
-		if ( distance > projectionA + projectionB )
-			return false;
-	}
-
-	for ( int i = 0; i < 3; ++i )
-	{
-		glm::vec3 axis = glm::normalize ( pOtherCollider->GetGameObject ( ).GetTransform ( ).GetRotation ( ) * axes [ i ] );
-		float projectionA = glm::dot ( axis, pCollider->GetExtents ( ) );
-		float projectionB = glm::dot ( axis, pOtherCollider->GetExtents ( ) );
-		float distance = glm::abs ( glm::dot ( axis, pCollider->GetGameObject ( ).GetTransform ( ).GetPosition ( ) - pOtherCollider->GetGameObject ( ).GetTransform ( ).GetPosition ( ) ) );
-
-		if ( distance > projectionA + projectionB )
-			return false;
-	}
-
-	return true;
+	return ( glm::abs ( glm::dot( RPos , Plane ) ) >
+			 ( glm::abs ( glm::dot( ( box1.GetTransform ( ).GetRight()   * box1.GetScaledHalfExtents ( ).x ) , Plane ) ) +
+			   glm::abs ( glm::dot( ( box1.GetTransform ( ).GetUp()      * box1.GetScaledHalfExtents ( ).y ) , Plane ) ) +
+			   glm::abs ( glm::dot( ( box1.GetTransform ( ).GetForward() * box1.GetScaledHalfExtents ( ).z ) , Plane ) ) +
+			   glm::abs ( glm::dot( ( box2.GetTransform ( ).GetRight()   * box2.GetScaledHalfExtents ( ).x ) , Plane ) ) +
+			   glm::abs ( glm::dot( ( box2.GetTransform ( ).GetUp()      * box2.GetScaledHalfExtents ( ).y ) , Plane ) ) +
+			   glm::abs ( glm::dot( ( box2.GetTransform ( ).GetForward() * box2.GetScaledHalfExtents ( ).z ) , Plane ) ) ) );
 }
 
-bool CollisionManager::AreIntersecting ( const ColliderSphere * pCollider, const ColliderBox * pOtherCollider )
+// test for separating planes in all 15 axes
+bool CollisionManager::AreIntersecting ( const ColliderBox & box1, const ColliderBox & box2 )
 {
-	auto & sphereTransform = pCollider->GetGameObject ( ).GetTransform ( );
+	static glm::vec3 RPos;
+	RPos = box2.GetCentre() - box1.GetCentre();
 
-	glm::vec3 closestPoint = ClosestPointOnBox ( sphereTransform.GetPosition(), *pOtherCollider );
+	return !( GetSeparatingPlane ( RPos, box1.GetTransform ( ).GetRight ( ), box1, box2 ) ||
+			  GetSeparatingPlane ( RPos, box1.GetTransform ( ).GetUp ( ), box1, box2 ) ||
+			  GetSeparatingPlane ( RPos, box1.GetTransform ( ).GetForward ( ), box1, box2 ) ||
+			  GetSeparatingPlane ( RPos, box2.GetTransform ( ).GetRight ( ), box1, box2 ) ||
+			  GetSeparatingPlane ( RPos, box2.GetTransform ( ).GetUp ( ), box1, box2 ) ||
+			  GetSeparatingPlane ( RPos, box2.GetTransform ( ).GetForward ( ), box1, box2 ) ||
+			  GetSeparatingPlane ( RPos, glm::cross ( box1.GetTransform ( ).GetRight ( ) ,   box2.GetTransform ( ).GetRight ( ) ), box1, box2 ) ||
+			  GetSeparatingPlane ( RPos, glm::cross ( box1.GetTransform ( ).GetRight ( ) ,   box2.GetTransform ( ).GetUp ( ) ), box1, box2 ) ||
+			  GetSeparatingPlane ( RPos, glm::cross ( box1.GetTransform ( ).GetRight ( ) ,   box2.GetTransform ( ).GetForward ( ) ) , box1, box2 ) ||
+			  GetSeparatingPlane ( RPos, glm::cross ( box1.GetTransform ( ).GetUp ( ) ,      box2.GetTransform ( ).GetRight ( ) ) , box1, box2 ) ||
+			  GetSeparatingPlane ( RPos, glm::cross ( box1.GetTransform ( ).GetUp ( ) ,      box2.GetTransform ( ).GetUp ( ) ) , box1, box2 ) ||
+			  GetSeparatingPlane ( RPos, glm::cross ( box1.GetTransform ( ).GetUp ( ) ,      box2.GetTransform ( ).GetForward ( ) ) , box1, box2 ) ||
+			  GetSeparatingPlane ( RPos, glm::cross ( box1.GetTransform ( ).GetForward ( ) , box2.GetTransform ( ).GetRight ( ) ), box1, box2 ) ||
+			  GetSeparatingPlane ( RPos, glm::cross ( box1.GetTransform ( ).GetForward ( ) , box2.GetTransform ( ).GetUp ( ) ), box1, box2 ) ||
+			  GetSeparatingPlane ( RPos, glm::cross ( box1.GetTransform ( ).GetForward ( ) , box2.GetTransform ( ).GetForward ( ) ) , box1, box2 ) );
+}
 
-	auto & sphereScale = pCollider->GetGameObject ( ).GetTransform ( ).GetScale ( );
+bool CollisionManager::AreIntersecting ( const ColliderSphere & pCollider, const ColliderBox & pOtherCollider )
+{
+	auto & sphereTransform = pCollider.GetGameObject ( ).GetTransform ( );
+
+	glm::vec3 closestPoint = ClosestPointOnBox ( sphereTransform.GetPosition(), pOtherCollider );
+
+	auto & sphereScale = pCollider.GetGameObject ( ).GetTransform ( ).GetScale ( );
 	float sphereScaleMultiplyer = fmax ( fmax ( sphereScale.x, sphereScale.y ), sphereScale.z );
-	float radius = sphereScaleMultiplyer * pCollider->GetRadious ( );
+	float radius = sphereScaleMultiplyer * pCollider.GetRadious ( );
 	float radiusSquared = radius * radius;
 
 	float distanceSquared = glm::distance2 ( sphereTransform.GetPosition( ), closestPoint );
@@ -409,7 +405,7 @@ bool CollisionManager::AreIntersecting ( const ColliderSphere * pCollider, const
 	return distanceSquared <= radiusSquared;
 }
 
-bool CollisionManager::AreIntersecting ( const ColliderBox * pCollider, const ColliderSphere * pOtherCollider )
+bool CollisionManager::AreIntersecting ( const ColliderBox & pCollider, const ColliderSphere & pOtherCollider )
 {
 	return AreIntersecting ( pOtherCollider, pCollider );
 }

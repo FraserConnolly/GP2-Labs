@@ -28,3 +28,9 @@ inline void ColliderSphere::SetRadious ( const float radious )
     m_radious = radious;
 }
 
+const glm::quat & ColliderSphere::GetRotation ( ) const
+{
+    // sphere's don't have a rotation.
+    return glm::quat ( );
+}
+

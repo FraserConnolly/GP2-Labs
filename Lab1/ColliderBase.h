@@ -9,7 +9,8 @@ class Collider : public Component
 
 public:
 	
-	virtual const glm::vec3 & GetCentre ( ) const = 0;
+	virtual const glm::vec3 & GetCentre   ( ) const = 0;
+	virtual const glm::quat & GetRotation ( ) const = 0;
 
 	void Awake ( ) override;
 	void OnDestroy ( ) override;
