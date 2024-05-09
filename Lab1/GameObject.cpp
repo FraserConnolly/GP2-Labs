@@ -21,7 +21,9 @@ GameObject::GameObject ( )
 
 GameObject::~GameObject ( )
 {
+    m_transform.SetActive ( false );
 	RemoveAllComponentsImmediately ( );
+    delete &m_transform;
 }
 
 Component * GameObject::CreateComponent ( ComponentTypes component, GameObject & hostObject )
@@ -125,12 +127,38 @@ Component * GameObject::AddComponent ( Component * const pComponent )
     m_components.push_back ( pComponent );
 
     pComponent->Awake ( );
-    if ( pComponent->IsEnabled ( ) )
+    if ( pComponent->IsActiveAndEnabled ( ) )
     {
         pComponent->OnEnable ( );
     }
 
     return pComponent;
+}
+
+void GameObject::OnActiveChanged ( bool enabled )
+{
+    for ( auto & comp : m_components )
+    {
+        if ( comp->GetType ( ) == TRANSFORM )
+        {
+            continue;
+        }
+
+        if ( !comp->IsEnabled ( ) )
+        {
+            // component is disabled so ignore it.
+            continue;
+        }
+
+        if ( enabled )
+        {
+            comp->OnEnable ( );
+        }
+        else
+        {
+            comp->OnDisable ( );
+        }
+    }
 }
 
 void GameObject::RemoveComponent ( Component * const pToRemove )
@@ -161,7 +189,12 @@ void GameObject::RemoveAllComponentsImmediately ( )
     {
         ( *itor )->Kill ( ); 
         ( *itor )->OnDestroy ( );
-        delete *itor;
+
+        // let the GameObject's destructor delete Transform.
+        if ( ( *itor )->GetType ( ) != TRANSFORM ) 
+        {
+            delete * itor;
+        }
         ++itor;
     }
     m_components.clear ( );

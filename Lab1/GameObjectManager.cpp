@@ -17,6 +17,7 @@ void GameObjectManager::Shutdown ( )
 
 	for ( auto & object : s_instance->m_gameObjects )
 	{
+		object->m_transform.SetActive ( false );
 		object->RemoveAllComponentsImmediately ( );
 		delete object;
 	}

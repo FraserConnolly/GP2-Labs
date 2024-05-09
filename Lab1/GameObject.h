@@ -33,9 +33,9 @@ public:
 
 	void Destroy ( )
 	{
+		m_transform.SetActive ( false ); // will call OnDisable on any enabled components
 		RemoveAllComponents ( ); // this will also destroy children through the transform component.
 		m_isDestroyed = true;
-		// to do - how will this game object be cleaned up?
 	}
 
 	const bool GetIsDestroyed ( ) const
@@ -98,7 +98,12 @@ private:
 	
 	friend class GameObjectManager;
 	
+	// Transform must be a friend as it needs to call OnEnable / OnDisable on the other components when it is 
+	// set to enabled or disabled
+	friend class Transform; 
+	
 	Component * AddComponent ( Component * const pComponent );
+	void OnActiveChanged ( bool enabled ); // called only from Transform
 
 	GameObject ( );
 	~GameObject ( );
@@ -112,7 +117,6 @@ private:
 	typedef ComponentVector::iterator  VectorItor;
 
 	ComponentVector m_components;
-	//ArcheTypes m_type;
 
 	bool m_isDestroyed = false;
 

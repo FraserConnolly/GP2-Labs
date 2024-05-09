@@ -189,6 +189,10 @@ public:
 
 	void OnDestroy ( ) override;
 
+	void OnEnable ( ) override;
+
+	void OnDisable ( ) override;
+
 protected: 
 
 	void SetDirty ( )
