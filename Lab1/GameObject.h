@@ -30,7 +30,7 @@ public:
 		return m_transform;
 	}
 	
-	int GetID ( ) const
+	const int GetID ( ) const
 	{
 		return m_id;
 	}
@@ -75,6 +75,8 @@ public:
 
 	Component * AddComponent ( ComponentTypes Component );
 	void        RemoveComponent ( Component * const pToRemove );
+	
+	// Kill is called on the component but OnDestroy and delete is not called until the end of the frame
 	void        RemoveAllComponents ( );
 	void        RemoveAllComponents ( ComponentTypes type );
 	
@@ -83,7 +85,16 @@ public:
 	template<typename T>
 	void GetAllComponent ( ComponentTypes type, std::vector<T *> & comps );
 
+private:
+	/// <summary>
+	/// Called at the end of each frame. Will call OnDestory the delete the component.
+	/// </summary>
 	void CleanUpComponents ( );
+
+	/// <summary>
+	/// Called in Shutdown to immediately remove a component, it will call Kill, OnDestroy, then delete.
+	/// </summary>
+	void RemoveAllComponentsImmediately ( );
 
 #pragma endregion
 

@@ -10,7 +10,7 @@
 unsigned int GameObject::s_objectIDCounter = 0;
 
 GameObject::GameObject ( )
-    : m_transform ( *new Transform ( *this ) )
+    : m_transform ( *new Transform ( *this ) ), m_id ( 0 )
 {
     m_id = s_objectIDCounter++;
     AddComponent ( &m_transform );
@@ -18,7 +18,7 @@ GameObject::GameObject ( )
 
 GameObject::~GameObject ( )
 {
-	RemoveAllComponents ( );
+	RemoveAllComponentsImmediately ( );
 }
 
 Component * GameObject::CreateComponent ( ComponentTypes component, GameObject & hostObject )
@@ -26,7 +26,8 @@ Component * GameObject::CreateComponent ( ComponentTypes component, GameObject &
     switch ( component )
     {
         case TRANSFORM:
-            return new Transform ( hostObject );
+            // Transform can only be constructed inside the initialisation list of a GameObject.
+            return nullptr;
         case MESH_RENDERER:
             return new MeshRenderer ( hostObject );
         case BOX_COLIDER:
@@ -86,6 +87,12 @@ Component * GameObject::AddComponent ( Component * const pComponent )
 
 void GameObject::RemoveComponent ( Component * const pToRemove )
 { 
+    if ( pToRemove->GetType ( ) == TRANSFORM )
+    {
+        // Can not remove a transform.
+        return;
+    }
+
     //Make the sure the instance exists in this object 
     VectorItor end = m_components.end ( );
     VectorItor itor = std::find ( m_components.begin ( ), end, pToRemove );
@@ -98,12 +105,13 @@ void GameObject::RemoveComponent ( Component * const pToRemove )
     // note - don't erase or delete in this function, do that in the clean up.
 }
 
-void GameObject::RemoveAllComponents ( )
+void GameObject::RemoveAllComponentsImmediately ( )
 { 
     VectorItor itor = m_components.begin ( );
     VectorItor end = m_components.end ( );
     while ( itor != end )
     {
+        ( *itor )->Kill ( ); 
         ( *itor )->OnDestroy ( );
         delete *itor;
         ++itor;
@@ -148,15 +156,35 @@ void GameObject::CleanUpComponents ( )
         {
             m_components [ endIndex ]->OnDestroy ( );
             delete m_components [ endIndex ];
-            m_components [ endIndex ] = m_components [ m_components.size ( )
-                - 1 ];
-            m_components.pop_back ( );
+            m_components [ endIndex ] = m_components [ m_components.size ( ) - 1 ]; // copy the pointer to the last component to this element
+            m_components.pop_back ( );  // pop the last element which is now a duplicate.
         }
+    }
+}
+
+
+void GameObject::RemoveAllComponents ( )
+{
+    for ( size_t i = 0; i < m_components.size ( ); ++i )
+    {
+        if ( m_components[i]->GetType( ) == TRANSFORM )
+        {
+            // can not remove the transform component.
+            continue;
+        }
+    
+        m_components [ i ]->Kill ( );
     }
 }
 
 void GameObject::RemoveAllComponents ( ComponentTypes type )
 {
+    if ( type == TRANSFORM )
+    {
+        // can not remove the transform component.
+        return;
+    }
+
     for ( size_t i = 0; i < m_components.size ( ); ++i )
     {
         if ( m_components [ i ]->GetType ( ) == type )

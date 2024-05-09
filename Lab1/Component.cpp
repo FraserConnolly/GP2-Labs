@@ -1,11 +1,11 @@
 #include "Component.h"
 #include "GameObject.h"
 
-Component::Component ( const ComponentTypes type, GameObject & hostObject ) :
-	Component ( type, hostObject, true )
+Component::Component ( GameObject & hostObject, const ComponentTypes type ) :
+	Component ( hostObject, true, type )
 { }
 
-Component::Component ( const ComponentTypes type, GameObject & hostObject, const bool enable ) :
+Component::Component ( GameObject & hostObject, const bool enable, const ComponentTypes type ) :
 	m_componentType ( type ), 
 	m_gameObject ( hostObject ), 
 	m_transform ( hostObject.GetTransform ( ) ),

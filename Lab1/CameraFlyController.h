@@ -36,7 +36,7 @@ class CameraFlyController : public Component
 private:
 
 	CameraFlyController ( GameObject & hostObject )
-        : Component ( ComponentTypes::CAMERA_FLY_CONTROLLER, hostObject ),
+        : Component ( hostObject, ComponentTypes::CAMERA_FLY_CONTROLLER ),
         Yaw ( 0.0f ), Pitch ( 0.0f )
     {
 		m_camera = nullptr;

@@ -47,8 +47,10 @@ protected:
 	GameObject & m_gameObject;
 	Transform & m_transform;
 
-	Component ( const ComponentTypes type, GameObject & hostObject );
-	Component ( const ComponentTypes type, GameObject & hostObject, const bool enable );
+	Component ( GameObject & hostObject, const ComponentTypes type );
+	Component ( GameObject & hostObject, const bool enable, const ComponentTypes type );
 
+private:
+	Component ( ) = delete;	
 };
 
