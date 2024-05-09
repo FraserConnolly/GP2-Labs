@@ -67,6 +67,8 @@ void CameraFlyController::Update ( )
     if ( Input::WasKeyPressedThisFrame ( SDLK_SPACE ) )
     {
         m_lockCameraRotation = !m_lockCameraRotation;
+        Pitch = m_transform.GetRotationEuler ( ).x;
+        Yaw = m_transform.GetRotationEuler ( ).y;
     }
 
 #pragma region Camera controls
