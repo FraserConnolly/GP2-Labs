@@ -67,6 +67,12 @@ void GameObject::Update ( )
 
 void GameObject::OnCollisionEnter ( const Collider & otherCollider )
 {
+    // Belt and braces, this shouldn't be needed as the collision manager shouldn't check collisions with disabled colliders.
+    if ( !IsActiveInHierarchy ( ) )
+    {
+        return;
+    }
+
     for ( auto & comp : m_components )
     {
         if ( comp->IsEnabled ( ) )
@@ -78,6 +84,12 @@ void GameObject::OnCollisionEnter ( const Collider & otherCollider )
 
 void GameObject::OnCollisionExit ( const Collider & otherCollider )
 {
+    // Belt and braces, this shouldn't be needed as the collision manager shouldn't check collisions with disabled colliders.
+    if ( !IsActiveInHierarchy ( ) )
+    {
+        return;
+    }
+
     for ( auto & comp : m_components )
     {
         if ( comp->IsEnabled ( ) )

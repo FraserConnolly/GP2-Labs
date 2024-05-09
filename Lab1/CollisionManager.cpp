@@ -5,10 +5,12 @@
 #include "Transform.h"
 #include "GameObject.h"
 #include "ColliderBase.h"
-
-#include <glm/glm.hpp> 
-#include <glm/gtx/quaternion.hpp>
+#include "ColliderSphere.h"
+#include "ColliderBox.h"
 #include "Time.h"
+
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/quaternion.hpp>
 
 struct TranslationData
 {
@@ -81,9 +83,15 @@ struct ColliderData
 	const Collider & m_collider;
 	const Transform & m_transform;
 	bool m_isActive;
+
+	// cache of the position, rotation, and scale 
 	TranslationData m_translation;
+
+	// the last frame in which this collider moved, scaled, rotated, or was enabled/disabled.
 	unsigned int m_lastFrameMoved;
-	std::vector<ColliderData *> m_currentCollisions;
+
+	// note that a collision record will only exist in the ColliderData for one of the two participants in the collision!
+	std::vector<ColliderData *> m_currentCollisions; 
 
 	ColliderData ( const Collider & collider )
 		: m_collider ( collider ), m_transform ( collider.GetGameObject ( ).GetTransform ( ) ), m_lastFrameMoved ( 0 )
@@ -105,6 +113,11 @@ struct ColliderData
 
 	bool IsCurrentlyCollidingWith ( const ColliderData * pColliderData, std::vector<ColliderData *>::iterator & itorator )
 	{
+		if ( m_currentCollisions.size ( ) == 0 )
+		{
+			return false;
+		}
+
 		itorator = std::find (
 			m_currentCollisions.begin ( ),
 			m_currentCollisions.end ( ),
@@ -168,66 +181,65 @@ void CollisionManager::Service ( )
 		{
 			pColliderData->m_lastFrameMoved = currentFrameIndex;
 		}
-		
+
 	}
 
-		// perform a pair wise collision detection.
+	// perform a pair wise collision detection.
+	auto numberOfColliders = s_instance->m_collisionWorld.size ( );
 
-		auto numberOfColliders = s_instance->m_collisionWorld.size ( );
+	for ( int i = 0; i < numberOfColliders - 1; ++i )
+	{
+		auto & pColliderData = s_instance->m_collisionWorld [ i ];
 
-		for ( int i = 0; i < numberOfColliders - 1; ++i )
+		// can we skip this collider
+		if ( !pColliderData->m_isActive )
 		{
-			auto & pColliderData = s_instance->m_collisionWorld [ i ];
+			continue;
+		}
 
-			// can we skip this collider
-			if ( ! pColliderData->m_isActive )
+		// check this collider against the others
+		for ( int j = i + 1; j < numberOfColliders; ++j )
+		{
+			auto pOtherCollider = s_instance->m_collisionWorld [ j ];
+
+			// check to see if neither collider moved this frame.
+			if ( pColliderData->m_lastFrameMoved != currentFrameIndex && pOtherCollider->m_lastFrameMoved != currentFrameIndex )
 			{
 				continue;
 			}
-		
-			// check this collider against the others
-			for ( int j = i + 1; j < numberOfColliders; ++j )
+
+			auto collided = AreIntersecting ( &pColliderData->m_collider, &pOtherCollider->m_collider );
+
+			std::vector<ColliderData *>::iterator itorator;
+
+			// check if we have previously collided.
+			bool previouslyCollided = pColliderData->IsCurrentlyCollidingWith ( pOtherCollider, itorator );
+
+			if ( collided && !previouslyCollided )
 			{
-				auto pOtherCollider = s_instance->m_collisionWorld [ j ];
+				// this is a new collision so raise the enter event
+				pColliderData->m_transform.GetGameObject ( ).OnCollisionEnter ( pOtherCollider->m_collider );
+				pOtherCollider->m_transform.GetGameObject ( ).OnCollisionEnter ( pColliderData->m_collider );
 
-				// check to see if neither collider moved this frame.
-				if ( pColliderData->m_lastFrameMoved != currentFrameIndex && pOtherCollider->m_lastFrameMoved != currentFrameIndex )
-				{
-					continue;
-				}
-
-				auto collided = AreIntersecting ( &pColliderData->m_collider, &pOtherCollider->m_collider );
-
-				std::vector<ColliderData *>::iterator itorator;
-				
+				pColliderData->m_currentCollisions.push_back ( pOtherCollider );
+			}
+			else if ( !collided && previouslyCollided )
+			{
 				// check if we have previously collided.
-				bool previouslyCollided = pColliderData->IsCurrentlyCollidingWith ( pOtherCollider, itorator );
-
-				if ( collided && !previouslyCollided )
+				if ( pColliderData->IsCurrentlyCollidingWith ( pOtherCollider, itorator ) )
 				{
-					// this is a new collision so raise the enter event
-					pColliderData->m_transform.GetGameObject ( ).OnCollisionEnter ( pOtherCollider->m_collider );
-					pOtherCollider->m_transform.GetGameObject ( ).OnCollisionEnter ( pColliderData->m_collider );
+					// we had previously collided but aren't now so raise the exit event.
+					pColliderData->m_transform.GetGameObject ( ).OnCollisionExit ( pOtherCollider->m_collider );
+					pOtherCollider->m_transform.GetGameObject ( ).OnCollisionExit ( pColliderData->m_collider );
 
-					pColliderData->m_currentCollisions.push_back ( pOtherCollider );
-				}
-				else if ( !collided && previouslyCollided )
-				{
-					// check if we have previously collided.
-					if ( pColliderData->IsCurrentlyCollidingWith(pOtherCollider, itorator ) )
-					{
-						// we had previously collided but aren't now so raise the exit event.
-						pColliderData->m_transform.GetGameObject ( ).OnCollisionEnter ( pOtherCollider->m_collider );
-						pOtherCollider->m_transform.GetGameObject ( ).OnCollisionEnter ( pColliderData->m_collider );
-
-						pColliderData->m_currentCollisions.erase ( itorator );
-					}
-				}
-				else
-				{
-					// do nothing the state is the same.
+					pColliderData->m_currentCollisions.erase ( itorator );
 				}
 			}
+			else
+			{
+				// do nothing the state is the same.
+			}
+		}
 	}
 }
 
@@ -336,22 +348,92 @@ bool CollisionManager::AreIntersecting ( const Collider * pCollider, const Colli
 
 bool CollisionManager::AreIntersecting ( const ColliderSphere * pCollider, const ColliderSphere * pOtherCollider )
 {
-	return false;
+	float distanceSquared = glm::distance2 ( pCollider->GetGameObject().GetTransform().GetPosition(), 
+											 pOtherCollider->GetGameObject ( ).GetTransform ( ).GetPosition ( ) );
+
+	auto & pColliderScale = pCollider->GetGameObject ( ).GetTransform ( ).GetScale ( );
+	float pColliderScaleMultiplyer = fmax ( fmax ( pColliderScale.x, pColliderScale.y ), pColliderScale.z );
+
+	auto & pColliderOtherScale = pCollider->GetGameObject ( ).GetTransform ( ).GetScale ( );
+	float pColliderOtherScaleMultiplyer = fmax ( fmax ( pColliderOtherScale.x, pColliderOtherScale.y ), pColliderOtherScale.z );
+
+	float sumOfRadiuses = ( pCollider->GetRadious ( )      * pColliderScaleMultiplyer )
+		                + ( pOtherCollider->GetRadious ( ) * pColliderOtherScaleMultiplyer );
+	
+	float sumRadiusesSquared = ( sumOfRadiuses ) * ( sumOfRadiuses );
+
+	return distanceSquared <= sumRadiusesSquared;
 }
 
 bool CollisionManager::AreIntersecting ( const ColliderBox * pCollider, const ColliderBox * pOtherCollider )
 {
-	return false;
+	glm::vec3 axes [ 3 ] = { glm::vec3 ( 1, 0, 0 ), glm::vec3 ( 0, 1, 0 ), glm::vec3 ( 0, 0, 1 ) };
+	for ( int i = 0; i < 3; ++i )
+	{
+		glm::vec3 axis = glm::normalize ( pCollider->GetGameObject().GetTransform().GetRotation() * axes [ i ] );
+		float projectionA = glm::dot ( axis, pCollider->GetExtents() );
+		float projectionB = glm::dot ( axis, pOtherCollider->GetExtents() );
+		float distance = glm::abs ( glm::dot ( axis, pOtherCollider->GetGameObject ( ).GetTransform ( ).GetPosition ( ) - pCollider->GetGameObject ( ).GetTransform ( ).GetPosition ( ) ) );
+
+		if ( distance > projectionA + projectionB )
+			return false;
+	}
+
+	for ( int i = 0; i < 3; ++i )
+	{
+		glm::vec3 axis = glm::normalize ( pOtherCollider->GetGameObject ( ).GetTransform ( ).GetRotation ( ) * axes [ i ] );
+		float projectionA = glm::dot ( axis, pCollider->GetExtents ( ) );
+		float projectionB = glm::dot ( axis, pOtherCollider->GetExtents ( ) );
+		float distance = glm::abs ( glm::dot ( axis, pCollider->GetGameObject ( ).GetTransform ( ).GetPosition ( ) - pOtherCollider->GetGameObject ( ).GetTransform ( ).GetPosition ( ) ) );
+
+		if ( distance > projectionA + projectionB )
+			return false;
+	}
+
+	return true;
 }
 
 bool CollisionManager::AreIntersecting ( const ColliderSphere * pCollider, const ColliderBox * pOtherCollider )
 {
-	return false;
+	auto & sphereTransform = pCollider->GetGameObject ( ).GetTransform ( );
+
+	glm::vec3 closestPoint = ClosestPointOnBox ( sphereTransform.GetPosition(), *pOtherCollider );
+
+	auto & sphereScale = pCollider->GetGameObject ( ).GetTransform ( ).GetScale ( );
+	float sphereScaleMultiplyer = fmax ( fmax ( sphereScale.x, sphereScale.y ), sphereScale.z );
+	float radius = sphereScaleMultiplyer * pCollider->GetRadious ( );
+	float radiusSquared = radius * radius;
+
+	float distanceSquared = glm::distance2 ( sphereTransform.GetPosition( ), closestPoint );
+
+	return distanceSquared <= radiusSquared;
 }
 
 bool CollisionManager::AreIntersecting ( const ColliderBox * pCollider, const ColliderSphere * pOtherCollider )
 {
-	return false;
+	return AreIntersecting ( pOtherCollider, pCollider );
+}
+
+// Function to transform a point from world space to local space of a rotated box
+glm::vec3 CollisionManager::TransformToLocalSpace ( const glm::vec3 & point, const ColliderBox & box )
+{
+	return glm::inverse ( box.GetGameObject ( ).GetTransform ( ).GetRotation ( ) ) * ( point - box.GetGameObject ( ).GetTransform ( ).GetPosition ( ) );
+}
+
+// Function to find the closest point on a box to a given point
+glm::vec3 CollisionManager::ClosestPointOnBox ( const glm::vec3 & point, const ColliderBox & box )
+{
+	glm::vec3 localPoint = TransformToLocalSpace ( point, box );
+
+	glm::vec3 closestPoint;
+
+	auto & scale = box.GetGameObject ( ).GetTransform ( ).GetScale ( );
+
+	closestPoint.x = glm::clamp ( localPoint.x, -box.GetExtents ( ).x * scale.x, box.GetExtents ( ).x * scale.x );
+	closestPoint.y = glm::clamp ( localPoint.y, -box.GetExtents ( ).y * scale.y, box.GetExtents ( ).y * scale.y );
+	closestPoint.z = glm::clamp ( localPoint.z, -box.GetExtents ( ).z * scale.z, box.GetExtents ( ).z * scale.z );
+
+	return box.GetGameObject ( ).GetTransform ( ).GetRotation ( ) * closestPoint + box.GetGameObject ( ).GetTransform ( ).GetPosition ( );
 }
 
 ColliderData * CollisionManager::GetColliderDataFor ( const Collider * pCollider )

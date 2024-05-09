@@ -316,6 +316,15 @@
     <CopyFileToFolders Include="..\res\ArrowNegZ.obj">
       <Filter>Resource Files</Filter>
     </CopyFileToFolders>
+    <CopyFileToFolders Include="..\res\UnitCube.obj">
+      <Filter>Resource Files</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="..\res\UnitCylinder.obj">
+      <Filter>Resource Files</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="..\res\UnitSphere.obj">
+      <Filter>Resource Files</Filter>
+    </CopyFileToFolders>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Notes.txt" />

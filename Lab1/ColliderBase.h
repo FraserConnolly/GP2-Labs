@@ -11,6 +11,9 @@ public:
 	
 	virtual const glm::vec3 & GetCentre ( ) const = 0;
 
+	void Awake ( ) override;
+	void OnDestroy ( ) override;
+
 protected:
 
 	Collider ( GameObject & hostObject, ComponentTypes type )

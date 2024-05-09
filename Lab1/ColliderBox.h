@@ -7,9 +7,7 @@ class ColliderBox :
 
     friend class GameObject;
 
-    ColliderBox ( GameObject & hostObject ) :
-        Collider ( hostObject, ComponentTypes::BOX_COLIDER )
-    { }
+    ColliderBox ( GameObject & hostObject );
 
 public:
 

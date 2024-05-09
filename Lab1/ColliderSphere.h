@@ -7,9 +7,7 @@ class ColliderSphere :
 
     friend class GameObject;
 
-    ColliderSphere ( GameObject & hostObject ) :
-        Collider ( hostObject, ComponentTypes::SPHERE_COLIDER )
-    { }
+    ColliderSphere ( GameObject & hostObject );
 
 public:
 
