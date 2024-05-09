@@ -18,11 +18,10 @@ private:
 
 	GameObjectManager ( );
 
-	void DeleteAllObjects ( );
 	void CleanUpObjects ( );
 
 	std::vector<GameObject *> m_gameObjects;
-	std::vector<GameObject*> m_gameObjectsToBeDeleted;
+	std::vector<GameObject *> m_gameObjectsToBeDeleted;
 
 	static GameObjectManager * s_instance;
 

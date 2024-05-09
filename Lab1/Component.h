@@ -4,6 +4,7 @@
 
 class GameObject;
 class Transform;
+class Collider;
 
 class Component
 {
@@ -14,6 +15,9 @@ public:
 	virtual void Update ( ) { }
 	virtual void LateUpdate ( ) { }
 	
+	virtual void OnCollisionEnter ( const Collider & otherCollider ) { }
+	virtual void OnCollisionExit ( const Collider & otherCollider ) { }
+
 	virtual void OnEnable ( ) { }
 	virtual void OnDisable ( ) { }
 
@@ -28,12 +32,12 @@ public:
 	bool IsDead ( ) const;
 	void Kill ( );
 
-	bool IsEnabled ( ) const;
-	bool IsActiveAndEnabled ( ) const;
+	const bool IsEnabled ( ) const;
+	const bool IsActiveAndEnabled ( ) const;
 
 	void SetActive ( const bool enable );
 
-	ComponentTypes GetType ( )
+	ComponentTypes GetType ( ) const
 	{
 		return m_componentType;
 	}
@@ -47,8 +51,10 @@ protected:
 	GameObject & m_gameObject;
 	Transform & m_transform;
 
-	Component ( const ComponentTypes type, GameObject & hostObject );
-	Component ( const ComponentTypes type, GameObject & hostObject, const bool enable );
+	Component ( GameObject & hostObject, const ComponentTypes type );
+	Component ( GameObject & hostObject, const bool enable, const ComponentTypes type );
 
+private:
+	Component ( ) = delete;	
 };
 

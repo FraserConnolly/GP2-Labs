@@ -1,7 +1,7 @@
 #include "Path Follow.h"
 
 PathFollow::PathFollow ( GameObject & hostObject ) :
-	Component ( ComponentTypes::PATH_FOLLOW, hostObject ),
+	Component ( hostObject, ComponentTypes::PATH_FOLLOW ),
 	m_nextPointIndex ( 0 ), m_speed ( 1.0f ), m_checkDistance ( 0.1f )
 { }
 

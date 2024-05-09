@@ -8,7 +8,8 @@ class Rotator : public Component
 
 private:
 
-	Rotator( GameObject & hostObject ) : Component( ComponentTypes::ROTATOR, hostObject ) { }
+	Rotator( GameObject & hostObject ) : 
+		Component( hostObject, ComponentTypes::ROTATOR ) { }
 	~Rotator() { }
 	
 public:

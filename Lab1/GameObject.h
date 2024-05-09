@@ -6,6 +6,7 @@
 #include "Transform.h"
 
 class GameEngine;
+class Collider;
 
 /// <summary>
 /// The whether an object is active or not is defined by the enabled flag of its transform.
@@ -14,32 +15,27 @@ class GameObject
 { 
 public: 
 	
-	void Update ( )
-	{
-		for ( auto & comp : m_components )
-		{
-			if ( comp->IsEnabled ( ) )
-			{
-				comp->Update ( );
-			}
-		}
-	};
+	void Update ( );
+
+	void OnCollisionEnter ( const Collider & otherCollider );
+
+	void OnCollisionExit ( const Collider & otherCollider );
 
 	Transform & GetTransform ( ) const
 	{
 		return m_transform;
 	}
 	
-	int GetID ( ) const
+	const int GetID ( ) const
 	{
 		return m_id;
 	}
 
 	void Destroy ( )
 	{
+		m_transform.SetActive ( false ); // will call OnDisable on any enabled components
 		RemoveAllComponents ( ); // this will also destroy children through the transform component.
 		m_isDestroyed = true;
-		// to do - how will this game object be cleaned up?
 	}
 
 	const bool GetIsDestroyed ( ) const
@@ -75,6 +71,8 @@ public:
 
 	Component * AddComponent ( ComponentTypes Component );
 	void        RemoveComponent ( Component * const pToRemove );
+	
+	// Kill is called on the component but OnDestroy and delete is not called until the end of the frame
 	void        RemoveAllComponents ( );
 	void        RemoveAllComponents ( ComponentTypes type );
 	
@@ -83,7 +81,16 @@ public:
 	template<typename T>
 	void GetAllComponent ( ComponentTypes type, std::vector<T *> & comps );
 
+private:
+	/// <summary>
+	/// Called at the end of each frame. Will call OnDestory the delete the component.
+	/// </summary>
 	void CleanUpComponents ( );
+
+	/// <summary>
+	/// Called in Shutdown to immediately remove a component, it will call Kill, OnDestroy, then delete.
+	/// </summary>
+	void RemoveAllComponentsImmediately ( );
 
 #pragma endregion
 
@@ -91,7 +98,12 @@ private:
 	
 	friend class GameObjectManager;
 	
+	// Transform must be a friend as it needs to call OnEnable / OnDisable on the other components when it is 
+	// set to enabled or disabled
+	friend class Transform; 
+	
 	Component * AddComponent ( Component * const pComponent );
+	void OnActiveChanged ( bool enabled ); // called only from Transform
 
 	GameObject ( );
 	~GameObject ( );
@@ -105,7 +117,6 @@ private:
 	typedef ComponentVector::iterator  VectorItor;
 
 	ComponentVector m_components;
-	//ArcheTypes m_type;
 
 	bool m_isDestroyed = false;
 

@@ -1,11 +1,11 @@
 #include "Component.h"
 #include "GameObject.h"
 
-Component::Component ( const ComponentTypes type, GameObject & hostObject ) :
-	Component ( type, hostObject, true )
+Component::Component ( GameObject & hostObject, const ComponentTypes type ) :
+	Component ( hostObject, true, type )
 { }
 
-Component::Component ( const ComponentTypes type, GameObject & hostObject, const bool enable ) :
+Component::Component ( GameObject & hostObject, const bool enable, const ComponentTypes type ) :
 	m_componentType ( type ), 
 	m_gameObject ( hostObject ), 
 	m_transform ( hostObject.GetTransform ( ) ),
@@ -28,12 +28,12 @@ void Component::Kill ( )
 	m_isDead = true;
 }
 
-bool Component::IsEnabled ( ) const
+const bool Component::IsEnabled ( ) const
 {
 	return m_isEnabled;
 }
 
-bool Component::IsActiveAndEnabled ( ) const
+const bool Component::IsActiveAndEnabled ( ) const
 {
 	if ( ! m_isEnabled )
 	{

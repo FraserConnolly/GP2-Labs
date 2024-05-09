@@ -19,6 +19,7 @@ void Time::Service ( float newTime )
 		s_instance->m_deltaTime = 1.0f / 30.0f;
 	}
 
+	s_instance->m_frameCount++;
 }
 
 void Time::Shutdown ( )
@@ -36,7 +37,15 @@ float Time::GetDeltaTime ( )
 	return s_instance->m_deltaTime;
 }
 
-Time::Time ( ) : m_time ( 0.0f ), m_deltaTime ( 0.0f )
+unsigned int Time::GetFrameCount ( )
+{
+	return s_instance->m_frameCount;
+}
+
+Time::Time ( ) : 
+	m_time ( 0.0f ), 
+	m_deltaTime ( 0.0f ), 
+	m_frameCount( 0 )
 { 
 
 }

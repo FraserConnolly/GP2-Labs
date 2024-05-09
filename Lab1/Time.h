@@ -16,10 +16,12 @@ public:
 	static void Shutdown ( );
 
 	// Returns the time in seconds
-	static float GetTime();
+	static float GetTime( );
 
 	// Returns the delta time in seconds
-	static float GetDeltaTime();
+	static float GetDeltaTime( );
+
+	static unsigned int GetFrameCount ( );
 
 private:
 
@@ -28,6 +30,7 @@ private:
 	// in seconds
 	float m_time = 0.0f;
 	float m_deltaTime = 0.0f;
+	unsigned int m_frameCount = 0;
 
 	Time ( );
 	~Time ( );
