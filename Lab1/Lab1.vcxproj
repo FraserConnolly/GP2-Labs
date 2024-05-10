@@ -109,6 +109,7 @@
     <ClCompile Include="MouseInput.cpp" />
     <ClCompile Include="obj_loader.cpp" />
     <ClCompile Include="Path Follow.cpp" />
+    <ClCompile Include="PlayerController.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Rotator.cpp" />
     <ClCompile Include="Shader.cpp" />
@@ -151,6 +152,7 @@
     <ClInclude Include="MouseInput.h" />
     <ClInclude Include="obj_loader.h" />
     <ClInclude Include="Path Follow.h" />
+    <ClInclude Include="PlayerController.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Rotator.h" />
     <ClInclude Include="Shader.h" />

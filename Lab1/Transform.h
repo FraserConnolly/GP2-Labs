@@ -125,7 +125,7 @@ public:
 	// Please see Chat GPT Capture 1.png and Chat GPT Capture 2.png for query and response.
 	// I don't really understand why this works but I lost a day trying to make it work
 	// directly with the quaternion and failed miserably so going via Euler was the compromise.
-	inline void LookAt ( glm::vec3 & target )
+	inline void LookAt ( const glm::vec3 & target )
 	{
 		glm::vec3 direction = glm::normalize ( target - m_position );
 

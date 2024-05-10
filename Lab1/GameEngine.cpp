@@ -53,8 +53,8 @@ void GameEngine::initSystems ( )
 	Audio::LoadBank ( "Master.strings.bank", FMOD_STUDIO_LOAD_BANK_NORMAL );
 
 	// load and play background music - this event is set to loop in FMOD.
-	// note that I am note setting 3D attributes for this event so it will 
-	// essentially follow the listener.
+	// note that I am note setting 3D attributes for this event as it is configured in
+	// FMOD to be a 2D event.
 	Audio::LoadEvent ( "event:/Lighthearted LOOP SHORT" );
 	Audio::PlayEvent ( "event:/Lighthearted LOOP SHORT" );
 
@@ -68,7 +68,7 @@ void GameEngine::initSystems ( )
 	auto flyController = ( CameraFlyController * ) mainCameraObj->AddComponent ( ComponentTypes::CAMERA_FLY_CONTROLLER );
 	flyController->SetCamera ( *mainCamera );
 
-	mainCameraObj->GetTransform ( ).SetPosition ( glm::vec3 ( 2.5f, 7.5f, 10.0f ) );
+	mainCameraObj->GetTransform ( ).SetPosition ( glm::vec3 ( 0.0f, 7.5f, 10.0f ) );
 	mainCameraObj->GetTransform ( ).SetRotationEulerInDegrees ( -29, 0, 0 );
 	mainCameraObj->AddComponent ( ComponentTypes::AUDIO_LISTENER );
 
@@ -106,6 +106,7 @@ void GameEngine::initSystems ( )
 	Transform * toFollow = nullptr;
 
 	std::vector<glm::vec3> points;
+	std::vector<const Transform *> transforms;
 
 	points.push_back ( glm::vec3 ( -2.5, 0, -2.5 ) );
 	points.push_back ( glm::vec3 ( +2.5, 5, -2.5 ) );
@@ -136,6 +137,8 @@ void GameEngine::initSystems ( )
 
 		if ( i != points.size ( ) )
 		{
+			transforms.push_back ( &( obj->GetTransform ( ) ) );
+
 			mesh->loadObjModel ( "monkey3.obj" );
 
 			mesh->SetMaterial ( _material );
@@ -162,9 +165,16 @@ void GameEngine::initSystems ( )
 					break;
 			}
 		}
+
+		if ( i == 1 )
+		{
+			// make this object player controllable.
+			obj->AddComponent ( ComponentTypes::PLAYER_CONTROLLER );
+		}
 		
 		if ( i == points.size( ) )
 		{
+			// This object is an arrow that will move between the four previously defined objects.
 			mesh->loadObjModel ( "ArrowNegZ.obj" );
 
 			auto ptrTexture = new Texture ( "PolygonPrototype_Texture_01.png" );
@@ -176,12 +186,19 @@ void GameEngine::initSystems ( )
 			obj->GetTransform ( ).SetPosition ( ( float ) ( 0 ), 0, 0 );
 
 			auto path = ( PathFollow * ) obj->AddComponent ( PATH_FOLLOW );
-			
-			for ( auto & point : points )
+
+			// using world coordinates
+			//for ( auto & point : points )
+			//{
+			//	path->AddWayPoint ( point );
+			//}
+
+			// using Transforms 
+			for ( auto point : transforms )
 			{
 				path->AddWayPoint ( point );
 			}
-			
+
 			path->SetSpeed ( 2.5f );
 
 			//toFollow = &obj->GetTransform ( );
