@@ -10,7 +10,8 @@ class AudioEventEmitter : public Component
 
 private:
 
-	AudioEventEmitter ( GameObject & hostObject ) : Component( ComponentTypes::AUDIO_EVENT_EMITTER, hostObject ) { }
+	AudioEventEmitter ( GameObject & hostObject ) : 
+		Component( hostObject, ComponentTypes::AUDIO_EVENT_EMITTER ) { }
 	~AudioEventEmitter () { }
 	
 public:

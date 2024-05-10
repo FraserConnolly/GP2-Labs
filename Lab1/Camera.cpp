@@ -4,7 +4,7 @@
 #include "Transform.h"
 
 Camera::Camera ( GameObject & hostObject )
-	: Component( ComponentTypes::CAMERA, hostObject ),
+	: Component( hostObject, ComponentTypes::CAMERA ),
 	_mode ( CameraMode::PERSPECTIVE )
 { }
 

@@ -135,7 +135,7 @@ void Renderer::DeregisterMeshRenderer ( const MeshRenderer * pMeshRenderer )
     if ( itor == end )
         return;
 
-    s_instance->m_renderers.erase ( itor , end );
+    s_instance->m_renderers.erase ( itor );
 }
 
 GLint Renderer::FindFreeTextureUnit ( )

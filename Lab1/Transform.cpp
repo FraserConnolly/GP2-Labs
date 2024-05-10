@@ -11,6 +11,18 @@ void Transform::OnDestroy ( )
 	}
 }
 
+void Transform::OnEnable ( )
+{ 
+	// call OnEnable on the other components for this GameObject
+	m_gameObject.OnActiveChanged ( true );
+}
+
+void Transform::OnDisable ( )
+{ 
+	// call OnDisable on the other components for this GameObject
+	m_gameObject.OnActiveChanged ( false );
+}
+
 void Transform::AddChild ( Transform * const pChild )
 {
 	auto found = std::find ( m_children.begin ( ),

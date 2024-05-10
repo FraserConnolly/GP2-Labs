@@ -10,7 +10,7 @@ class AudioListener : public Component
 private:
 
 	AudioListener ( GameObject & hostObject ) : 
-		Component( ComponentTypes::AUDIO_LISTENER, hostObject )
+		Component( hostObject, ComponentTypes::AUDIO_LISTENER )
 	{ }
 
 	~AudioListener () { }

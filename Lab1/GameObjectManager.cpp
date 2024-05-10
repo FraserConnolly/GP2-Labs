@@ -17,6 +17,8 @@ void GameObjectManager::Shutdown ( )
 
 	for ( auto & object : s_instance->m_gameObjects )
 	{
+		object->m_transform.SetActive ( false );
+		object->RemoveAllComponentsImmediately ( );
 		delete object;
 	}
 
@@ -25,6 +27,7 @@ void GameObjectManager::Shutdown ( )
 
 void GameObjectManager::Service ( )
 {
+	// call the update method on all active objects
 	for ( auto & object : s_instance->m_gameObjects )
 	{
 		object->Update ( );
@@ -33,6 +36,15 @@ void GameObjectManager::Service ( )
 		{
 			s_instance->m_gameObjectsToBeDeleted.push_back ( object );
 		}
+	}
+
+	// delete any objects that were destroyed during this frame.
+	s_instance->CleanUpObjects ( );
+
+	// clear up any components which were removed during this frame
+	for ( auto & object : s_instance->m_gameObjects )
+	{
+		object->CleanUpComponents ( );
 	}
 }
 
@@ -51,17 +63,6 @@ void GameObjectManager::CleanUpObjects ( )
 		delete object;
 	}
 	
-	m_gameObjectsToBeDeleted.clear ( );
-}
-
-void GameObjectManager::DeleteAllObjects ( )
-{ 
-	for ( auto & object : m_gameObjects )
-	{
-		delete object;
-	}
-
-	m_gameObjects.clear ( );
 	m_gameObjectsToBeDeleted.clear ( );
 }
 

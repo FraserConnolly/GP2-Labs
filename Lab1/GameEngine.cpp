@@ -2,13 +2,18 @@
 
 #include <iostream>
 #include <string>
-#include "GameObjectManager.h"
-#include "GameObject.h"
 
+// Sub systems
+#include "GameObjectManager.h"
 #include "Time.h"
 #include "Input.h"
-#include "Rotator.h"
 #include "Renderer.h"
+#include "CollisionManager.h"
+
+#include "GameObject.h"
+
+// Components
+#include "Rotator.h"
 #include "CameraFlyController.h"
 #include "Audio Event Emitter.h"
 #include "Audio Listener.h"
@@ -36,6 +41,7 @@ void GameEngine::initSystems ( )
 	Input::StartUp ( );
 	Renderer::Startup ( );
 	Audio::Startup ( );
+	CollisionManager::Startup ( );
 	GameObjectManager::Startup ( );
 
 	Input::RegisterKey ( SDLK_ESCAPE ); // escape
@@ -174,6 +180,12 @@ void GameEngine::initSystems ( )
 		{
 			obj->GetTransform ( ).SetPosition ( points [ i ] );
 			obj->GetTransform ( ).SetScale ( 1.0f );
+			obj->AddComponent ( BOX_COLIDER );
+		}
+		else
+		{
+			// arrow
+			obj->AddComponent ( BOX_COLIDER );
 		}
 
 		// create a mesh object
@@ -255,7 +267,7 @@ void GameEngine::gameLoop ( )
 		Time::Service ( _gameDisplay.getTime ( ) );
 
 		processInput ( );
-
+		CollisionManager::Service ( );
 		GameObjectManager::Service ( );
 		Audio::Service ( );
 
@@ -273,6 +285,7 @@ void GameEngine::shutdown ( )
 	delete _shaderProgram;
 	delete _texture;
 	GameObjectManager::Shutdown ( );
+	CollisionManager::Shutdown ( );
 	Audio::Shutdown ( );
 	Renderer::Shutdown ( );
 	Input::Shutdown ( );
