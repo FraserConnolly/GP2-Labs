@@ -113,7 +113,9 @@ public:
 	glm::mat4 GetViewMatrix ( );
 	glm::mat4 GetProjectionMatrix ( ) ;
 
+#if _DEBUG
 	void Update ( ) override;
+#endif
 
 private:
 	

@@ -5,8 +5,8 @@ Display::Display()
 	: _glContext ( 0 )
 {
 	_window = nullptr; //initialise to generate null access violation for debugging. 
-	_screenWidth = 1920/2;
-	_screenHeight = 1080/2; 
+	_screenWidth = 1920 * 0.95;
+	_screenHeight = 1080 * 0.95; 
 }
 
 Display::~Display()

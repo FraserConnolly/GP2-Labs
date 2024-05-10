@@ -250,6 +250,34 @@
     <CopyFileToFolders Include="..\res\skybox\right.jpg" />
     <CopyFileToFolders Include="..\res\skybox\top.jpg" />
   </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="..\res\PolygonCity_Texture_01_A.png" />
+    <CopyFileToFolders Include="..\res\PolygonCity_Texture_02_B.png" />
+    <CopyFileToFolders Include="..\res\PolygonCity_Texture_03_C.png" />
+    <CopyFileToFolders Include="..\res\PolygonCity_Texture_04_B.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="..\res\SM_Prop_Cone_01.obj">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="..\res\SM_Prop_Cone_02.obj">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="..\res\SM_Prop_Hydrant_01.obj">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="..\res\SM_Prop_PotPlant_01.obj">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="..\res\Stone.obj">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="..\res\stone_colour.png" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -39,10 +39,12 @@ private:
 	GameState _gameState = GameState::PLAY;
 	Display _gameDisplay;
 
-	Material * _material = nullptr;
-	Texture * _texture = nullptr;
-	Shader * _shaderProgram = nullptr;
-	CubeMap * _skyBox = nullptr;
+	Material * m_BrickMaterial = nullptr;
+	Material * m_SyntyMaterial = nullptr;
+	Texture * m_SyntyTexture = nullptr;
+	Texture * m_BrickTexture = nullptr;
+	Shader * m_shaderProgram = nullptr;
+	CubeMap * m_skyBox = nullptr;
 
 #if _DEBUG
 	ConsoleDebugScene _debugScene;

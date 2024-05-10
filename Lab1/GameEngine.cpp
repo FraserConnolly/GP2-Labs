@@ -56,7 +56,7 @@ void GameEngine::initSystems ( )
 	// note that I am note setting 3D attributes for this event as it is configured in
 	// FMOD to be a 2D event.
 	Audio::LoadEvent ( "event:/Lighthearted LOOP SHORT" );
-	Audio::PlayEvent ( "event:/Lighthearted LOOP SHORT" );
+	//Audio::PlayEvent ( "event:/Lighthearted LOOP SHORT" );
 
 #pragma endregion
 
@@ -76,7 +76,7 @@ void GameEngine::initSystems ( )
 
 #pragma region Skybox
 
-	_skyBox = new CubeMap ( );
+	m_skyBox = new CubeMap ( );
 
 	vector<char *> faces
 	{
@@ -88,20 +88,31 @@ void GameEngine::initSystems ( )
 		"back.jpg"
 	};
 
-	_skyBox->LoadCubeMap ( faces );
-	_skyBox->SetCamera ( *mainCamera );
+	m_skyBox->LoadCubeMap ( faces );
+	m_skyBox->SetCamera ( *mainCamera );
 
 #pragma endregion
 
-	_shaderProgram = new Shader ( );
-	_shaderProgram->LoadDefaultShaders ( );
-	_shaderProgram->SetCamera ( mainCamera );
+#pragma region Set up materials and textures
 
-	_texture = new Texture ( );
-	_texture->LoadTexture ( "bricks.jpg" );
 
-	_material = new Material ( _shaderProgram );
-	_material->SetTexture ( "diffuse", _texture );
+	m_shaderProgram = new Shader ( );
+	m_shaderProgram->LoadDefaultShaders ( );
+	m_shaderProgram->SetCamera ( mainCamera );
+
+	m_SyntyTexture = new Texture ( );
+	m_SyntyTexture->LoadTexture ( "PolygonCity_Texture_01_A.png" );
+	
+	m_BrickTexture = new Texture ( );
+	m_BrickTexture->LoadTexture ( "bricks.jpg" );
+
+	m_SyntyMaterial = new Material ( m_shaderProgram );
+	m_SyntyMaterial->SetTexture ( "diffuse", m_SyntyTexture );
+
+	m_BrickMaterial = new Material ( m_shaderProgram );
+	m_BrickMaterial->SetTexture ( "diffuse", m_BrickTexture );
+
+#pragma endregion
 
 	Transform * toFollow = nullptr;
 
@@ -135,31 +146,38 @@ void GameEngine::initSystems ( )
 		// create a mesh object
 		auto mesh = ( MeshRenderer * ) obj->AddComponent ( ComponentTypes::MESH_RENDERER );
 
+		Texture * ptrTexture = nullptr;  new Texture ( "PolygonPrototype_Texture_01.png" );
+		Material * ptrMaterial = nullptr; new Material ( m_shaderProgram );
+
 		if ( i != points.size ( ) )
 		{
 			transforms.push_back ( &( obj->GetTransform ( ) ) );
-
-			mesh->loadObjModel ( "monkey3.obj" );
-
-			mesh->SetMaterial ( _material );
 
 			auto r = ( Rotator * ) obj->AddComponent ( ComponentTypes::ROTATOR );
 
 			switch ( i % 4 )
 			{
 				case 0:
+					mesh->loadObjModel ( "monkey3.obj" );
+					mesh->SetMaterial ( m_BrickMaterial );
 					r->SetRotationAxis ( true, !true, !true );
 					emitter->LoadEvent ( "event:/Orchestra 1st Star" );
 					break;
 				case 1:
+					mesh->loadObjModel ( "SM_Prop_Cone_02.obj" );
+					mesh->SetMaterial ( m_SyntyMaterial );
 					r->SetRotationAxis ( !true, true, !true );
 					emitter->LoadEvent ( "event:/Orchestra 2nd Star" );
 					break;
 				case 2:
+					mesh->loadObjModel ( "SM_Prop_Cone_01.obj" );
+					mesh->SetMaterial ( m_SyntyMaterial );
 					r->SetRotationAxis ( !true, !true, true );
 					emitter->LoadEvent ( "event:/Orchestra 3rd Star" );
 					break;
 				case 3:
+					mesh->loadObjModel ( "UnitCube.obj" );
+					mesh->SetMaterial ( m_SyntyMaterial );
 					r->SetRotationAxis ( !true, !true, !true );
 					emitter->LoadEvent ( "event:/Casual Win 1" );
 					break;
@@ -177,11 +195,7 @@ void GameEngine::initSystems ( )
 			// This object is an arrow that will move between the four previously defined objects.
 			mesh->loadObjModel ( "ArrowNegZ.obj" );
 
-			auto ptrTexture = new Texture ( "PolygonPrototype_Texture_01.png" );
-			auto ptrMaterial = new Material ( _shaderProgram );
-			ptrMaterial->SetTexture ( "diffuse", ptrTexture );
-
-			mesh->SetMaterial ( ptrMaterial );
+			mesh->SetMaterial ( m_SyntyMaterial );
 
 			obj->GetTransform ( ).SetPosition ( ( float ) ( 0 ), 0, 0 );
 
@@ -236,9 +250,12 @@ void GameEngine::gameLoop ( )
 
 void GameEngine::shutdown ( )
 {
-	delete _material;
-	delete _shaderProgram;
-	delete _texture;
+	delete m_SyntyMaterial;
+	delete m_BrickMaterial;
+	delete m_shaderProgram;
+	delete m_BrickTexture;
+	delete m_SyntyTexture;
+
 	GameObjectManager::Shutdown ( );
 	CollisionManager::Shutdown ( );
 	Audio::Shutdown ( );
@@ -282,9 +299,9 @@ void GameEngine::drawGame ( )
 {
 	_gameDisplay.clearDisplay ( );
 	Renderer::Service ( );
-	if ( _skyBox != nullptr )
+	if ( m_skyBox != nullptr )
 	{
-		_skyBox->Draw ( );
+		m_skyBox->Draw ( );
 	}
 	_gameDisplay.swapBuffer ( );
 }
