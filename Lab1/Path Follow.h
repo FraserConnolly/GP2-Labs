@@ -19,6 +19,9 @@ public:
 	void Update ( ) override;
 	void AddWayPoint ( const glm::vec3 point );
 	void ClearWayPoints ( );
+	
+	void SetSpeed ( float speed );
+	const float GetSpeed ( );
 
 private:
 

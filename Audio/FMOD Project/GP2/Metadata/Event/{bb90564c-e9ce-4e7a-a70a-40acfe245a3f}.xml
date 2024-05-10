@@ -5,7 +5,7 @@
 			<value>Lighthearted LOOP SHORT</value>
 		</property>
 		<property name="outputFormat">
-			<value>2</value>
+			<value>1</value>
 		</property>
 		<relationship name="folder">
 			<destination>{1e4d34cf-e2ea-472c-a3d1-132e5aae959a}</destination>
@@ -100,6 +100,9 @@
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{a080c872-be8a-48b7-a05c-6390533096e3}">
+		<property name="volume">
+			<value>-4</value>
+		</property>
 		<property name="name">
 			<value>Audio 1</value>
 		</property>
@@ -130,7 +133,6 @@
 	<object class="MixerBusEffectChain" id="{13bf5d25-e55c-4c5f-b86d-79cb281a4754}">
 		<relationship name="effects">
 			<destination>{6ccb9cd5-7097-4907-bbd8-c2dac166b861}</destination>
-			<destination>{3e7235e7-a387-471d-96fc-9dc4d857774e}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{bbe1a425-a3d7-427a-a11b-3d0c39be4a3e}" />
@@ -142,6 +144,5 @@
 	</object>
 	<object class="MixerBusPanner" id="{d7e62415-e0ed-4fac-a426-1d8a6a78c666}" />
 	<object class="MixerBusFader" id="{6ccb9cd5-7097-4907-bbd8-c2dac166b861}" />
-	<object class="SpatialiserEffect" id="{3e7235e7-a387-471d-96fc-9dc4d857774e}" />
 	<object class="MixerBusFader" id="{0943a83e-1a3d-425d-9e97-f7f00b4f7212}" />
 </objects>

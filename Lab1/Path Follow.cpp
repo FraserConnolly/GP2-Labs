@@ -41,3 +41,13 @@ void PathFollow::ClearWayPoints ( )
 { 
 	m_path.clear ( );
 }
+
+void PathFollow::SetSpeed ( float speed )
+{ 
+	m_speed = speed;
+}
+
+const float PathFollow::GetSpeed ( )
+{
+	return m_speed;
+}

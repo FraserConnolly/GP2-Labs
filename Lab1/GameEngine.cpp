@@ -50,97 +50,14 @@ void GameEngine::initSystems ( )
 
 	Audio::LoadBank ( "Master.bank", FMOD_STUDIO_LOAD_BANK_NORMAL );
 	Audio::LoadBank ( "Master.strings.bank", FMOD_STUDIO_LOAD_BANK_NORMAL );
-	//Audio::LoadEvent ( "event:/Lighthearted LOOP SHORT" );
-	//Audio::SetEvent3dAttributes ( "event:/Lighthearted LOOP SHORT", glm::vec3 ( 0 ) );
-	//Audio::PlayEvent ( "event:/Lighthearted LOOP SHORT" );
+
+	// load and play background music - this event is set to loop in FMOD.
+	// note that I am note setting 3D attributes for this event so it will 
+	// essentially follow the listener.
+	Audio::LoadEvent ( "event:/Lighthearted LOOP SHORT" );
+	Audio::PlayEvent ( "event:/Lighthearted LOOP SHORT" );
 
 #pragma endregion
-
-//#pragma region Vertices for a triangle
-//
-//	_triangleVertices [ 0 ] = Vertex1P1D1U ( -0.5f, -0.5f, 0.0f );
-//	_triangleVertices [ 1 ] = Vertex1P1D1U ( 0.5f, -0.5f, 0.0f );
-//	_triangleVertices [ 2 ] = Vertex1P1D1U ( 0.0f, 0.5f, 0.0f );
-//
-//	_triangleVertices [ 0 ].SetPosition ( 0.0f, 0.0f, 0.0f );
-//	_triangleVertices [ 1 ].SetPosition ( 0.5f, 0.0f, 0.0f );
-//	_triangleVertices [ 2 ].SetPosition ( 0.25f, 0.5f, 0.0f );
-//
-//	// Rainbow vertex colours
-//	//_vertices [ 0 ].SetColour ( 1.0f, 0.0f, 0.0f );
-//	//_vertices [ 1 ].SetColour ( 0.0f, 1.0f, 0.0f );
-//	//_vertices [ 2 ].SetColour ( 0.0f, 0.0f, 1.0f );
-//
-//	_triangleVertices [ 0 ].SetTexture ( 0.0f, 0.0f );
-//	_triangleVertices [ 1 ].SetTexture ( 1.0f, 0.0f );
-//	_triangleVertices [ 2 ].SetTexture ( 0.5f, 1.0f );
-//
-//	_triangleIndices [ 0 ] = 0;
-//	_triangleIndices [ 1 ] = 1;
-//	_triangleIndices [ 2 ] = 2;
-//
-//#pragma endregion
-//
-//#pragma region vertices for a cube
-//
-//	// raw vertices for a cube with texture coordinates
-//	float vertices[ ] = {
-//	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-//	 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-//	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-//	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-//	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-//	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-//
-//	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-//	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-//	 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-//	 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-//	-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-//	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-//
-//	-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-//	-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-//	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-//	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-//	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-//	-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-//
-//	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-//	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-//	 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-//	 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-//	 0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-//	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-//
-//	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-//	 0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-//	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-//	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-//	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-//	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-//
-//	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-//	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-//	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-//	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-//	-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-//	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
-//	};
-//
-//	for ( size_t i = 0, j = 0; j < 36; j++ )
-//	{
-//		float x, y, z, u, v;
-//		x = vertices [ i++ ];
-//		y = vertices [ i++ ];
-//		z = vertices [ i++ ];
-//		u = vertices [ i++ ];
-//		v = vertices [ i++ ];
-//		_cubeVertices [ j ].SetPosition ( x, y, z );
-//		_cubeVertices [ j ].SetTexture ( u, v );
-//	}
-//
-//#pragma endregion
 
 	auto mainCameraObj = GameObjectManager::CreateObject ( );
 	auto mainCamera = ( Camera * ) mainCameraObj->AddComponent ( ComponentTypes::CAMERA );
@@ -148,10 +65,9 @@ void GameEngine::initSystems ( )
 	auto flyController = ( CameraFlyController * ) mainCameraObj->AddComponent ( ComponentTypes::CAMERA_FLY_CONTROLLER );
 	flyController->SetCamera ( *mainCamera );
 
-	mainCameraObj->GetTransform ( ).SetPosition ( glm::vec3 ( 0.0f, 20.0f, 20.0f ) );
-	mainCameraObj->GetTransform ( ).SetRotationEulerInDegrees ( -45, 0, 0 );
+	mainCameraObj->GetTransform ( ).SetPosition ( glm::vec3 ( 2.5f, 7.5f, 10.0f ) );
+	mainCameraObj->GetTransform ( ).SetRotationEulerInDegrees ( -29, 0, 0 );
 	mainCameraObj->AddComponent ( ComponentTypes::AUDIO_LISTENER );
-
 
 	_shaderProgram = new Shader ( );
 	_shaderProgram->LoadDefaultShaders ( );
@@ -173,19 +89,23 @@ void GameEngine::initSystems ( )
 	points.push_back ( glm::vec3 ( +2.5, 0, +2.5 ) );
 	points.push_back ( glm::vec3 ( -2.5, 0, +2.5 ) );
 
-	for ( size_t i = 0; i < points.size( ) + 1; i++ )
+	for ( size_t i = 0; i < points.size ( ) + 1; i++ )
 	{
 		auto obj = GameObjectManager::CreateObject ( );
+
+		auto emitter = ( AudioEventEmitter * ) obj->AddComponent ( ComponentTypes::AUDIO_EVENT_EMITTER );
+		emitter->SetCollisionBehaviour ( true, false );
+
 		if ( i != points.size ( ) )
 		{
 			obj->GetTransform ( ).SetPosition ( points [ i ] );
 			obj->GetTransform ( ).SetScale ( 1.0f );
-			obj->AddComponent ( BOX_COLIDER );
+			obj->AddComponent ( SPHERE_COLIDER );
 		}
 		else
 		{
 			// arrow
-			obj->AddComponent ( BOX_COLIDER );
+			obj->AddComponent ( SPHERE_COLIDER );
 		}
 
 		// create a mesh object
@@ -198,40 +118,30 @@ void GameEngine::initSystems ( )
 		mesh->SetMaterial ( _material );
 
 		auto r = ( Rotator * ) obj->AddComponent ( ComponentTypes::ROTATOR );
-		switch ( i % 4 )
+
+		if ( i != points.size ( ) )
 		{
-			case 0:
-				r->SetRotationAxis ( true, !true, !true );
-				break;
-			case 1:
-				r->SetRotationAxis ( !true, true, !true );
-				break;
-			case 2:
-				r->SetRotationAxis ( !true, !true, true );
-				break;
-			case 3:
-				r->SetRotationAxis ( !true, !true, !true );
-				break;
+			switch ( i % 4 )
+			{
+				case 0:
+					r->SetRotationAxis ( true, !true, !true );
+					emitter->LoadEvent ( "event:/Orchestra 1st Star" );
+					break;
+				case 1:
+					r->SetRotationAxis ( !true, true, !true );
+					emitter->LoadEvent ( "event:/Orchestra 2nd Star" );
+					break;
+				case 2:
+					r->SetRotationAxis ( !true, !true, true );
+					emitter->LoadEvent ( "event:/Orchestra 3rd Star" );
+					break;
+				case 3:
+					r->SetRotationAxis ( !true, !true, !true );
+					emitter->LoadEvent ( "event:/Casual Win 1" );
+					break;
+			}
 		}
 		
-
-		//if ( i == 0 )
-		//{
-		//	//mesh->loadObjModel ( "SM_Icon_Camera_01.obj" );
-		//	obj->GetTransform ( ).SetRotationEulerInDegrees ( 0, 0, 0 );
-		//	auto emitter  = ( AudioEventEmitter * ) obj->AddComponent ( ComponentTypes::AUDIO_EVENT_EMITTER );
-		//	emitter->LoadEvent ( "event:/Test" ); // ( "event:/Lighthearted LOOP SHORT" );
-		//	//emitter->PlayEvent ( );
-		//}
-
-		//if ( i == 1 )
-		//{
-		//	mesh->loadObjModel ( "ArrowNegZ.obj" );
-		//	//obj->AddComponent ( ComponentTypes::AUDIO_LISTENER );
-		//	r->SetActive ( false );
-		//	mainCamera->SetDebugTransform ( obj->GetTransform ( ), glm::vec3 ( 0, -1, -3 ) );
-		//}
-
 		if ( i == points.size( ) )
 		{
 			mesh->loadObjModel ( "ArrowNegZ.obj" );
@@ -245,18 +155,20 @@ void GameEngine::initSystems ( )
 			{
 				path->AddWayPoint ( point );
 			}
+			
+			path->SetSpeed ( 2.5f );
 
-			toFollow = &obj->GetTransform ( );
+			//toFollow = &obj->GetTransform ( );
 		}
 	}
-
-
-
 
 #if _DEBUG
 	_debugScene.initaliseScene ( 0 );
 	_debugScene.SetTransformToMonitor ( mainCameraObj->GetTransform ( ) );
-	_debugScene.SetTransformToMonitor ( *toFollow );
+	if ( toFollow != nullptr )
+	{
+		_debugScene.SetTransformToMonitor ( *toFollow );
+	}
 #endif
 }
 

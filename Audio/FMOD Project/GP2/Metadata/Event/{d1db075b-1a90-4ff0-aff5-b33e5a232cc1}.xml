@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="Event" id="{d1db075b-1a90-4ff0-aff5-b33e5a232cc1}">
 		<property name="name">
-			<value>Orchestra 1st Star </value>
+			<value>Orchestra 1st Star</value>
 		</property>
 		<property name="outputFormat">
 			<value>2</value>
@@ -56,7 +56,11 @@
 			<destination>{524dd41b-ac0c-45ec-9dd6-0609e499da8b}</destination>
 		</relationship>
 	</object>
-	<object class="EventAutomatableProperties" id="{fdc02aaa-76ff-4f25-9b3e-df43ec1c829d}" />
+	<object class="EventAutomatableProperties" id="{fdc02aaa-76ff-4f25-9b3e-df43ec1c829d}">
+		<property name="maximumDistance">
+			<value>55</value>
+		</property>
+	</object>
 	<object class="MarkerTrack" id="{b9887eda-32ae-4f16-ae0d-d2b989881a29}" />
 	<object class="GroupTrack" id="{7e53a92e-d280-48f2-9131-7fd4f68f5548}">
 		<relationship name="modules">
@@ -97,6 +101,9 @@
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{7f5d36d7-1094-4984-ac52-995a8d792130}">
+		<property name="volume">
+			<value>5</value>
+		</property>
 		<property name="name">
 			<value>Audio 1</value>
 		</property>

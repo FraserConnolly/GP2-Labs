@@ -4,14 +4,15 @@
 #include "GameObject.h"
 #include "Audio.h"
 
+class Collider;
+
 class AudioEventEmitter : public Component
 { 
 	friend class GameObject;
 
 private:
 
-	AudioEventEmitter ( GameObject & hostObject ) : 
-		Component( hostObject, ComponentTypes::AUDIO_EVENT_EMITTER ) { }
+	AudioEventEmitter ( GameObject & hostObject );
 	~AudioEventEmitter () { }
 	
 public:
@@ -21,63 +22,24 @@ public:
 	/// This will also create the FMOD event instance.
 	/// </summary>
 	/// <param name="strEventName">These are FMOD events so don't forget to use the full FMOD path which will start event:/</param>
-	void LoadEvent ( const std::string & strEventName )
-	{
-		m_eventName = strEventName; // copy string
-		Audio::LoadEvent ( m_eventName );
-		m_position = m_transform.GetPosition ( );
-		Audio::SetEvent3dAttributes ( m_eventName, m_transform );
-	}
+	void LoadEvent ( const std::string & strEventName );
 
-	void PlayEvent ( )
-	{
-		if ( m_eventName.empty( ) )
-		{
-			return;
-		}
-
-		Audio::PlayEvent ( m_eventName );
-	}
+	void PlayEvent ( );
+	void StopEvent ( );
+	bool IsPlaying ( );
 	
-	void StopEvent ( )
-	{
-		if ( m_eventName.empty ( ) )
-		{
-			return;
-		}
+	void Update ( ) override;
+	void OnCollisionEnter ( const Collider & other ) override;
+	void OnCollisionExit  ( const Collider & other ) override;
 
-		Audio::StopEvent ( m_eventName );
-	}
-
-	bool IsPlaying ( )
-	{
-		if ( m_eventName.empty ( ) )
-		{
-			return false;
-		}
-
-		return Audio::IsEventPlaying ( m_eventName );
-	}
-
-	void Update ( ) override
-	{
-		if ( !IsPlaying ( ) )
-		{
-			return;
-		}
-
-		auto & newPosition = m_transform.GetPosition ( );
-		if ( newPosition != m_position )
-		{
-			m_position = newPosition;
-			Audio::SetEvent3dAttributes ( m_eventName, m_transform );
-		}
-	}
+	void SetCollisionBehaviour ( bool startOnCollisionEnter, bool stopOnCollisionExit );
 
 private:
 
 	glm::vec3 m_position;
 	std::string m_eventName;
+	bool m_playOnCollisionEnter;
+	bool m_stopOnCollisionExit;
 
 };
 
