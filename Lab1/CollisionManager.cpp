@@ -141,6 +141,13 @@ void CollisionManager::Startup ( )
 
 void CollisionManager::Service ( )
 {
+	auto numberOfColliders = s_instance->m_collisionWorld.size ( );
+
+	if ( numberOfColliders == 0 )
+	{
+		return;
+	}
+
 	const unsigned int currentFrameIndex = Time::GetFrameCount ( );
 
 	// check the state of all collider (have they moved or enabled/disabled)
@@ -185,8 +192,6 @@ void CollisionManager::Service ( )
 	}
 
 	// perform a pair wise collision detection.
-	auto numberOfColliders = s_instance->m_collisionWorld.size ( );
-
 	for ( int i = 0; i < numberOfColliders - 1; ++i )
 	{
 		auto & pColliderData = s_instance->m_collisionWorld [ i ];
