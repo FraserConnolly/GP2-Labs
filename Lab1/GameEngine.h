@@ -17,6 +17,7 @@ enum class GameState
 class Texture;
 class Shader;
 class Material;
+class CubeMap;
 
 class GameEngine
 {
@@ -41,6 +42,7 @@ private:
 	Material * _material = nullptr;
 	Texture * _texture = nullptr;
 	Shader * _shaderProgram = nullptr;
+	CubeMap * _skyBox = nullptr;
 
 #if _DEBUG
 	ConsoleDebugScene _debugScene;

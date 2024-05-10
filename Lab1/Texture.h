@@ -1,11 +1,13 @@
 #pragma once 
 
 #include <string> 
+#include <vector>
 #include <GL\glew.h>
 
 class Texture
 {
 	friend class Renderer;
+	enum TextureType;
 
 public: 
 	Texture ( );
@@ -14,6 +16,7 @@ public:
 	~Texture ( );
 	
 	void LoadTexture ( const char * filename );
+	void LoadCubeMap ( const std::vector<char *> & cubeMapFilePaths );
 
 	// bind up to 80 in OpenGL 4 textures. 
 	// true limit is determined at runtime.
@@ -25,6 +28,7 @@ protected:
 private:
 
 	void SetDefaultTexture ( );
+	void DeleteCurrentTexture ( );
 
 	GLuint _texture = 0u;
 	int _width = 0;
@@ -32,5 +36,6 @@ private:
 	int _nrChannels = 0;
 	bool _fileLoaded = false;
 	GLint _activeBind = -1;
+	TextureType m_textureType;
 
 };

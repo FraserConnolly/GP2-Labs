@@ -11,6 +11,7 @@
 #include "CollisionManager.h"
 
 #include "GameObject.h"
+#include "CubeMap.h"
 
 // Components
 #include "Rotator.h"
@@ -59,6 +60,8 @@ void GameEngine::initSystems ( )
 
 #pragma endregion
 
+#pragma region Main Camera
+
 	auto mainCameraObj = GameObjectManager::CreateObject ( );
 	auto mainCamera = ( Camera * ) mainCameraObj->AddComponent ( ComponentTypes::CAMERA );
 
@@ -68,6 +71,27 @@ void GameEngine::initSystems ( )
 	mainCameraObj->GetTransform ( ).SetPosition ( glm::vec3 ( 2.5f, 7.5f, 10.0f ) );
 	mainCameraObj->GetTransform ( ).SetRotationEulerInDegrees ( -29, 0, 0 );
 	mainCameraObj->AddComponent ( ComponentTypes::AUDIO_LISTENER );
+
+#pragma endregion
+
+#pragma region Skybox
+
+	_skyBox = new CubeMap ( );
+
+	vector<char *> faces
+	{
+		"right.jpg",
+		"left.jpg",
+		"top.jpg",
+		"bottom.jpg",
+		"front.jpg",
+		"back.jpg"
+	};
+
+	_skyBox->LoadCubeMap ( faces );
+	_skyBox->SetCamera ( *mainCamera );
+
+#pragma endregion
 
 	_shaderProgram = new Shader ( );
 	_shaderProgram->LoadDefaultShaders ( );
@@ -239,6 +263,10 @@ void GameEngine::drawGame ( )
 {
 	_gameDisplay.clearDisplay ( );
 	Renderer::Service ( );
+	if ( _skyBox != nullptr )
+	{
+		_skyBox->Draw ( );
+	}
 	_gameDisplay.swapBuffer ( );
 }
 

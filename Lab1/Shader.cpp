@@ -148,7 +148,8 @@ GLuint Shader::CreateShader ( const std::string & text, GLenum type )
 
 inline GLint Shader::GetUnifromLocation ( const GLchar * name ) const
 {
-	return glGetUniformLocation ( _program, name );
+	auto location = glGetUniformLocation ( _program, name );
+	return location;
 }
 
 void Shader::SetUniform ( const GLchar * name, const GLboolean v ) const
@@ -159,6 +160,11 @@ void Shader::SetUniform ( const GLchar * name, const GLboolean v ) const
 void Shader::SetUniform ( const GLchar * name, const GLint v ) const
 {
 	glUniform1i ( GetUnifromLocation ( name ), v );
+}
+
+void Shader::SetUniform ( const GLint location, const GLint v ) const
+{ 
+	glUniform1i ( location, v );
 }
 
 void Shader::SetUniform ( const GLchar * name, const GLfloat v ) const

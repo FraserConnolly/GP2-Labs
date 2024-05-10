@@ -4,16 +4,26 @@
 #include <iostream>
 #include "Renderer.h"
 
-Texture::Texture ( )
+enum Texture::TextureType
+{
+	UNDEFINED,
+	TEXTURE_2D,
+	CUBEMAP
+};
+
+Texture::Texture ( ) : 
+	m_textureType ( UNDEFINED )
 { 
 }
 
-Texture::Texture ( const std::string & fileName )
+Texture::Texture ( const std::string & fileName ) :
+	m_textureType ( TEXTURE_2D )
 { 
 	LoadTexture ( fileName.c_str ( ) );
 }
 
-Texture::Texture ( const char * fileName )
+Texture::Texture ( const char * fileName ) :
+	m_textureType ( TEXTURE_2D )
 { 
 	LoadTexture ( fileName );
 }
@@ -25,11 +35,8 @@ Texture::~Texture ( )
 
 void Texture::LoadTexture ( const char * filename )
 {
-	if ( _texture != 0u )
-	{
-		// delete any existing texture - to do 
-	}
-
+	DeleteCurrentTexture ( );
+	m_textureType = TEXTURE_2D;
 
 	// load and generate the texture
 	//    unsigned char *data = stbi_load(filename, &x, &y, &n, 0);
@@ -64,6 +71,40 @@ void Texture::LoadTexture ( const char * filename )
 	stbi_image_free ( data );
 }
 
+// Heavily influenced by LearnOpenGL.com website. - https://learnopengl.com/Advanced-OpenGL/Cubemaps
+void Texture::LoadCubeMap ( const std::vector<char *> & cubeMapFilePaths )
+{ 
+	DeleteCurrentTexture ( );
+	m_textureType = CUBEMAP;
+
+	glGenTextures ( 1, &_texture );
+	glBindTexture ( GL_TEXTURE_CUBE_MAP, _texture );
+
+	int width, height, nrChannels;
+	for ( unsigned int i = 0; i < cubeMapFilePaths.size ( ); i++ )
+	{
+		unsigned char * data = stbi_load ( cubeMapFilePaths [ i ], &width, &height, &nrChannels, 0 );
+		if ( data )
+		{
+			glTexImage2D ( GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+						   0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data
+			);
+			stbi_image_free ( data );
+		}
+		else
+		{
+			std::cout << "Cubemap tex failed to load at path: " << cubeMapFilePaths [ i ] << std::endl;
+			stbi_image_free ( data );
+		}
+	}
+
+	glTexParameteri ( GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+	glTexParameteri ( GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+	glTexParameteri ( GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
+	glTexParameteri ( GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
+	glTexParameteri ( GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE );
+}
+
 void Texture::Bind ( GLint unit )
 {
 	// check we are working with one of the available textures
@@ -76,12 +117,25 @@ void Texture::Bind ( GLint unit )
 		SetDefaultTexture ( );
 	}
 
-	glBindTextureUnit ( GL_TEXTURE0 + unit, _texture );
-	_activeBind = unit;
-	
-	// these two functions can be called together with glBindtextureUnit
-	//glActiveTexture ( GL_TEXTURE0 + unit ); //set active texture unit 
-	//glBindTexture(GL_TEXTURE_2D, _texture); //type of and texture to bind to unit
+	switch ( m_textureType )
+	{
+		case Texture::TEXTURE_2D:
+			glBindTextureUnit ( GL_TEXTURE0 + unit, _texture );
+			_activeBind = unit;
+
+			// these two functions can be called together with glBindtextureUnit
+			//glActiveTexture ( GL_TEXTURE0 + unit ); //set active texture unit 
+			//glBindTexture(GL_TEXTURE_2D, _texture); //type of and texture to bind to unit
+			break;
+		case Texture::CUBEMAP:
+			glActiveTexture ( GL_TEXTURE0 + unit ); //set active texture unit 
+			glBindTexture ( GL_TEXTURE_CUBE_MAP, _texture );
+			break;
+		case Texture::UNDEFINED:
+		default:
+			break;
+	}
+
 }
 
 void Texture::SetDefaultTexture ( )
@@ -106,6 +160,15 @@ void Texture::SetDefaultTexture ( )
 	glTexImage2D ( GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, data );
 	glGenerateMipmap ( GL_TEXTURE_2D );
 
+}
+
+void Texture::DeleteCurrentTexture ( )
+{
+	if ( _texture != 0u )
+	{
+		glDeleteTextures ( 1, &_texture );
+		_texture = 0;
+	}
 }
 
 

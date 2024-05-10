@@ -39,6 +39,7 @@ public:
 	/// </summary>
 	void SetUniform ( const GLchar * name, const GLboolean v ) const;
 	void SetUniform ( const GLchar * name, const GLint v ) const;
+	void SetUniform ( const GLint location, const GLint v ) const;
 	void SetUniform ( const GLchar * name, const GLfloat v ) const;
 	void SetUniform ( const GLchar * name, const GLfloat x, const GLfloat y, const GLfloat z ) const;
 	void SetUniform ( const GLchar * name, const GLfloat x, const GLfloat y, const GLfloat z, const GLfloat w ) const;

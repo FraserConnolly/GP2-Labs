@@ -75,25 +75,10 @@ void Renderer::Service ( )
         for ( auto & pair : material->m_textures )
         {
             Texture * texture = pair.second;
-            
-            // is the texture already bound to a Texture Unit
-            if ( texture->_activeBind >= 0 )
-            {
-                // confirm the cached activeBind is still true
-                if ( s_activeTextures [ texture->_activeBind ] == texture )
-                {
-                    // texture is already active
-                    continue;
-                }
-                else
-                {
-                    BindTexture ( texture );
-                }
-            }
-            else
-            {
-                BindTexture ( texture );
-            }
+
+            BindTexture ( texture );
+
+            shader.SetUniform ( pair.first, texture->_activeBind );
         }
 
         // draw the mesh
@@ -182,17 +167,30 @@ void Renderer::FreeAllTextureUnits ( )
     s_lastUsedTextureUnit = 0;
 }
 
-void Renderer::BindTexture ( Texture * pTexture )
+GLint Renderer::BindTexture ( Texture * pTexture )
 {
+    // is the texture already bound to a Texture Unit
+    if ( pTexture->_activeBind >= 0 )
+    {
+        // confirm the cached activeBind is still true
+        if ( s_activeTextures [ pTexture->_activeBind ] == pTexture )
+        {
+            // texture is already active
+            return pTexture->_activeBind;
+        }
+    }
+
     auto tu = FindFreeTextureUnit ( );
 
     if ( tu == -1 )
     {
         // this is a fatal error and should be logged.
-        return;
+        return -1;
     }
-
+    
+    s_activeTextures [ tu ] = pTexture;
     pTexture->Bind ( tu );
+    return tu;
 }
 
 bool Renderer::CheckUnitsAvilable ( unsigned int count )

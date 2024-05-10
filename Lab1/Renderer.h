@@ -21,6 +21,8 @@ public:
 	{
 		return s_maxTextureUnit;
 	}
+	
+	static GLint BindTexture ( Texture * pTexture );
 
 private:
 
@@ -42,8 +44,6 @@ private:
 	// This is the bull in the china shop approach.
 	// A more elegant method should be written.
 	static void FreeAllTextureUnits ( );
-
-	static void BindTexture ( Texture * pTexture );
 
 	static bool CheckUnitsAvilable ( unsigned int count );
 
