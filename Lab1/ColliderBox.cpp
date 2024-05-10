@@ -26,7 +26,7 @@ void ColliderBox::SetExtents ( const glm::vec3 & extents )
     m_halfExtents.z = m_extents.z / 2;
 }
 
-const glm::vec3 & ColliderBox::GetScaledHalfExtents ( ) const
+const glm::vec3 ColliderBox::GetScaledHalfExtents ( ) const
 {
     return m_halfExtents * m_transform.GetScale ( ) ;
 }

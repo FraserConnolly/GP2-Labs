@@ -192,7 +192,7 @@ void CollisionManager::Service ( )
 	}
 
 	// perform a pair wise collision detection.
-	for ( int i = 0; i < numberOfColliders - 1; ++i )
+	for ( size_t i = 0; i < numberOfColliders - 1; ++i )
 	{
 		auto & pColliderData = s_instance->m_collisionWorld [ i ];
 
@@ -203,7 +203,7 @@ void CollisionManager::Service ( )
 		}
 
 		// check this collider against the others
-		for ( int j = i + 1; j < numberOfColliders; ++j )
+		for ( size_t j = i + 1; j < numberOfColliders; ++j )
 		{
 			auto pOtherCollider = s_instance->m_collisionWorld [ j ];
 

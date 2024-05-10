@@ -30,7 +30,7 @@ inline void ColliderSphere::SetRadious ( const float radious )
 
 const glm::quat & ColliderSphere::GetRotation ( ) const
 {
-    // sphere's don't have a rotation.
-    return glm::quat ( );
+    // Sphere's don't have a rotation. This will be ignored in Collision Manager.
+    return m_transform.GetRotation( );
 }
 

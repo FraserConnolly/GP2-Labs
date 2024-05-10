@@ -32,7 +32,7 @@ private:
 
 	float m_speed;
 	float m_checkDistance;
-	int m_nextPointIndex = 0;
+	size_t m_nextPointIndex = 0;
 	std::vector<glm::vec3> m_path;
 	std::vector<const Transform *> m_pathTransforms;
 

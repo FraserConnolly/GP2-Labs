@@ -14,7 +14,7 @@ public:
     const glm::vec3 & GetCentre ( ) const override;
     const glm::vec3 & GetExtents ( ) const;
     void SetExtents ( const glm::vec3 & extents );
-    const glm::vec3 & GetScaledHalfExtents ( ) const;
+    const glm::vec3 GetScaledHalfExtents ( ) const;
     const glm::quat & GetRotation ( ) const override;
     const Transform & GetTransform ( ) const; // just a short cut
 
