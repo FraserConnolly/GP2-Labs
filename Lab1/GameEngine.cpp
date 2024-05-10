@@ -99,7 +99,6 @@ void GameEngine::initSystems ( )
 
 	_texture = new Texture ( );
 	_texture->LoadTexture ( "bricks.jpg" );
-	//_texture->LoadTexture ( "PolygonPrototype_Texture_01.png" );
 
 	_material = new Material ( _shaderProgram );
 	_material->SetTexture ( "diffuse", _texture );
@@ -134,17 +133,15 @@ void GameEngine::initSystems ( )
 
 		// create a mesh object
 		auto mesh = ( MeshRenderer * ) obj->AddComponent ( ComponentTypes::MESH_RENDERER );
-		//mesh.SetMesh ( _vertices, 3, nullptr, 0 );
-		//mesh.SetMesh( _triangleVertices, 3, _triangleIndices, 3 );
-		//mesh.SetMesh ( _cubeVertices, 36, nullptr, 0 );
-		mesh->loadObjModel ( "monkey3.obj" );
-
-		mesh->SetMaterial ( _material );
-
-		auto r = ( Rotator * ) obj->AddComponent ( ComponentTypes::ROTATOR );
 
 		if ( i != points.size ( ) )
 		{
+			mesh->loadObjModel ( "monkey3.obj" );
+
+			mesh->SetMaterial ( _material );
+
+			auto r = ( Rotator * ) obj->AddComponent ( ComponentTypes::ROTATOR );
+
 			switch ( i % 4 )
 			{
 				case 0:
@@ -169,9 +166,14 @@ void GameEngine::initSystems ( )
 		if ( i == points.size( ) )
 		{
 			mesh->loadObjModel ( "ArrowNegZ.obj" );
+
+			auto ptrTexture = new Texture ( "PolygonPrototype_Texture_01.png" );
+			auto ptrMaterial = new Material ( _shaderProgram );
+			ptrMaterial->SetTexture ( "diffuse", ptrTexture );
+
+			mesh->SetMaterial ( ptrMaterial );
+
 			obj->GetTransform ( ).SetPosition ( ( float ) ( 0 ), 0, 0 );
-			r->SetRotationAxis ( !true, !true, !true );
-			r->SetActive ( false );
 
 			auto path = ( PathFollow * ) obj->AddComponent ( PATH_FOLLOW );
 			

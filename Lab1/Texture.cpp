@@ -117,22 +117,20 @@ void Texture::Bind ( GLint unit )
 		SetDefaultTexture ( );
 	}
 
+	_activeBind = unit;
+	glActiveTexture ( GL_TEXTURE0 + unit ); //set active texture unit 
+
 	switch ( m_textureType )
 	{
 		case Texture::TEXTURE_2D:
-			glBindTextureUnit ( GL_TEXTURE0 + unit, _texture );
-			_activeBind = unit;
-
-			// these two functions can be called together with glBindtextureUnit
-			//glActiveTexture ( GL_TEXTURE0 + unit ); //set active texture unit 
-			//glBindTexture(GL_TEXTURE_2D, _texture); //type of and texture to bind to unit
+			glBindTexture(GL_TEXTURE_2D, _texture); //type of and texture to bind to unit
 			break;
 		case Texture::CUBEMAP:
-			glActiveTexture ( GL_TEXTURE0 + unit ); //set active texture unit 
 			glBindTexture ( GL_TEXTURE_CUBE_MAP, _texture );
 			break;
 		case Texture::UNDEFINED:
 		default:
+			// log error!
 			break;
 	}
 

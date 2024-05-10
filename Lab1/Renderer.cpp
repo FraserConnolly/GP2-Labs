@@ -72,6 +72,7 @@ void Renderer::Service ( )
             FreeAllTextureUnits ( );
         }
 
+        // the pair here is a GLint representing the uniform location that this texture should be applied to and the texture object to apply.
         for ( auto & pair : material->m_textures )
         {
             Texture * texture = pair.second;
