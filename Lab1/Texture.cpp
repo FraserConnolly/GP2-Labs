@@ -46,6 +46,7 @@ void Texture::LoadTexture ( const char * filename )
     // ... but 'n' will always be the number that it would have been if you said 0
 	
 	// we must use 4 because we later have GL_RGBA which requires all four channels.
+	stbi_set_flip_vertically_on_load(true);
 	unsigned char * data = stbi_load ( filename, &_width, &_height, &_nrChannels, 4 );
 
 	if ( ! data )
